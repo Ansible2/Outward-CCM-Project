@@ -85,6 +85,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             StartCoroutine(waitForSync(myScene));
         }
 
+        // exec each frame
         void Update()
         {
 
