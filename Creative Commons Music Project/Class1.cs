@@ -60,7 +60,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     yield return new WaitForSeconds(1);
                 }
                 Logger.Log(LogLevel.Message, "loading done");
-
                 Logger.Log(LogLevel.Message, "Searching for music...");
 
                 var myList = Resources.FindObjectsOfTypeAll<GameObject>()
@@ -70,6 +69,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 foreach (var _x in myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
+                    Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
                 sceneBeingChecked = "";
             }
