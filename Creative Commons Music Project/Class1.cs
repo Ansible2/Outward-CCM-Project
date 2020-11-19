@@ -23,10 +23,16 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        public static bool IsRealScene(Scene scene)
+        private static bool IsRealScene(Scene scene)
         {
             var name = scene.name.ToLower();
             return !(name.Contains("lowmemory") && !name.Contains("mainmenu"));
+        }
+        public string sceneBeingChecked = "";
+        private bool isSceneChecked(Scene sceneToCheck)
+        {
+            bool _isChecked = (sceneToCheck.name == sceneBeingChecked);
+            return _isChecked;
         }
 
         private IEnumerator waitForSync(Scene myScene)
@@ -40,11 +46,13 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
             Logger.Log(LogLevel.Message, "Sync done");
             */
-
-            if (IsRealScene(myScene))
+            string mySceneName = myScene.name;
+            if (mySceneName != sceneBeingChecked && IsRealScene(myScene))
             {
+                sceneBeingChecked = mySceneName;
                 Logger.Log(LogLevel.Message, "Found real scene:");
-                Logger.Log(LogLevel.Message, myScene.name);
+                Logger.Log(LogLevel.Message, mySceneName);
+
 
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
@@ -63,6 +71,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 {
                     Logger.Log(LogLevel.Message, _x.name);
                 }
+                sceneBeingChecked = "";
             }
             else
             {
