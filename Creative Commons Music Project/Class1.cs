@@ -76,7 +76,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             else
             {
                 Logger.Log(LogLevel.Message, "Skipped fake Scene:");
-                Logger.Log(LogLevel.Message, myScene.name);
+                Logger.Log(LogLevel.Message, mySceneName);
             }
         }
 
@@ -84,5 +84,58 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         {
             StartCoroutine(waitForSync(myScene));
         }
+
+        void Update()
+        {
+
+        }
+
+        IEnumerator LoadMusic(string songPath)
+        {
+            if (System.IO.File.Exists(songPath))
+            {
+                using (var uwr = UnityWebRequestMultimedia.GetAudioClip("file://" + songPath, AudioType.AUDIOQUEUE))
+                {
+                    ((DownloadHandlerAudioClip)uwr.downloadHandler).streamAudio = true;
+
+                    yield return uwr.SendWebRequest();
+
+                    if (uwr.isNetworkError || uwr.isHttpError)
+                    {
+                        Debug.LogError(uwr.error);
+                        yield break;
+                    }
+
+                    DownloadHandlerAudioClip dlHandler = (DownloadHandlerAudioClip)uwr.downloadHandler;
+
+                    if (dlHandler.isDone)
+                    {
+                        AudioClip audioClip = dlHandler.audioClip;
+
+                        if (audioClip != null)
+                        {
+                            audioClip = DownloadHandlerAudioClip.GetContent(uwr);
+
+                            Debug.Log("Playing song using Audio Source!");
+
+                        }
+                        else
+                        {
+                            Debug.Log("Couldn't find a valid AudioClip :(");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("The download process is not completely finished.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Unable to locate converted song file.");
+            }
+        }
+
     }
 }
+
