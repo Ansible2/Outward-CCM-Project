@@ -26,30 +26,37 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             // This is your entry-point for your mod.
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
-            Logger.Log(LogLevel.Message, "Hello world"); /* Prints to "BepInEx\LogOutput.log" */
+            Logger.Log(LogLevel.Message, "Hello world");
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         // main menu is returning true?
-        private static bool IsRealScene(Scene scene)
+        private bool IsRealScene(Scene scene)
         {
             var name = scene.name.ToLower();
-            return !(name.Contains("lowmemory") && !name.Contains("mainmenu"));
+            Logger.Log(LogLevel.Message, "Checking scene: " + name);
+            return (!name.Contains("lowmemory") && !name.Contains("mainmenu"));
         }
-        public string sceneBeingChecked = "";
-        private bool isSceneChecked(Scene sceneToCheck)
+
+        private List<GameObject> FindMusicObjects()
         {
-            bool _isChecked = (sceneToCheck.name == sceneBeingChecked);
-            return _isChecked;
+            List<GameObject> myList = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
+                    .Where(x => x.name.StartsWith("BGM_"));
+
+            return myList;
+        }
+
+        // run the loop that will detect if any combat music shows up
+        private void startChecksForCombatMusic()
+        {
+
         }
 
         private IEnumerator waitForSync(Scene myScene)
         {
-            
             string mySceneName = myScene.name;
-            if (mySceneName != sceneBeingChecked && IsRealScene(myScene))
+            if (IsRealScene(myScene))
             {
-                sceneBeingChecked = mySceneName;
                 Logger.Log(LogLevel.Message, "Found real scene:");
                 Logger.Log(LogLevel.Message, mySceneName);
 
@@ -60,23 +67,23 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     yield return new WaitForSeconds(1);
                 }
                 Logger.Log(LogLevel.Message, "loading done");
-                Logger.Log(LogLevel.Message, "Searching for music...");
+                Logger.Log(LogLevel.Message, "Searching for music objects...");
 
                 var myList = Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
 
-                Logger.Log(LogLevel.Message, "Music Found:");
+                Logger.Log(LogLevel.Message, "Music Objects Found:");
                 foreach (var _x in myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
-                sceneBeingChecked = "";
+
+
             }
             else
             {
-                Logger.Log(LogLevel.Message, "Skipped fake Scene:");
-                Logger.Log(LogLevel.Message, mySceneName);
+                Logger.Log(LogLevel.Message, "Skipped fake Scene: " + mySceneName);
             }
         }
 
