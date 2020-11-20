@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 using System.Collections;
+//using System.Collections.Generic;
+//using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using System.Collections.Generic;
 
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
@@ -13,6 +17,9 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
+        
+        
+        
 
         internal void Awake()
         {
@@ -37,15 +44,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
         private IEnumerator waitForSync(Scene myScene)
         {
-            /*
-            Logger.Log(LogLevel.Message, "Waiting for sync");
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene.name);
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
-            Logger.Log(LogLevel.Message, "Sync done");
-            */
+            
             string mySceneName = myScene.name;
             if (mySceneName != sceneBeingChecked && IsRealScene(myScene))
             {
@@ -85,10 +84,20 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             StartCoroutine(waitForSync(myScene));
         }
 
+        public List<GameObject> musicList = new List<GameObject>();
+        public List<GameObject> musicListCompare = new List<GameObject>();
+
+        private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
+        {
+            var firstNotSecond = list1.Except(list2).ToList();
+            var secondNotFirst = list2.Except(list1).ToList();
+            return !firstNotSecond.Any() && !secondNotFirst.Any();
+        }
         // exec each frame
         void Update()
         {
-
+            musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
+                    .Where(x => x.name.StartsWith("BGM_"));
         }
 
         IEnumerator LoadMusic(string songPath)
@@ -216,4 +225,15 @@ BGM_EventMystery,
 BGM_RegionAntiquePlateau,
 BGM_RegionAntiquePlateauNIGHT,
 BGM_TownHarmattan
+*/
+
+
+/*
+Logger.Log(LogLevel.Message, "Waiting for sync");
+AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene.name);
+while (!asyncLoad.isDone)
+{
+    yield return null;
+}
+Logger.Log(LogLevel.Message, "Sync done");
 */
