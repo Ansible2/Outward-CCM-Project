@@ -4,3 +4,8 @@ S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\obj\Debug\
 S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\obj\Debug\Creative Commons Music Project.csproj.CoreCompileInputs.cache
 S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\obj\Debug\creativeCommonsMusicProject.dll
 S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\obj\Debug\creativeCommonsMusicProject.pdb
+S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\bin\Debug\UnityEngine.Networking.dll
+S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\bin\Debug\UnityEngine.UnityWebRequestAudioModule.dll
+S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\bin\Debug\UnityEngine.UnityWebRequestModule.dll
+S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\bin\Debug\UnityEngine.UnityWebRequestWWWModule.dll
+S:\Coding Projects\Outward CCM Project\Creative Commons Music Project\obj\Debug\Creative Commons Music Project.csproj.CopyComplete

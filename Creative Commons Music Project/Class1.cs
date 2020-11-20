@@ -30,6 +30,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
+        // main menu is returning true?
         private static bool IsRealScene(Scene scene)
         {
             var name = scene.name.ToLower();
@@ -93,13 +94,25 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             var secondNotFirst = list2.Except(list1).ToList();
             return !firstNotSecond.Any() && !secondNotFirst.Any();
         }
+
+        // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
+        // need to find a way to end it, however.
+        // could also just exec it at start and then just keep it running at intervals
+
         // exec each frame
+        /*
         void Update()
         {
             musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
+            if (areListsTheSame(musicList, musicListCompare)) {
+                musicList = musicListCompare;
+                Logger.Log(LogLevel.Message,"Found new music object");
+            }
         }
+        */
 
+        /*
         IEnumerator LoadMusic(string songPath)
         {
             if (System.IO.File.Exists(songPath))
@@ -145,7 +158,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 Debug.Log("Unable to locate converted song file.");
             }
         }
-
+        */
     }
 }
 
