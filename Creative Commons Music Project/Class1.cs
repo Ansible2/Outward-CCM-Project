@@ -140,3 +140,80 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
     }
 }
 
+
+// combat music objects are created upon combat initiation
+// scene changes are not triggered for combat so you need either an event or frame check for it
+/*
+ * 1. Get the current scene
+ * 2. Find all the game objects that have music attached to them in the current scene
+ * 3. Of all the game objects find: if they are playing AND/OR they are looping and stop both
+ * 4. Determine the music to play based upon the name of the object/location 
+ * 5. change the music clip
+ * 6. start playing the music again
+ * 7. Detect when the music has stopped OR when combat music has been created using an onEachFrame type method (such as update)
+ *      Combat music should be able to continue to loop, just needs to be random select
+ * 8a. When music simply stops select from another in the list (should similar to KISKA random music system keep a list of used tracks
+ * 8b. When combat music starts just change the clip based upon a random selection from a combat music list
+ */
+
+
+
+// music in game by object name
+/*
+BGM_OutwardTheme,
+BGM_StandardCombat,
+BGM_CierzoDay,
+BGM_ChersoneseDay,
+BGM_Dungeon2,
+BGM_StandardCombat2,
+BGM_CierzoNight,
+BGM_ChersoneseNight,
+BGM_DungeonAmbiant,
+BGM_DungeonRuins,
+BGM_DungeonWild,
+BGM_CombatAbrassar,
+BGM_CombatChersonese,
+BGM_CombatEnmerkar,
+BGM_CombatHallowedMarsh,
+BGM_EventDanger,
+BGM_EventDramatic,
+BGM_EventFriendly,
+BGM_RegionAbrassar,
+BGM_RegionAntiqueFields,
+BGM_RegionChersonese,
+BGM_RegionChersoneseNIGHT,
+BGM_RegionEnmerkarForest,
+BGM_RegionHallowedMarsh,
+BGM_RegionHallowedMarshNIGHT,
+BGM_RegionKarburan,
+BGM_TownBerg,
+BGM_TownBergNIGHT,
+BGM_TownCierzo,
+BGM_TownCierzoNIGHT,
+BGM_TownHarmattanNIGHT,
+BGM_TownKaraburanCity,
+BGM_TownMarket,
+BGM_TownMonsoon,
+BGM_GeneralTitleScreen,
+BGM_TownMonsoonNIGHT,
+BGM_TownLevant,
+BGM_TownLevantNIGHT,
+BGM_CombatBoss,
+BGM_CombatMiniboss,
+BGM_RegionEnmerkarForestNIGHT,
+BGM_RegionAbrassarNIGHT,
+BGM_DungeonManmade,
+BGM_EventQuest,
+BGM_Empty,
+BGM_CombatAntiquePlateau,
+BGM_CombatBossDLC1,
+BGM_CombatDungeonAntique,
+BGM_CombatDungeonFactory,
+BGM_CombatMinibossDLC1,
+BGM_DungeonAntique,
+BGM_DungeonFactory,
+BGM_EventMystery,
+BGM_RegionAntiquePlateau,
+BGM_RegionAntiquePlateauNIGHT,
+BGM_TownHarmattan
+*/

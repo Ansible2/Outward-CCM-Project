@@ -67,6 +67,9 @@
       <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.Networking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
