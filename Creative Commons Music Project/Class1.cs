@@ -51,8 +51,8 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
         private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
         {
-            var firstNotSecond = list1.Except(list2).ToList();
-            var secondNotFirst = list2.Except(list1).ToList();
+            var firstNotSecond = list1.Except(list2);
+            var secondNotFirst = list2.Except(list1);
             return !firstNotSecond.Any() && !secondNotFirst.Any();
         }
 
@@ -64,13 +64,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         // run the loop that will detect if any combat music shows up
         private IEnumerator StartChecksForCombatMusic()
         {
+            logWithTime("Started combat music check");
             var musicList = FindMusicObjects();
             var musicListCompare = FindMusicObjects();
 
             doRunCombatMusicCheck = true;
             while (doRunCombatMusicCheck)
             {
-                logWithTime("Started combat music check");
+                logWithTime("Looping for combat music check");
                 musicListCompare = FindMusicObjects();
 
                 if (!areListsTheSame(musicList,musicListCompare))
@@ -109,8 +110,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
 
-                yield return new WaitUntil(() => !doRunCombatMusicCheck);
-                StartChecksForCombatMusic();
+                while (doRunCombatMusicCheck)
+                {
+                    logWithTime("waiting for combat music check reset...");
+                    yield return new WaitForSeconds(0.1f);
+                }
+                //yield return new WaitUntil(() => !doRunCombatMusicCheck);
+                logWithTime("Reached combat music check");
+                StartCoroutine(StartChecksForCombatMusic());
             }
             else
             {
