@@ -66,12 +66,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
             else
             {
-                foreach(var _x in combatMusicList)
+                foreach (var _x in combatMusicList)
                 {
                     var theObject = GameObject.Find(_x);
                     if (theObject != null)
                     {
                         myList.Add(theObject);
+                        logWithTime("Added an object");
+                        Logger.Log(LogLevel.Message,theObject);
                     }
                 }
             }
@@ -95,12 +97,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             logWithTime("Started combat music check");
             var musicList = FindMusicObjects();
             var musicListCompare = FindMusicObjects();
-
+            
             doRunCombatMusicCheck = true;
             while (doRunCombatMusicCheck)
             {
                 logWithTime("Looping for combat music check");
                 musicListCompare = FindMusicObjects();
+                Logger.Log(LogLevel.Message, musicListCompare.Count);
+                Logger.Log(LogLevel.Message, musicList.Count);
 
                 if (!areListsTheSame(musicList, musicListCompare))
                 {
