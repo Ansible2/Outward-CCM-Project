@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using System.Collections;
-//using System.Collections.Generic;
-//using System.IO;
+using System.Collections.Generic;
+using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
-using System.Collections.Generic;
 
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
@@ -19,6 +18,10 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         const string VERSION = "1.0";
         
         
+        private void logWithTime(string myMessage = "")
+        {
+            Logger.Log(LogLevel.Message,Time.time + myMessage);
+        }
         
 
         internal void Awake()
@@ -26,7 +29,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             // This is your entry-point for your mod.
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
-            Logger.Log(LogLevel.Message, "Hello world");
+            //Logger.Log(LogLevel.Message, "Hello world");
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
@@ -46,10 +49,38 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             return myList;
         }
 
-        // run the loop that will detect if any combat music shows up
-        private void startChecksForCombatMusic()
+        private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
         {
+            var firstNotSecond = list1.Except(list2).ToList();
+            var secondNotFirst = list2.Except(list1).ToList();
+            return !firstNotSecond.Any() && !secondNotFirst.Any();
+        }
 
+
+
+        public List<GameObject> musicList = new List<GameObject>();
+        public List<GameObject> musicListCompare = new List<GameObject>();
+        internal static bool doRunCombatMusicCheck = true;
+        // run the loop that will detect if any combat music shows up
+        private IEnumerator StartChecksForCombatMusic()
+        {
+            musicList = FindMusicObjects();
+            doRunCombatMusicCheck = true;
+            while (doRunCombatMusicCheck)
+            {
+                musicListCompare = FindMusicObjects();
+
+                if (!areListsTheSame(musicList,musicListCompare))
+                {
+                    logWithTime("Found more music");
+                    //Logger.Log(LogLevel.Message, "Found more music");
+                    musicList = musicListCompare;
+                    logWithTime("Adjustsed music list");
+                    //Logger.Log(LogLevel.Message,Time.time + "Adjustsed music list");
+                }
+
+                yield return new WaitForSeconds((float)0.5);
+            }
         }
 
         private IEnumerator waitForSync(Scene myScene)
@@ -57,49 +88,45 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             string mySceneName = myScene.name;
             if (IsRealScene(myScene))
             {
-                Logger.Log(LogLevel.Message, "Found real scene:");
-                Logger.Log(LogLevel.Message, mySceneName);
-
+                logWithTime("Found real scene: " + mySceneName);
+                //Logger.Log(LogLevel.Message, "Found real scene:");
+                //Logger.Log(LogLevel.Message, mySceneName);
 
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
-                    Logger.Log(LogLevel.Message, "waiting for loading...");
+                    logWithTime("waiting for loading...");
+                    //Logger.Log(LogLevel.Message, "waiting for loading...");
                     yield return new WaitForSeconds(1);
                 }
-                Logger.Log(LogLevel.Message, "loading done");
-                Logger.Log(LogLevel.Message, "Searching for music objects...");
+                logWithTime("Loading done. Searching for music objects...");
+                //Logger.Log(LogLevel.Message, "loading done");
+                //Logger.Log(LogLevel.Message, "Searching for music objects...");
 
-                var myList = Resources.FindObjectsOfTypeAll<GameObject>()
-                    .Where(x => x.name.StartsWith("BGM_"));
+                var myList = FindMusicObjects();
 
-                Logger.Log(LogLevel.Message, "Music Objects Found:");
+                logWithTime("Music Objects Found:");
+                //Logger.Log(LogLevel.Message, "Music Objects Found:");
                 foreach (var _x in myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
 
-
+                yield return new WaitUntil(() => !doRunCombatMusicCheck);
+                StartChecksForCombatMusic();
             }
             else
             {
-                Logger.Log(LogLevel.Message, "Skipped fake Scene: " + mySceneName);
+                logWithTime("Skipped fake Scene: " + mySceneName);
+                //Logger.Log(LogLevel.Message, "Skipped fake Scene: " + mySceneName);
             }
         }
 
+        // on a scene change
         private void OnSceneLoaded(Scene myScene, LoadSceneMode mySceneMode)
         {
+            doRunCombatMusicCheck = false;
             StartCoroutine(waitForSync(myScene));
-        }
-
-        public List<GameObject> musicList = new List<GameObject>();
-        public List<GameObject> musicListCompare = new List<GameObject>();
-
-        private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
-        {
-            var firstNotSecond = list1.Except(list2).ToList();
-            var secondNotFirst = list2.Except(list1).ToList();
-            return !firstNotSecond.Any() && !secondNotFirst.Any();
         }
 
         // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
