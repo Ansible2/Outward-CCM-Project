@@ -56,7 +56,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             return (!name.Contains("lowmemory") && !name.Contains("mainmenu"));
         }
 
-        private List<GameObject> FindMusicObjects(bool _findAll = true)
+        private List<GameObject> FindMusicObjects(bool _findAll = false)
         {
             List<GameObject> myList = new List<GameObject>();
             if (_findAll)
@@ -89,6 +89,32 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
         internal static bool doRunCombatMusicCheck = true;
         // run the loop that will detect if any combat music shows up
+
+        private IEnumerator StartChecksForCombatMusic()
+        {
+            logWithTime("Started combat music check");
+            var musicList = FindMusicObjects();
+            var musicListCompare = FindMusicObjects();
+
+            doRunCombatMusicCheck = true;
+            while (doRunCombatMusicCheck)
+            {
+                logWithTime("Looping for combat music check");
+                musicListCompare = FindMusicObjects();
+
+                if (!areListsTheSame(musicList, musicListCompare))
+                {
+                    logWithTime("Found more music");
+                    musicList = musicListCompare;
+                    logWithTime("Adjustsed music list");
+                }
+
+                yield return new WaitForSeconds(0.5f);
+            }
+            logWithTime("Ended combat music check");
+        }
+
+        /*       
         private IEnumerator StartChecksForCombatMusic()
         {
             logWithTime("Started combat music check");
@@ -112,6 +138,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
             logWithTime("Ended combat music check");
         }
+        */
 
         private IEnumerator waitForSync(Scene myScene)
         {
@@ -127,7 +154,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 }
                 logWithTime("Loading done. Searching for music objects...");
 
-                var myList = FindMusicObjects();
+                var myList = FindMusicObjects(true);
 
                 logWithTime("Music Objects Found:");
                 //Logger.Log(LogLevel.Message, "Music Objects Found:");
@@ -254,6 +281,9 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
  * 8a. When music simply stops select from another in the list (should similar to KISKA random music system keep a list of used tracks
  * 8b. When combat music starts just change the clip based upon a random selection from a combat music list
  */
+
+
+
 
 
 
