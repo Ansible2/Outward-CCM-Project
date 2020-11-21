@@ -23,7 +23,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
-        public List<string> combatMusicList = new List<string>();
+        public static List<string> combatMusicList = new List<string>();
 
         internal void Awake()
         {
@@ -111,6 +111,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     logWithTime("Found more music");
                     musicList = musicListCompare;
                     logWithTime("Adjustsed music list");
+                }
+
+                logWithTime("Search for Cierzo");
+                var aVar = GameObject.Find("BGM_TownCierzo");
+                Logger.Log(LogLevel.Message,aVar);
+                if (aVar != null)
+                {
+                    logWithTime("Found BGM_TownCierzo");
                 }
 
                 yield return new WaitForSeconds(0.5f);
