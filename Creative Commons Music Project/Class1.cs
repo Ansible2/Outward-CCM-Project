@@ -20,7 +20,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         
         private void logWithTime(string myMessage = "")
         {
-            Logger.Log(LogLevel.Message,Time.time + myMessage);
+            Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
 
@@ -43,10 +43,10 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
         private List<GameObject> FindMusicObjects()
         {
-            List<GameObject> myList = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
+            var myList = Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
-
-            return myList;
+            
+            return myList.ToList();
         }
 
         private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
@@ -64,23 +64,25 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         // run the loop that will detect if any combat music shows up
         private IEnumerator StartChecksForCombatMusic()
         {
-            musicList = FindMusicObjects();
+            var musicList = FindMusicObjects();
+            var musicListCompare = FindMusicObjects();
+
             doRunCombatMusicCheck = true;
             while (doRunCombatMusicCheck)
             {
+                logWithTime("Started combat music check");
                 musicListCompare = FindMusicObjects();
 
                 if (!areListsTheSame(musicList,musicListCompare))
                 {
                     logWithTime("Found more music");
-                    //Logger.Log(LogLevel.Message, "Found more music");
                     musicList = musicListCompare;
                     logWithTime("Adjustsed music list");
-                    //Logger.Log(LogLevel.Message,Time.time + "Adjustsed music list");
                 }
 
                 yield return new WaitForSeconds((float)0.5);
             }
+            logWithTime("Ended combat music check");
         }
 
         private IEnumerator waitForSync(Scene myScene)
@@ -89,18 +91,13 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             if (IsRealScene(myScene))
             {
                 logWithTime("Found real scene: " + mySceneName);
-                //Logger.Log(LogLevel.Message, "Found real scene:");
-                //Logger.Log(LogLevel.Message, mySceneName);
 
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
                     logWithTime("waiting for loading...");
-                    //Logger.Log(LogLevel.Message, "waiting for loading...");
                     yield return new WaitForSeconds(1);
                 }
                 logWithTime("Loading done. Searching for music objects...");
-                //Logger.Log(LogLevel.Message, "loading done");
-                //Logger.Log(LogLevel.Message, "Searching for music objects...");
 
                 var myList = FindMusicObjects();
 
@@ -118,7 +115,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             else
             {
                 logWithTime("Skipped fake Scene: " + mySceneName);
-                //Logger.Log(LogLevel.Message, "Skipped fake Scene: " + mySceneName);
             }
         }
 
@@ -128,6 +124,19 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             doRunCombatMusicCheck = false;
             StartCoroutine(waitForSync(myScene));
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
         // need to find a way to end it, however.
