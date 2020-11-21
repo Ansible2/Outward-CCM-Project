@@ -23,6 +23,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
+        public List<string> combatMusicList = new List<string>();
 
         internal void Awake()
         {
@@ -30,7 +31,21 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
             //Logger.Log(LogLevel.Message, "Hello world");
+
             SceneManager.sceneLoaded += OnSceneLoaded;
+            
+            // fill combat music list
+            combatMusicList.Add("BGM_StandardCombat");
+            combatMusicList.Add("BGM_CombatAbrassar");
+            combatMusicList.Add("BGM_CombatChersonese");
+            combatMusicList.Add("BGM_CombatEnmerkar");
+            combatMusicList.Add("BGM_CombatHallowedMarsh");
+            combatMusicList.Add("BGM_CombatAntiquePlateau");
+            combatMusicList.Add("BGM_CombatBossDLC1");
+            combatMusicList.Add("BGM_CombatDungeonAntique");
+            combatMusicList.Add("BGM_CombatDungeonFactory");
+            combatMusicList.Add("BGM_CombatMinibossDLC1");
+            combatMusicList.Add("BGM_DungeonAntique");
         }
 
         // main menu is returning true?
@@ -41,12 +56,27 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             return (!name.Contains("lowmemory") && !name.Contains("mainmenu"));
         }
 
-        private List<GameObject> FindMusicObjects()
+        private List<GameObject> FindMusicObjects(bool _findAll = true)
         {
-            var myList = Resources.FindObjectsOfTypeAll<GameObject>()
-                    .Where(x => x.name.StartsWith("BGM_"));
-            
-            return myList.ToList();
+            List<GameObject> myList = new List<GameObject>();
+            if (_findAll)
+            {
+                myList = Resources.FindObjectsOfTypeAll<GameObject>()
+                    .Where(x => x.name.StartsWith("BGM_")).ToList();
+            }
+            else
+            {
+                foreach(var _x in combatMusicList)
+                {
+                    var theObject = GameObject.Find(_x);
+                    if (theObject != null)
+                    {
+                        myList.Add(theObject);
+                    }
+                }
+            }
+
+            return myList;
         }
 
         private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
@@ -57,9 +87,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         }
 
 
-
-        public List<GameObject> musicList = new List<GameObject>();
-        public List<GameObject> musicListCompare = new List<GameObject>();
         internal static bool doRunCombatMusicCheck = true;
         // run the loop that will detect if any combat music shows up
         private IEnumerator StartChecksForCombatMusic()
