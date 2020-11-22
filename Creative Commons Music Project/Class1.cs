@@ -35,17 +35,19 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             SceneManager.sceneLoaded += OnSceneLoaded;
             
             // fill combat music list
-            combatMusicList.Add("BGM_StandardCombat");
-            combatMusicList.Add("BGM_CombatAbrassar");
-            combatMusicList.Add("BGM_CombatChersonese");
-            combatMusicList.Add("BGM_CombatEnmerkar");
-            combatMusicList.Add("BGM_CombatHallowedMarsh");
-            combatMusicList.Add("BGM_CombatAntiquePlateau");
-            combatMusicList.Add("BGM_CombatBossDLC1");
-            combatMusicList.Add("BGM_CombatDungeonAntique");
-            combatMusicList.Add("BGM_CombatDungeonFactory");
-            combatMusicList.Add("BGM_CombatMinibossDLC1");
-            combatMusicList.Add("BGM_DungeonAntique");
+            // only clones become active and play the music
+            // can't use the standard ones with GameObject.Find
+            combatMusicList.Add("BGM_StandardCombat(Clone)");
+            combatMusicList.Add("BGM_CombatAbrassar(Clone)");
+            combatMusicList.Add("BGM_CombatChersonese(Clone)");
+            combatMusicList.Add("BGM_CombatEnmerkar(Clone)");
+            combatMusicList.Add("BGM_CombatHallowedMarsh(Clone)");
+            combatMusicList.Add("BGM_CombatAntiquePlateau(Clone)");
+            combatMusicList.Add("BGM_CombatBossDLC1(Clone)");
+            combatMusicList.Add("BGM_CombatDungeonAntique(Clone)");
+            combatMusicList.Add("BGM_CombatDungeonFactory(Clone)");
+            combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
+            combatMusicList.Add("BGM_DungeonAntique(Clone)");
         }
 
         // main menu is returning true?
@@ -73,7 +75,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     {
                         myList.Add(theObject);
                         logWithTime("Added an object");
-                        Logger.Log(LogLevel.Message,theObject);
+                        //Logger.Log(LogLevel.Message,theObject);
                     }
                 }
             }
@@ -113,13 +115,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     logWithTime("Adjustsed music list");
                 }
 
-                logWithTime("Search for Cierzo");
-                var aVar = GameObject.Find("BGM_TownCierzo");
-                Logger.Log(LogLevel.Message,aVar);
-                if (aVar != null)
-                {
-                    logWithTime("Found BGM_TownCierzo");
-                }
 
                 yield return new WaitForSeconds(0.5f);
             }
