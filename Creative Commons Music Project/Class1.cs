@@ -23,7 +23,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
-        public static List<string> combatMusicList = new List<string>();
+        public static List<string> CCM_combatMusicList = new List<string>();
 
         internal void Awake()
         {
@@ -37,81 +37,81 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             // fill combat music list
             // only clones become active and play the music
             // can't use the standard ones with GameObject.Find
-            combatMusicList.Add("BGM_StandardCombat(Clone)");
-            combatMusicList.Add("BGM_CombatAbrassar(Clone)");
-            combatMusicList.Add("BGM_CombatChersonese(Clone)");
-            combatMusicList.Add("BGM_CombatEnmerkar(Clone)");
-            combatMusicList.Add("BGM_CombatHallowedMarsh(Clone)");
-            combatMusicList.Add("BGM_CombatAntiquePlateau(Clone)");
-            combatMusicList.Add("BGM_CombatBossDLC1(Clone)");
-            combatMusicList.Add("BGM_CombatDungeonAntique(Clone)");
-            combatMusicList.Add("BGM_CombatDungeonFactory(Clone)");
-            combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
-            combatMusicList.Add("BGM_DungeonAntique(Clone)");
+            CCM_combatMusicList.Add("BGM_StandardCombat(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatAbrassar(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatChersonese(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatEnmerkar(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatHallowedMarsh(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatAntiquePlateau(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatBossDLC1(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatDungeonAntique(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatDungeonFactory(Clone)");
+            CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
+            CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
         }
 
         // main menu is returning true?
-        private bool IsRealScene(Scene scene)
+        private bool _fn_isRealScene(Scene _scene)
         {
-            var name = scene.name.ToLower();
-            Logger.Log(LogLevel.Message, "Checking scene: " + name);
-            return (!name.Contains("lowmemory") && !name.Contains("mainmenu"));
+            var _name = _scene.name.ToLower();
+            Logger.Log(LogLevel.Message, "Checking scene: " + _name);
+            return (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
         }
 
         private List<GameObject> FindMusicObjects(bool _findAll = false)
         {
-            List<GameObject> myList = new List<GameObject>();
+            List<GameObject> _myList = new List<GameObject>();
             if (_findAll)
             {
-                myList = Resources.FindObjectsOfTypeAll<GameObject>()
+                _myList = Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_")).ToList();
             }
             else
             {
-                foreach (var _x in combatMusicList)
+                foreach (var _x in CCM_combatMusicList)
                 {
-                    var theObject = GameObject.Find(_x);
-                    if (theObject != null)
+                    var _theObject = GameObject.Find(_x);
+                    if (_theObject != null)
                     {
-                        myList.Add(theObject);
+                        _myList.Add(_theObject);
                         logWithTime("Added an object");
                         //Logger.Log(LogLevel.Message,theObject);
                     }
                 }
             }
 
-            return myList;
+            return _myList;
         }
 
-        private static bool areListsTheSame(List<GameObject> list1, List<GameObject> list2)
+        private static bool _areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
         {
-            var firstNotSecond = list1.Except(list2);
-            var secondNotFirst = list2.Except(list1);
-            return !firstNotSecond.Any() && !secondNotFirst.Any();
+            var _firstNotSecond = _list1.Except(_list2);
+            var _secondNotFirst = _list2.Except(_list1);
+            return !_firstNotSecond.Any() && !_secondNotFirst.Any();
         }
 
 
-        internal static bool doRunCombatMusicCheck = true;
+        internal static bool CCM_doRunCombatMusicCheck = true;
         // run the loop that will detect if any combat music shows up
 
-        private IEnumerator StartChecksForCombatMusic()
+        private IEnumerator _startChecksForCombatMusic()
         {
             logWithTime("Started combat music check");
-            var musicList = FindMusicObjects();
-            var musicListCompare = FindMusicObjects();
+            var _musicList = FindMusicObjects();
+            var _musicListCompare = FindMusicObjects();
             
-            doRunCombatMusicCheck = true;
-            while (doRunCombatMusicCheck)
+            CCM_doRunCombatMusicCheck = true;
+            while (CCM_doRunCombatMusicCheck)
             {
                 logWithTime("Looping for combat music check");
-                musicListCompare = FindMusicObjects();
-                Logger.Log(LogLevel.Message, musicListCompare.Count);
-                Logger.Log(LogLevel.Message, musicList.Count);
+                _musicListCompare = FindMusicObjects();
+                Logger.Log(LogLevel.Message, _musicListCompare.Count);
+                Logger.Log(LogLevel.Message, _musicList.Count);
 
-                if (!areListsTheSame(musicList, musicListCompare))
+                if (!_areListsTheSame(_musicList, _musicListCompare))
                 {
                     logWithTime("Found more music");
-                    musicList = musicListCompare;
+                    _musicList = _musicListCompare;
                     logWithTime("Adjustsed music list");
                 }
 
@@ -128,13 +128,13 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             var musicList = FindMusicObjects();
             var musicListCompare = FindMusicObjects();
 
-            doRunCombatMusicCheck = true;
-            while (doRunCombatMusicCheck)
+            CCM_doRunCombatMusicCheck = true;
+            while (CCM_doRunCombatMusicCheck)
             {
                 logWithTime("Looping for combat music check");
                 musicListCompare = FindMusicObjects();
 
-                if (!areListsTheSame(musicList,musicListCompare))
+                if (!_areListsTheSame(musicList,musicListCompare))
                 {
                     logWithTime("Found more music");
                     musicList = musicListCompare;
@@ -147,12 +147,12 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         }
         */
 
-        private IEnumerator waitForSync(Scene myScene)
+        private IEnumerator _fn_waitForSync(Scene _myScene)
         {
-            string mySceneName = myScene.name;
-            if (IsRealScene(myScene))
+            string _mySceneName = _myScene.name;
+            if (_fn_isRealScene(_myScene))
             {
-                logWithTime("Found real scene: " + mySceneName);
+                logWithTime("Found real scene: " + _mySceneName);
 
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
@@ -161,36 +161,45 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 }
                 logWithTime("Loading done. Searching for music objects...");
 
-                var myList = FindMusicObjects(true);
+                var _myList = FindMusicObjects(true);
 
                 logWithTime("Music Objects Found:");
                 //Logger.Log(LogLevel.Message, "Music Objects Found:");
-                foreach (var _x in myList)
+                foreach (var _x in _myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
 
-                while (doRunCombatMusicCheck)
+                while (CCM_doRunCombatMusicCheck)
                 {
                     logWithTime("waiting for combat music check reset...");
                     yield return new WaitForSeconds(0.1f);
                 }
-                //yield return new WaitUntil(() => !doRunCombatMusicCheck);
+                //yield return new WaitUntil(() => !CCM_doRunCombatMusicCheck);
                 logWithTime("Reached combat music check");
-                StartCoroutine(StartChecksForCombatMusic());
+                StartCoroutine(_startChecksForCombatMusic());
             }
             else
             {
-                logWithTime("Skipped fake Scene: " + mySceneName);
+                logWithTime("Skipped fake Scene: " + _mySceneName);
+            }
+        }
+
+        private void replaceAudio(GameObject _objectToChange)
+        {
+            if (_objectToChange != null)
+            {
+                var _objectName = _objectToChange.name;
+                var _objectAudioClip = _objectToChange.GetComponent<AudioSource>().clip;
             }
         }
 
         // on a scene change
-        private void OnSceneLoaded(Scene myScene, LoadSceneMode mySceneMode)
+        private void OnSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
-            doRunCombatMusicCheck = false;
-            StartCoroutine(waitForSync(myScene));
+            CCM_doRunCombatMusicCheck = false;
+            StartCoroutine(_fn_waitForSync(_myScene));
         }
 
 
@@ -216,7 +225,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         {
             musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
-            if (areListsTheSame(musicList, musicListCompare)) {
+            if (_areListsTheSame(musicList, musicListCompare)) {
                 musicList = musicListCompare;
                 Logger.Log(LogLevel.Message,"Found new music object");
             }
