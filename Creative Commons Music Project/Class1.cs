@@ -7,6 +7,7 @@ using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using Photon;
 
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
@@ -23,7 +24,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
-        public static List<string> CCM_combatMusicList = new List<string>();
+        internal static List<string> CCM_combatMusicList = new List<string>();
 
         internal void Awake()
         {
@@ -58,7 +59,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             return (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
         }
 
-        private List<GameObject> FindMusicObjects(bool _findAll = false)
+        private List<GameObject> _fn_findMusicObjects(bool _findAll = false)
         {
             List<GameObject> _myList = new List<GameObject>();
             if (_findAll)
@@ -83,7 +84,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             return _myList;
         }
 
-        private static bool _areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
+        private static bool _fn_areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
         {
             var _firstNotSecond = _list1.Except(_list2);
             var _secondNotFirst = _list2.Except(_list1);
@@ -97,22 +98,22 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         private IEnumerator _startChecksForCombatMusic()
         {
             logWithTime("Started combat music check");
-            var _musicList = FindMusicObjects();
-            var _musicListCompare = FindMusicObjects();
+            var _musicList = _fn_findMusicObjects();
+            var _musicListCompare = _fn_findMusicObjects();
             
             CCM_doRunCombatMusicCheck = true;
             while (CCM_doRunCombatMusicCheck)
             {
                 logWithTime("Looping for combat music check");
-                _musicListCompare = FindMusicObjects();
+                _musicListCompare = _fn_findMusicObjects();
                 Logger.Log(LogLevel.Message, _musicListCompare.Count);
                 Logger.Log(LogLevel.Message, _musicList.Count);
 
-                if (!_areListsTheSame(_musicList, _musicListCompare))
+                if (!_fn_areListsTheSame(_musicList, _musicListCompare))
                 {
                     logWithTime("Found more music");
                     _musicList = _musicListCompare;
-                    logWithTime("Adjustsed music list");
+                    logWithTime("Adjusted music list");
                 }
 
 
@@ -125,16 +126,16 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         private IEnumerator StartChecksForCombatMusic()
         {
             logWithTime("Started combat music check");
-            var musicList = FindMusicObjects();
-            var musicListCompare = FindMusicObjects();
+            var musicList = _fn_findMusicObjects();
+            var musicListCompare = _fn_findMusicObjects();
 
             CCM_doRunCombatMusicCheck = true;
             while (CCM_doRunCombatMusicCheck)
             {
                 logWithTime("Looping for combat music check");
-                musicListCompare = FindMusicObjects();
+                musicListCompare = _fn_findMusicObjects();
 
-                if (!_areListsTheSame(musicList,musicListCompare))
+                if (!_fn_areListsTheSame(musicList,musicListCompare))
                 {
                     logWithTime("Found more music");
                     musicList = musicListCompare;
@@ -161,10 +162,9 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 }
                 logWithTime("Loading done. Searching for music objects...");
 
-                var _myList = FindMusicObjects(true);
+                var _myList = _fn_findMusicObjects(true);
 
                 logWithTime("Music Objects Found:");
-                //Logger.Log(LogLevel.Message, "Music Objects Found:");
                 foreach (var _x in _myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
@@ -200,6 +200,10 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         {
             CCM_doRunCombatMusicCheck = false;
             StartCoroutine(_fn_waitForSync(_myScene));
+            if (NetworkBehaviour.isServer)
+            {
+
+            }
         }
 
 
@@ -225,7 +229,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         {
             musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
-            if (_areListsTheSame(musicList, musicListCompare)) {
+            if (_fn_areListsTheSame(musicList, musicListCompare)) {
                 musicList = musicListCompare;
                 Logger.Log(LogLevel.Message,"Found new music object");
             }
