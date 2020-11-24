@@ -48,6 +48,9 @@
       <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\netstandard.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Photon3Unity3D">
+      <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\Photon3Unity3D.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -70,6 +73,9 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
       <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
@@ -83,7 +89,6 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnityWebRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

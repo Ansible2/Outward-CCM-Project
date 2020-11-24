@@ -33,7 +33,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
             //Logger.Log(LogLevel.Message, "Hello world");
 
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += CCM_onSceneLoaded;
             
             // fill combat music list
             // only clones become active and play the music
@@ -186,7 +186,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
         }
 
-        private void replaceAudio(GameObject _objectToChange)
+        private void _fn_replaceAudio(GameObject _objectToChange)
         {
             if (_objectToChange != null)
             {
@@ -196,13 +196,13 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         }
 
         // on a scene change
-        private void OnSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
+        private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
             CCM_doRunCombatMusicCheck = false;
             StartCoroutine(_fn_waitForSync(_myScene));
-            if (NetworkBehaviour.isServer)
+            if (PhotonNetwork.isMasterClient)
             {
-
+                
             }
         }
 
