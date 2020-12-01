@@ -69,14 +69,42 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
             else
             {
+                // collect names of already found objects for comparison
+                List<string> _myListNames = new List<string>();
+                foreach (var _y in _myList)
+                {
+                    _myListNames.Add(_y.name);
+                }
+
+                //bool _alreadyFound;
                 foreach (var _x in CCM_combatMusicList)
                 {
-                    var _theObject = GameObject.Find(_x);
-                    if (_theObject != null)
+                    /*
+                    _alreadyFound = false;
+                    foreach (var _y in _myList)
                     {
-                        _myList.Add(_theObject);
-                        logWithTime("Added an object");
-                        //Logger.Log(LogLevel.Message,theObject);
+                        if (_y.name == _x)
+                        {
+                            _alreadyFound = true;
+                        }
+                    }
+                    */
+                    if (!_myListNames.Contains(_x))
+                    {
+                        var _theObject = GameObject.Find(_x);
+                        if (_theObject != null)
+                        {
+                            _myList.Add(_theObject);
+                            logWithTime("Added an object");
+                            /* // and alt method of checking to see if the object was already found
+                            if (!_myList.Contains(_theObject))
+                            {
+                                _myList.Add(_theObject);
+                                logWithTime("Added an object");
+                                //Logger.Log(LogLevel.Message,theObject);
+                            }
+                            */
+                        }
                     }
                 }
             }
@@ -194,7 +222,9 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 var _objectAudioClip = _objectToChange.GetComponent<AudioSource>().clip;
             }
         }
-
+        
+        
+        [PunRPC]
         // on a scene change
         private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
