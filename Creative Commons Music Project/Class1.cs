@@ -76,19 +76,8 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                     _myListNames.Add(_y.name);
                 }
 
-                //bool _alreadyFound;
                 foreach (var _x in CCM_combatMusicList)
                 {
-                    /*
-                    _alreadyFound = false;
-                    foreach (var _y in _myList)
-                    {
-                        if (_y.name == _x)
-                        {
-                            _alreadyFound = true;
-                        }
-                    }
-                    */
                     if (!_myListNames.Contains(_x))
                     {
                         var _theObject = GameObject.Find(_x);
@@ -96,14 +85,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                         {
                             _myList.Add(_theObject);
                             logWithTime("Added an object");
-                            /* // and alt method of checking to see if the object was already found
-                            if (!_myList.Contains(_theObject))
-                            {
-                                _myList.Add(_theObject);
-                                logWithTime("Added an object");
-                                //Logger.Log(LogLevel.Message,theObject);
-                            }
-                            */
                         }
                     }
                 }
