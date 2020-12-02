@@ -14,7 +14,7 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
     [BepInPlugin(ID, NAME, VERSION)]
-    public class MyMod : BaseUnityPlugin // Rename "MyMod"
+    public class MyMod : BaseUnityPlugin //Photon.MonoBehaviour // Rename "MyMod"
     {
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
@@ -187,14 +187,14 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             StartCoroutine(_fn_waitForSync(_myScene));
             if (PhotonNetwork.isMasterClient)
             {
-                PhotonView.RPC("doAThing",PhotonTargets.Others);
+                GetComponent<PhotonView>().RPC("doAThing",PhotonTargets.MasterClient);
             }
         }
 
         [PunRPC]
         void doAThing()
         {
-
+            
         }
 
 
@@ -286,7 +286,8 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                 return;
             }
             GetComponent<PhotonView>().RPC("MyRemoteMethod", PhotonTargets.Others, new object[] { 42, true });
-   
+            
+
                //Target Types
                //PhotonTargets.Others
                //PhotonTargets.All //triggered instantly
