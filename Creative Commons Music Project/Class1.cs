@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using Photon;
+using Photon.Realtime;
+//using ExitGames.Client.Photon;
 
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
@@ -131,32 +133,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             logWithTime("Ended combat music check");
         }
 
-        /*       
-        private IEnumerator StartChecksForCombatMusic()
-        {
-            logWithTime("Started combat music check");
-            var musicList = _fn_findMusicObjects();
-            var musicListCompare = _fn_findMusicObjects();
-
-            CCM_doRunCombatMusicCheck = true;
-            while (CCM_doRunCombatMusicCheck)
-            {
-                logWithTime("Looping for combat music check");
-                musicListCompare = _fn_findMusicObjects();
-
-                if (!_fn_areListsTheSame(musicList,musicListCompare))
-                {
-                    logWithTime("Found more music");
-                    musicList = musicListCompare;
-                    logWithTime("Adjustsed music list");
-                }
-
-                yield return new WaitForSeconds((float)0.5);
-            }
-            logWithTime("Ended combat music check");
-        }
-        */
-
         private IEnumerator _fn_waitForSync(Scene _myScene)
         {
             string _mySceneName = _myScene.name;
@@ -204,8 +180,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
         }
         
-        
-        [PunRPC]
         // on a scene change
         private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
@@ -213,10 +187,15 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             StartCoroutine(_fn_waitForSync(_myScene));
             if (PhotonNetwork.isMasterClient)
             {
-                
+                PhotonView.RPC("doAThing",PhotonTargets.Others);
             }
         }
 
+        [PunRPC]
+        void doAThing()
+        {
+
+        }
 
 
 
@@ -294,6 +273,38 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
         }
         */
+    }
+
+    public class MyCustomRPC : Photon.MonoBehaviour
+    {
+        public void CallRemoteMethod()
+        {
+
+            if (PhotonNetwork.offlineMode == true)
+            { //use this you need to support offline mode.
+                //MyRemoteMethod(PhotonTargets.Others, new object[] { 42, true });
+                return;
+            }
+            GetComponent<PhotonView>().RPC("MyRemoteMethod", PhotonTargets.Others, new object[] { 42, true });
+   
+               //Target Types
+               //PhotonTargets.Others
+               //PhotonTargets.All //triggered instantly
+               //PhotonTargets.AllViaServer //local client gets even through server just like everyone else
+               //PhotonTargets.MasterClient
+               //PhotonNetwork.playerList[0]
+               //PhotonTargets.AllBuffered
+               //PhotonTargets.AllBufferedViaServer //used in item pickups where could be contested which client got it first
+               //An important use is also when a new player connects later, they will recieve this 
+               //buffered event that the item has been picked up and should be removed from scene
+        }
+
+        [PunRPC]
+        void MyRemoteMethod(int someNumber, bool someBool)
+        {
+            Debug.Log(someNumber);
+            Debug.Log(someBool);
+        }
     }
 }
 
