@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using Photon;
 using Photon.Realtime;
-//using ExitGames.Client.Photon;
+
 
 namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 {
