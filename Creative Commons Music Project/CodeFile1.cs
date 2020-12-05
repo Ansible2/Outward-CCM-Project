@@ -1,6 +1,4 @@
-﻿using creativeCommonsMusicProject;
-
-namespace creativeCommonsMusicProject
+﻿namespace creativeCommonsMusicProject
 {
     public class MyMod2
     {
