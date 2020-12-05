@@ -21,7 +21,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         const string VERSION = "1.0";
         
         
-        private void logWithTime(string myMessage = "")
+        public void logWithTime(string myMessage = "")
         {
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
@@ -191,8 +191,8 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             }
         }
 
-        [PunRPC]
-        void doAThing()
+        //[PunRPC]
+        public void doAThing()
         {
             
         }
@@ -308,6 +308,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         }
     }
 }
+
 
 
 // combat music objects are created upon combat initiation
