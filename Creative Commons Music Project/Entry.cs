@@ -11,17 +11,18 @@ using Photon;
 using Photon.Realtime;
 
 
-namespace creativeCommonsMusicProject // Rename "MyNameSpace"
+namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
-    public class MyMod : BaseUnityPlugin //Photon.MonoBehaviour // Rename "MyMod"
+    public class CCM_base : BaseUnityPlugin //Photon.MonoBehaviour
     {
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
-        
-        
-        public void logWithTime(string myMessage = "")
+
+        CCM_rpc CCM_rpc = new CCM_rpc();
+
+        public void CCM_fnc_logWithTime(string myMessage = "")
         {
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
@@ -86,7 +87,7 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
                         if (_theObject != null)
                         {
                             _myList.Add(_theObject);
-                            logWithTime("Added an object");
+                            CCM_fnc_logWithTime("Added an object");
                         }
                     }
                 }
@@ -108,29 +109,29 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
         private IEnumerator _startChecksForCombatMusic()
         {
-            logWithTime("Started combat music check");
+            CCM_fnc_logWithTime("Started combat music check");
             var _musicList = _fn_findMusicObjects();
             var _musicListCompare = _fn_findMusicObjects();
             
             CCM_doRunCombatMusicCheck = true;
             while (CCM_doRunCombatMusicCheck)
             {
-                logWithTime("Looping for combat music check");
+                CCM_fnc_logWithTime("Looping for combat music check");
                 _musicListCompare = _fn_findMusicObjects();
                 Logger.Log(LogLevel.Message, _musicListCompare.Count);
                 Logger.Log(LogLevel.Message, _musicList.Count);
 
                 if (!_fn_areListsTheSame(_musicList, _musicListCompare))
                 {
-                    logWithTime("Found more music");
+                    CCM_fnc_logWithTime("Found more music");
                     _musicList = _musicListCompare;
-                    logWithTime("Adjusted music list");
+                    CCM_fnc_logWithTime("Adjusted music list");
                 }
 
 
                 yield return new WaitForSeconds(0.5f);
             }
-            logWithTime("Ended combat music check");
+            CCM_fnc_logWithTime("Ended combat music check");
         }
 
         private IEnumerator _fn_waitForSync(Scene _myScene)
@@ -138,18 +139,18 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
             string _mySceneName = _myScene.name;
             if (_fn_isRealScene(_myScene))
             {
-                logWithTime("Found real scene: " + _mySceneName);
+                CCM_fnc_logWithTime("Found real scene: " + _mySceneName);
 
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
-                    logWithTime("waiting for loading...");
+                    CCM_fnc_logWithTime("waiting for loading...");
                     yield return new WaitForSeconds(1);
                 }
-                logWithTime("Loading done. Searching for music objects...");
+                CCM_fnc_logWithTime("Loading done. Searching for music objects...");
 
                 var _myList = _fn_findMusicObjects(true);
 
-                logWithTime("Music Objects Found:");
+                CCM_fnc_logWithTime("Music Objects Found:");
                 foreach (var _x in _myList)
                 {
                     Logger.Log(LogLevel.Message, _x.name);
@@ -158,16 +159,16 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
 
                 while (CCM_doRunCombatMusicCheck)
                 {
-                    logWithTime("waiting for combat music check reset...");
+                    CCM_fnc_logWithTime("waiting for combat music check reset...");
                     yield return new WaitForSeconds(0.1f);
                 }
                 //yield return new WaitUntil(() => !CCM_doRunCombatMusicCheck);
-                logWithTime("Reached combat music check");
+                CCM_fnc_logWithTime("Reached combat music check");
                 StartCoroutine(_startChecksForCombatMusic());
             }
             else
             {
-                logWithTime("Skipped fake Scene: " + _mySceneName);
+                CCM_fnc_logWithTime("Skipped fake Scene: " + _mySceneName);
             }
         }
 
@@ -196,17 +197,6 @@ namespace creativeCommonsMusicProject // Rename "MyNameSpace"
         {
             
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
