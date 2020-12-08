@@ -14,13 +14,14 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
-    public class CCM_base : BaseUnityPlugin //Photon.MonoBehaviour
+    public class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
     {
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
         CCM_rpc CCM_rpc = new CCM_rpc();
+        CCM_scheduled CCM_scheduled = new CCM_scheduled();
 
         public void CCM_fnc_logWithTime(string myMessage = "")
         {
@@ -62,7 +63,7 @@ namespace creativeCommonsMusicProject
             return (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
         }
 
-        private List<GameObject> _fn_findMusicObjects(bool _findAll = false)
+        internal List<GameObject> CCM_fnc_findMusicObjectsInScene(bool _findAll = false)
         {
             List<GameObject> _myList = new List<GameObject>();
             if (_findAll)
@@ -73,6 +74,7 @@ namespace creativeCommonsMusicProject
             else
             {
                 // collect names of already found objects for comparison
+                // lists are by default pass by ref in classes
                 List<string> _myListNames = new List<string>();
                 foreach (var _y in _myList)
                 {
@@ -96,7 +98,7 @@ namespace creativeCommonsMusicProject
             return _myList;
         }
 
-        private static bool _fn_areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
+        internal static bool CCM_fnc_areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
         {
             var _firstNotSecond = _list1.Except(_list2);
             var _secondNotFirst = _list2.Except(_list1);
@@ -107,77 +109,21 @@ namespace creativeCommonsMusicProject
         internal static bool CCM_doRunCombatMusicCheck = true;
         // run the loop that will detect if any combat music shows up
 
-        private IEnumerator _startChecksForCombatMusic()
-        {
-            CCM_fnc_logWithTime("Started combat music check");
-            var _musicList = _fn_findMusicObjects();
-            var _musicListCompare = _fn_findMusicObjects();
-            
-            CCM_doRunCombatMusicCheck = true;
-            while (CCM_doRunCombatMusicCheck)
-            {
-                CCM_fnc_logWithTime("Looping for combat music check");
-                _musicListCompare = _fn_findMusicObjects();
-                Logger.Log(LogLevel.Message, _musicListCompare.Count);
-                Logger.Log(LogLevel.Message, _musicList.Count);
-
-                if (!_fn_areListsTheSame(_musicList, _musicListCompare))
-                {
-                    CCM_fnc_logWithTime("Found more music");
-                    _musicList = _musicListCompare;
-                    CCM_fnc_logWithTime("Adjusted music list");
-                }
+        
 
 
-                yield return new WaitForSeconds(0.5f);
-            }
-            CCM_fnc_logWithTime("Ended combat music check");
-        }
-
-        private IEnumerator _fn_waitForSync(Scene _myScene)
-        {
-            string _mySceneName = _myScene.name;
-            if (_fn_isRealScene(_myScene))
-            {
-                CCM_fnc_logWithTime("Found real scene: " + _mySceneName);
-
-                while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
-                {
-                    CCM_fnc_logWithTime("waiting for loading...");
-                    yield return new WaitForSeconds(1);
-                }
-                CCM_fnc_logWithTime("Loading done. Searching for music objects...");
-
-                var _myList = _fn_findMusicObjects(true);
-
-                CCM_fnc_logWithTime("Music Objects Found:");
-                foreach (var _x in _myList)
-                {
-                    Logger.Log(LogLevel.Message, _x.name);
-                    Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
-                }
-
-                while (CCM_doRunCombatMusicCheck)
-                {
-                    CCM_fnc_logWithTime("waiting for combat music check reset...");
-                    yield return new WaitForSeconds(0.1f);
-                }
-                //yield return new WaitUntil(() => !CCM_doRunCombatMusicCheck);
-                CCM_fnc_logWithTime("Reached combat music check");
-                StartCoroutine(_startChecksForCombatMusic());
-            }
-            else
-            {
-                CCM_fnc_logWithTime("Skipped fake Scene: " + _mySceneName);
-            }
-        }
-
-        private void _fn_replaceAudio(GameObject _objectToChange)
+        internal bool CCM_fnc_replaceAudio(GameObject _objectToChange)
         {
             if (_objectToChange != null)
             {
                 var _objectName = _objectToChange.name;
                 var _objectAudioClip = _objectToChange.GetComponent<AudioSource>().clip;
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         
@@ -185,19 +131,21 @@ namespace creativeCommonsMusicProject
         private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
             CCM_doRunCombatMusicCheck = false;
-            StartCoroutine(_fn_waitForSync(_myScene));
+            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+        /*    
             if (PhotonNetwork.isMasterClient)
             {
                 GetComponent<PhotonView>().RPC("doAThing",PhotonTargets.MasterClient);
             }
+        */
         }
-
+/*
         //[PunRPC]
         public void doAThing()
         {
             
         }
-
+*/
 
         // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
         // need to find a way to end it, however.
@@ -209,7 +157,7 @@ namespace creativeCommonsMusicProject
         {
             musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
                     .Where(x => x.name.StartsWith("BGM_"));
-            if (_fn_areListsTheSame(musicList, musicListCompare)) {
+            if (CCM_fnc_areListsTheSame(musicList, musicListCompare)) {
                 musicList = musicListCompare;
                 Logger.Log(LogLevel.Message,"Found new music object");
             }
@@ -265,38 +213,6 @@ namespace creativeCommonsMusicProject
         */
     }
 
-    public class MyCustomRPC : Photon.MonoBehaviour
-    {
-        public void CallRemoteMethod()
-        {
-
-            if (PhotonNetwork.offlineMode == true)
-            { //use this you need to support offline mode.
-                //MyRemoteMethod(PhotonTargets.Others, new object[] { 42, true });
-                return;
-            }
-            GetComponent<PhotonView>().RPC("MyRemoteMethod", PhotonTargets.Others, new object[] { 42, true });
-            
-
-               //Target Types
-               //PhotonTargets.Others
-               //PhotonTargets.All //triggered instantly
-               //PhotonTargets.AllViaServer //local client gets even through server just like everyone else
-               //PhotonTargets.MasterClient
-               //PhotonNetwork.playerList[0]
-               //PhotonTargets.AllBuffered
-               //PhotonTargets.AllBufferedViaServer //used in item pickups where could be contested which client got it first
-               //An important use is also when a new player connects later, they will recieve this 
-               //buffered event that the item has been picked up and should be removed from scene
-        }
-
-        [PunRPC]
-        void MyRemoteMethod(int someNumber, bool someBool)
-        {
-            Debug.Log(someNumber);
-            Debug.Log(someBool);
-        }
-    }
 }
 
 
