@@ -50,7 +50,7 @@ namespace creativeCommonsMusicProject
         internal IEnumerator CCM_fnc_waitForLoadingDone(Scene _myScene)
         {
             string _mySceneName = _myScene.name;
-            if (_fn_isRealScene(_myScene))
+            if (CCM_core.CCM_fnc_isSceneReal(_myScene))
             {
                 CCM_core.CCM_fnc_logWithTime("Found real scene: " + _mySceneName);
 
@@ -84,6 +84,5 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Skipped fake Scene: " + _mySceneName);
             }
         }
-
     }
 }

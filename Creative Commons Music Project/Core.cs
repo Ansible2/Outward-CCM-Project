@@ -56,7 +56,7 @@ namespace creativeCommonsMusicProject
         }
 
         // main menu is returning true?
-        private bool _fn_isRealScene(Scene _scene)
+        internal bool CCM_fnc_isSceneReal(Scene _scene)
         {
             var _name = _scene.name.ToLower();
             Logger.Log(LogLevel.Message, "Checking scene: " + _name);
