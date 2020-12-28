@@ -23,13 +23,27 @@ namespace creativeCommonsMusicProject
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
 
+        // a list for storing the combat music object names as strings
+        internal static List<string> CCM_combatMusicList = new List<string>();
+        // used for controlling the loop in CCM_fnc_startCombatMusicIntercept
+        internal static bool CCM_doRunCombatMusicCheck = true;
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_logWithTime
+
+        ------------------------------------------------------------------------ */
         public void CCM_fnc_logWithTime(string myMessage = "")
         {
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
         
-        internal static List<string> CCM_combatMusicList = new List<string>();
 
+        /* ------------------------------------------------------------------------
+        
+            awake function
+
+        ------------------------------------------------------------------------ */
         internal void Awake()
         {
             // This is your entry-point for your mod.
@@ -55,14 +69,25 @@ namespace creativeCommonsMusicProject
             CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
         }
 
-        // main menu is returning true?
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_isSceneReal
+
+        ------------------------------------------------------------------------ */
         internal bool CCM_fnc_isSceneReal(Scene _scene)
         {
             var _name = _scene.name.ToLower();
             Logger.Log(LogLevel.Message, "Checking scene: " + _name);
+
             return (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
         }
 
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_findMusicObjectsInScene
+
+        ------------------------------------------------------------------------ */
         internal List<GameObject> CCM_fnc_findMusicObjectsInScene(bool _findAll = false)
         {
             List<GameObject> _myList = new List<GameObject>();
@@ -98,6 +123,12 @@ namespace creativeCommonsMusicProject
             return _myList;
         }
 
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_areListsTheSame
+
+        ------------------------------------------------------------------------ */
         internal static bool CCM_fnc_areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
         {
             var _firstNotSecond = _list1.Except(_list2);
@@ -106,12 +137,14 @@ namespace creativeCommonsMusicProject
         }
 
 
-        internal static bool CCM_doRunCombatMusicCheck = true;
-        // run the loop that will detect if any combat music shows up
-
         
 
 
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_replaceAudio
+
+        ------------------------------------------------------------------------ */
         internal bool CCM_fnc_replaceAudio(GameObject _objectToChange)
         {
             if (_objectToChange != null)
@@ -126,19 +159,40 @@ namespace creativeCommonsMusicProject
                 return false;
             }
         }
+
+
+        /* ------------------------------------------------------------------------
         
-        // on a scene change
+            CCM_onSceneLoaded
+
+        ------------------------------------------------------------------------ */
         private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
         {
+            // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
+
+            // wait for loading to be done in a scheduled environment
+            // also runs combat music check
             StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
-        /*    
+
+
+            /*    
             if (PhotonNetwork.isMasterClient)
             {
                 GetComponent<PhotonView>().RPC("doAThing",PhotonTargets.MasterClient);
             }
-        */
+            */
         }
+
+
+
+
+
+
+
+
+
+
 /*
         //[PunRPC]
         public void doAThing()
