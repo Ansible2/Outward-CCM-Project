@@ -20,6 +20,13 @@ namespace creativeCommonsMusicProject
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
+        public const string CCM_mainFolderPath = @"Mods\CCM Project";
+        public const string CCM_combatFolderPath = @"Mods\CCM Project";
+        public const string CCM_ambientNightFolderPath = @"Mods\CCM Project";
+        public const string CCM_ambientDayFolderPath = @"Mods\CCM Project";
+        public const string CCM_cityFolderPath = @"Mods\CCM Project";
+        public const string CCM_dungeonFolderPath = @"Mods\CCM Project";
+
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
 
@@ -137,7 +144,25 @@ namespace creativeCommonsMusicProject
         }
 
 
+        /* ------------------------------------------------------------------------
         
+            CCM_fnc_stopMusicFromLooping
+
+        ------------------------------------------------------------------------ */
+        internal bool CCM_fnc_stopMusicFromLooping(GameObject _objectToStop)
+        {
+            bool _isLooping = _objectToStop.GetComponent<AudioSource>().loop;
+            if (_isLooping)
+            {
+                _objectToStop.GetComponent<AudioSource>().loop = false;
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
         /* ------------------------------------------------------------------------
@@ -151,6 +176,7 @@ namespace creativeCommonsMusicProject
             {
                 var _objectName = _objectToChange.name;
                 var _objectAudioClip = _objectToChange.GetComponent<AudioSource>().clip;
+
 
                 return true;
             }

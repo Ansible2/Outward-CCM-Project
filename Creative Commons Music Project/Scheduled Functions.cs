@@ -55,8 +55,6 @@ namespace creativeCommonsMusicProject
         }
 
 
-
-
         /* ------------------------------------------------------------------------
         
             CCM_fnc_waitForLoadingDone
@@ -91,6 +89,13 @@ namespace creativeCommonsMusicProject
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
+
+
+
+                // start replace audio here using _myList
+
+
+
 
                 // wait until combat music check if off
                 while (CCM_core.CCM_doRunCombatMusicCheck)
