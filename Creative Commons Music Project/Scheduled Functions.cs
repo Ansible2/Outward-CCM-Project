@@ -83,14 +83,23 @@ namespace creativeCommonsMusicProject
                 var _myList = CCM_core.CCM_fnc_findMusicObjectsInScene(true);
                 
                 // Print list of music objects & their clips
+                // find music object to use for playing
                 CCM_core.CCM_fnc_logWithTime("Music Objects Found:");
+                bool _wasLooping, _wasPlaying;
+                GameObject _mainMusicObject;
                 foreach (var _x in _myList)
                 {
-                    CCM_core.CCM_fnc_stopMusicFromLooping(_x);
-                    CCM_core.CCM_fnc_stopMusicFromPlaying(_x);
+                    _wasLooping = CCM_core.CCM_fnc_stopMusicFromLooping(_x);
+                    _wasPlaying = CCM_core.CCM_fnc_stopMusicFromPlaying(_x);
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
+
+                    if (_wasLooping && _wasPlaying)
+                    {
+                        _mainMusicObject = _x;
+                    }
                 }
+
 
 
 
