@@ -21,11 +21,11 @@ namespace creativeCommonsMusicProject
         const string VERSION = "1.0";
 
         public const string CCM_mainFolderPath = @"Mods\CCM Project";
-        public const string CCM_combatFolderPath = @"Mods\CCM Project";
-        public const string CCM_ambientNightFolderPath = @"Mods\CCM Project";
-        public const string CCM_ambientDayFolderPath = @"Mods\CCM Project";
-        public const string CCM_cityFolderPath = @"Mods\CCM Project";
-        public const string CCM_dungeonFolderPath = @"Mods\CCM Project";
+        public const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
+        public const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
+        public const string CCM_ambientDayFolderPath = CCM_mainFolderPath + @"\Ambient Day Tracks";
+        public const string CCM_cityFolderPath = CCM_mainFolderPath + @"\City Tracks";
+        public const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
 
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
@@ -163,6 +163,22 @@ namespace creativeCommonsMusicProject
                 return false;
             }
         }
+        internal bool CCM_fnc_stopMusicFromPlaying(GameObject _objectToStop)
+        {
+            AudioSource _objectAudioSource = _objectToStop.GetComponent<AudioSource>();
+            bool _isPlaying = _objectAudioSource.isPlaying;
+            if (_isPlaying)
+            {
+                _objectAudioSource.Stop();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
 
         /* ------------------------------------------------------------------------

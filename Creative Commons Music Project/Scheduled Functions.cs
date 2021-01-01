@@ -86,6 +86,8 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Music Objects Found:");
                 foreach (var _x in _myList)
                 {
+                    CCM_core.CCM_fnc_stopMusicFromLooping(_x);
+                    CCM_core.CCM_fnc_stopMusicFromPlaying(_x);
                     Logger.Log(LogLevel.Message, _x.name);
                     Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
                 }
