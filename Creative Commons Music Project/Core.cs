@@ -163,6 +163,13 @@ namespace creativeCommonsMusicProject
                 return false;
             }
         }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_stopMusicFromPlaying
+
+        ------------------------------------------------------------------------ */
         internal bool CCM_fnc_stopMusicFromPlaying(GameObject _objectToStop)
         {
             AudioSource _objectAudioSource = _objectToStop.GetComponent<AudioSource>();
@@ -228,20 +235,47 @@ namespace creativeCommonsMusicProject
 
 
 
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_getAvailableTracks
 
-
-
-
-
-
-
-/*
-        //[PunRPC]
-        public void doAThing()
+        ------------------------------------------------------------------------ */
+        internal List<string> CCM_fnc_getAvailableTracks(string _objectName = "")
         {
-            
+            List<string> _listOfTracks = new List<string>();
+
+            //_objectName.Contains("dungeon")
+
+
+            // if no name exit
+            if (_objectName == "")
+            {
+                _listOfTracks.Add("");
+
+                
+            }
+            else
+            {
+
+            }
+
+            return _listOfTracks;
         }
-*/
+
+
+
+
+
+
+
+
+        /*
+                //[PunRPC]
+                public void doAThing()
+                {
+
+                }
+        */
 
         // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
         // need to find a way to end it, however.
@@ -391,6 +425,19 @@ BGM_EventMystery,
 BGM_RegionAntiquePlateau,
 BGM_RegionAntiquePlateauNIGHT,
 BGM_TownHarmattan
+
+//// music types:
+
+// region
+// region night
+// town 
+// town night
+// combat
+// dungeon
+// Cierzo
+// Cierzo night
+// Chersonese
+// Chersonese night
 */
 
 
