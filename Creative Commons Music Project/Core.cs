@@ -228,7 +228,6 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         private void CCM_onSceneLoaded(Scene _myScene)
         {
-            GameObject _mainMusicObject;
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
@@ -245,7 +244,42 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal GameObject CCM_fnc_findMainMusicObject(Scene _sceneToCheck)
         {
+            GameObject _mainMusicObject = null;
+            if (CCM_fnc_isSceneReal(_sceneToCheck))
+            {
+                // get music objects currently active in the scene
+                var _myList = CCM_fnc_findMusicObjectsInScene(true);
 
+                // Print list of music objects & their clips
+                // find music object to use for playing
+                CCM_fnc_logWithTime("Music Objects Found:");
+                bool _wasLooping, _wasPlaying;
+                foreach (var _x in _myList)
+                {
+                    // stop looping
+                    _wasLooping = CCM_fnc_stopMusicFromLooping(_x);
+
+                    // stop playing music
+                    _wasPlaying = CCM_fnc_stopMusicFromPlaying(_x);
+                    Logger.Log(LogLevel.Message, _x.name);
+                    Logger.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
+
+                    // if object was both playing and looping it would be the object that we can use to play music, so save it
+                    if (_wasLooping && _wasPlaying)
+                    {
+                        _mainMusicObject = _x;
+                        Logger.Log(LogLevel.Message, "Found a main music object: " + _mainMusicObject);
+                    }
+                }
+
+                // if main music object is not found
+                if (_mainMusicObject == null)
+                {
+                    CCM_fnc_logWithTime("_mainMusicObject is null, finding replacement...");
+                }
+            }
+
+            return _mainMusicObject;
         }
 
 
