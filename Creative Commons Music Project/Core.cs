@@ -14,21 +14,33 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
-    public class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
+    /*
+    internal class CCM_photonPlayer : PhotonPlayer
+    {
+        internal string currentScene = "";
+    }
+    */
+    internal class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
     {
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
-        public const string CCM_mainFolderPath = @"Mods\CCM Project";
-        public const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
-        public const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
-        public const string CCM_ambientDayFolderPath = CCM_mainFolderPath + @"\Ambient Day Tracks";
-        public const string CCM_cityFolderPath = CCM_mainFolderPath + @"\City Tracks";
-        public const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
+        // folder paths for user defined music
+        internal const string CCM_mainFolderPath = @"Mods\CCM Project";
+        internal const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
+        internal const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
+        internal const string CCM_ambientDayFolderPath = CCM_mainFolderPath + @"\Ambient Day Tracks";
+        internal const string CCM_cityFolderPath = CCM_mainFolderPath + @"\City Tracks";
+        internal const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
+
+        // used to keep track of each player's' current scene. dictionary is global and synced between all players
+        public Dictionary<PhotonPlayer, string> CCM_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
 
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
+        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
+
 
         // a list for storing the combat music object names as strings
         internal static List<string> CCM_combatMusicList = new List<string>();
@@ -57,7 +69,6 @@ namespace creativeCommonsMusicProject
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
             //Logger.Log(LogLevel.Message, "Hello world");
-
             SceneManager.sceneLoaded += CCM_onSceneLoaded;
             
             // fill combat music list
@@ -224,13 +235,8 @@ namespace creativeCommonsMusicProject
             // also runs combat music check
             StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
 
-
-            /*    
-            if (PhotonNetwork.isMasterClient)
-            {
-                GetComponent<PhotonView>().RPC("doAThing",PhotonTargets.MasterClient);
-            }
-            */
+            // tell server that player h
+            CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene",PhotonTargets.MasterClient,new object[] {_myScene.name, PhotonNetwork.player});
         }
 
 
@@ -264,35 +270,6 @@ namespace creativeCommonsMusicProject
 
 
 
-
-
-
-
-
-        /*
-                //[PunRPC]
-                public void doAThing()
-                {
-
-                }
-        */
-
-        // start a suspeneded while once a scene is loaded because it will only need to account for change upon scene transisition
-        // need to find a way to end it, however.
-        // could also just exec it at start and then just keep it running at intervals
-
-        // exec each frame
-        /*
-        void Update()
-        {
-            musicListCompare = (List<GameObject>)Resources.FindObjectsOfTypeAll<GameObject>()
-                    .Where(x => x.name.StartsWith("BGM_"));
-            if (CCM_fnc_areListsTheSame(musicList, musicListCompare)) {
-                musicList = musicListCompare;
-                Logger.Log(LogLevel.Message,"Found new music object");
-            }
-        }
-        */
 
         /*
         IEnumerator LoadMusic(string songPath)
@@ -343,6 +320,7 @@ namespace creativeCommonsMusicProject
         */
     }
 
+    
 }
 
 
@@ -363,7 +341,14 @@ namespace creativeCommonsMusicProject
  */
 
 
+/*
 
+    The Server should keep track of each active scene's song
+    
+    Active scenes can be told to the server by players by using scene onLoad event
+     to tell the server what they're active scene is
+
+*/
 
 
 

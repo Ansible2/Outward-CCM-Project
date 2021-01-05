@@ -1,11 +1,47 @@
-﻿namespace creativeCommonsMusicProject
+﻿using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using BepInEx;
+using BepInEx.Logging;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using Photon;
+using Photon.Realtime;
+
+namespace creativeCommonsMusicProject
 {
-    public class CCM_rpc
+    internal class CCM_rpc
     {
+        internal List<string> CCM_activeScenes = new List<string>();
+
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
         void myThing()
         {
             CCM_core.CCM_fnc_logWithTime();
+        }
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_changeActiveScene
+
+        ------------------------------------------------------------------------ */
+        [PunRPC]
+        internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
+        {
+            if (PhotonNetwork.isMasterClient)
+            {
+                
+            }
+        }
+    }
+
+    internal class CCM_getPhotonView : UnityEngine.MonoBehaviour
+    {
+        internal PhotonView CCM_photonView;
+        void Start()
+        {
+            CCM_photonView = GetComponent<PhotonView>();
         }
     }
 }

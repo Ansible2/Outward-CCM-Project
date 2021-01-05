@@ -109,8 +109,6 @@ namespace creativeCommonsMusicProject
                 if (_mainMusicObject == null)
                 {
                     CCM_core.CCM_fnc_logWithTime("_mainMusicObject is null, finding replacement...");
-
-
                 }
 
                 string _mainMusicObjectName = _mainMusicObject.name;
@@ -131,7 +129,6 @@ namespace creativeCommonsMusicProject
                     yield return new WaitForSeconds(0.1f);
                 }
 
-                //yield return new WaitUntil(() => !CCM_doRunCombatMusicCheck);
                 CCM_core.CCM_fnc_logWithTime("Reached combat music check");
                 // start combat music check loop
                 StartCoroutine(CCM_fnc_startCombatMusicIntercept());
