@@ -29,10 +29,7 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
         {
-            if (PhotonNetwork.isMasterClient)
-            {
-                
-            }
+            // either add or change dictionary entry
         }
     }
 

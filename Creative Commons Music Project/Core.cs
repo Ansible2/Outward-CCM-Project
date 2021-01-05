@@ -52,7 +52,7 @@ namespace creativeCommonsMusicProject
             CCM_fnc_logWithTime
 
         ------------------------------------------------------------------------ */
-        public void CCM_fnc_logWithTime(string myMessage = "")
+        internal void CCM_fnc_logWithTime(string myMessage = "")
         {
             Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
         }
@@ -226,19 +226,27 @@ namespace creativeCommonsMusicProject
             CCM_onSceneLoaded
 
         ------------------------------------------------------------------------ */
-        private void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode _mySceneMode)
+        private void CCM_onSceneLoaded(Scene _myScene)
         {
+            GameObject _mainMusicObject;
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
             // wait for loading to be done in a scheduled environment
             // also runs combat music check
             StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
-
-            // tell server that player h
-            CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene",PhotonTargets.MasterClient,new object[] {_myScene.name, PhotonNetwork.player});
         }
 
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_findMainMusicObject
+
+        ------------------------------------------------------------------------ */
+        internal GameObject CCM_fnc_findMainMusicObject(Scene _sceneToCheck)
+        {
+
+        }
 
 
         /* ------------------------------------------------------------------------

@@ -14,6 +14,7 @@ namespace creativeCommonsMusicProject
 {
     public class CCM_scheduled : BaseUnityPlugin
     {
+        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
         /* ------------------------------------------------------------------------
         
@@ -77,6 +78,18 @@ namespace creativeCommonsMusicProject
                     // sleep 1 second
                     yield return new WaitForSeconds(1);
                 }
+                // tell every machine that is connected about
+                if (CCM_core.CCM_fnc_isSceneReal(_myScene))
+                {
+                    CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene", PhotonTargets.AllViaServer, new object[] { _myScene.name, PhotonNetwork.player });
+                }
+
+
+
+                // need to replace with CCM_fnc_findMainMusicObject
+
+
+
                 CCM_core.CCM_fnc_logWithTime("Loading done. Searching for music objects...");
 
                 // get music objects currently active in the scene
