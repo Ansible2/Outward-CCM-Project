@@ -80,9 +80,13 @@ namespace creativeCommonsMusicProject
                 }
                 CCM_core.CCM_fnc_logWithTime("Loading done...");
 
-                // tell every machine that is connected about
+                // tell every machine that is connected about what scene the player is on
                 CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
-                CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene", PhotonTargets.AllViaServer, new object[] { _myScene.name, PhotonNetwork.player });
+                CCM_getPhotonView.CCM_photonView.RPC(
+                    "CCM_fnc_changeActiveScene",
+                    PhotonTargets.AllViaServer,
+                    new object[] { _myScene.name, PhotonNetwork.player }
+                );
 
 
                 // start music replace music
@@ -117,9 +121,12 @@ namespace creativeCommonsMusicProject
 
         /* ------------------------------------------------------------------------
         
-            CCM_fnc_waitForLoadingDone
+            CCM_fnc_loadAudioClip
 
         ------------------------------------------------------------------------ */
-        //internal IEnumerator CCM_fnc_waitForMusic
+        internal IEnumerator CCM_fnc_loadAudioClip(string _fliePath)
+        {
+
+        }
     }
 }

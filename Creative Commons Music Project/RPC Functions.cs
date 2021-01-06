@@ -15,6 +15,8 @@ namespace creativeCommonsMusicProject
     internal class CCM_rpc
     {
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
+        
+        
         /* ------------------------------------------------------------------------
         
             CCM_fnc_changeActiveScene
@@ -33,6 +35,19 @@ namespace creativeCommonsMusicProject
             {
                 CCM_core.CCM_dictionary_activePlayerScenes[_player] = _sceneName;
             }
+        }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_playMusic
+
+        ------------------------------------------------------------------------ */
+        [PunRPC]
+        internal void CCM_fnc_playMusic(GameObject _objectToPlayOn, AudioClip _clipToPlay)
+        {
+            _objectToPlayOn.GetComponent<AudioSource>().clip = _clipToPlay;
+            _objectToPlayOn.GetComponent<AudioSource>().Play();
         }
     }
 

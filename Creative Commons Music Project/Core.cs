@@ -43,6 +43,15 @@ namespace creativeCommonsMusicProject
         // used to keep track of each active scenes music track
         public static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
 
+        // music game objects we will use
+        public GameObject CCM_musicHandler_1 = new GameObject("CCM_musicHandler_1");
+        public GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
+
+        // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
+        // they need to be assigned the properties of a BGM game object
+        // this is done (ideally) on the first run of CCM_fnc_findMainMusicObject
+        public bool CCM_gameObjectPropsAssigned = false;
+
 
         /* ------------------------------------------------------------------------
         
@@ -199,29 +208,6 @@ namespace creativeCommonsMusicProject
         }
 
 
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_replaceAudio
-
-        ------------------------------------------------------------------------ */
-        internal bool CCM_fnc_replaceAudio(GameObject _objectToChange)
-        {
-            if (_objectToChange != null)
-            {
-                var _objectName = _objectToChange.name;
-                var _objectAudioClip = _objectToChange.GetComponent<AudioSource>().clip;
-
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
         /* ------------------------------------------------------------------------
         
             CCM_onSceneLoaded
@@ -277,6 +263,21 @@ namespace creativeCommonsMusicProject
                 if (_mainMusicObject == null)
                 {
                     CCM_fnc_logWithTime("_mainMusicObject is null, finding replacement...");
+                }
+                else
+                {
+                    // assign properties (if not already) to custom music objects
+                    if (!CCM_gameObjectPropsAssigned)
+                    {
+                        CCM_gameObjectPropsAssigned = true;
+                        // copy settings to our objects for playing music
+                        CCM_musicHandler_1 = Instantiate(_mainMusicObject);
+                        CCM_musicHandler_1.name = "CCM_musicHandler_1";
+                        CCM_musicHandler_2 = Instantiate(_mainMusicObject);
+                        CCM_musicHandler_2.name = "CCM_musicHandler_2";
+
+                        Logger.Log(LogLevel.Message, "Assigned CCM music handler objects the properties of " + _mainMusicObject);
+                    }
                 }
             }
 
