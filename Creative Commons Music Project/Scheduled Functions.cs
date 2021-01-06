@@ -85,7 +85,7 @@ namespace creativeCommonsMusicProject
                 CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene", PhotonTargets.AllViaServer, new object[] { _myScene.name, PhotonNetwork.player });
 
 
-                // replace music
+                // start music replace music
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
@@ -113,5 +113,13 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Skipped fake Scene: " + _mySceneName);
             }
         }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_waitForLoadingDone
+
+        ------------------------------------------------------------------------ */
+        //internal IEnumerator CCM_fnc_waitForMusic
     }
 }

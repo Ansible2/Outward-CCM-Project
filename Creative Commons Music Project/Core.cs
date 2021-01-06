@@ -29,9 +29,6 @@ namespace creativeCommonsMusicProject
         internal const string CCM_cityFolderPath = CCM_mainFolderPath + @"\City Tracks";
         internal const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
 
-        // used to keep track of each player's' current scene. dictionary is global and synced between all players
-        public static Dictionary<PhotonPlayer, string> CCM_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
-
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
@@ -41,6 +38,11 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_combatMusicList = new List<string>();
         // used for controlling the loop in CCM_fnc_startCombatMusicIntercept
         internal static bool CCM_doRunCombatMusicCheck = true;
+        // used to keep track of each player's' current scene. dictionary is global and synced between all players
+        public static Dictionary<PhotonPlayer, string> CCM_dictionary_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
+        // used to keep track of each active scenes music track
+        public static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
+
 
         /* ------------------------------------------------------------------------
         

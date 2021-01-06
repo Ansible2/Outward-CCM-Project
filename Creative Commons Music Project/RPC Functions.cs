@@ -14,14 +14,7 @@ namespace creativeCommonsMusicProject
 {
     internal class CCM_rpc
     {
-        internal List<string> CCM_activeScenes = new List<string>();
-
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
-        void myThing()
-        {
-            CCM_core.CCM_fnc_logWithTime();
-        }
-
         /* ------------------------------------------------------------------------
         
             CCM_fnc_changeActiveScene
@@ -30,15 +23,15 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
         {
-            bool _playerInDictionary = CCM_core.CCM_activePlayerScenes.ContainsKey(_player);
+            bool _playerInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsKey(_player);
             
             if (_playerInDictionary)
             {
-                CCM_core.CCM_activePlayerScenes.Add(_player, _sceneName);
+                CCM_core.CCM_dictionary_activePlayerScenes.Add(_player, _sceneName);
             }
             else
             {
-                CCM_core.CCM_activePlayerScenes[_player] = _sceneName;
+                CCM_core.CCM_dictionary_activePlayerScenes[_player] = _sceneName;
             }
         }
     }
