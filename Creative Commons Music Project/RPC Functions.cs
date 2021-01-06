@@ -21,6 +21,7 @@ namespace creativeCommonsMusicProject
         {
             CCM_core.CCM_fnc_logWithTime();
         }
+
         /* ------------------------------------------------------------------------
         
             CCM_fnc_changeActiveScene
@@ -29,10 +30,21 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
         {
-            // either add or change dictionary entry
+            bool _playerInDictionary = CCM_core.CCM_activePlayerScenes.ContainsKey(_player);
+            
+            if (_playerInDictionary)
+            {
+                CCM_core.CCM_activePlayerScenes.Add(_player, _sceneName);
+            }
+            else
+            {
+                CCM_core.CCM_activePlayerScenes[_player] = _sceneName;
+            }
         }
     }
 
+
+    // simply used as a reference in other files to the photon view needed for RPCs
     internal class CCM_getPhotonView : UnityEngine.MonoBehaviour
     {
         internal PhotonView CCM_photonView;

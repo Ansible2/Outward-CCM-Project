@@ -14,12 +14,7 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
-    /*
-    internal class CCM_photonPlayer : PhotonPlayer
-    {
-        internal string currentScene = "";
-    }
-    */
+
     internal class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
     {
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
@@ -35,7 +30,7 @@ namespace creativeCommonsMusicProject
         internal const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
 
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
-        public Dictionary<PhotonPlayer, string> CCM_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
+        public static Dictionary<PhotonPlayer, string> CCM_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
 
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
@@ -86,6 +81,7 @@ namespace creativeCommonsMusicProject
             CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
             CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
         }
+        
 
         /* ------------------------------------------------------------------------
         
@@ -97,7 +93,10 @@ namespace creativeCommonsMusicProject
             var _name = _scene.name.ToLower();
             Logger.Log(LogLevel.Message, "Checking scene: " + _name);
 
-            return (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
+            bool _isSceneReal = (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
+            Logger.Log(LogLevel.Message, "Scene real? " + _isSceneReal);
+
+            return _isSceneReal;
         }
 
 
@@ -272,7 +271,7 @@ namespace creativeCommonsMusicProject
                     }
                 }
 
-                // if main music object is not found
+                // if main music object is not found select an object
                 if (_mainMusicObject == null)
                 {
                     CCM_fnc_logWithTime("_mainMusicObject is null, finding replacement...");

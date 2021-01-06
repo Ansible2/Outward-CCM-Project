@@ -78,32 +78,21 @@ namespace creativeCommonsMusicProject
                     // sleep 1 second
                     yield return new WaitForSeconds(1);
                 }
-
+                CCM_core.CCM_fnc_logWithTime("Loading done...");
 
                 // tell every machine that is connected about
-                if (CCM_core.CCM_fnc_isSceneReal(_myScene))
-                {
-                    CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene", PhotonTargets.AllViaServer, new object[] { _myScene.name, PhotonNetwork.player });
-                }
+                CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
+                CCM_getPhotonView.CCM_photonView.RPC("CCM_fnc_changeActiveScene", PhotonTargets.AllViaServer, new object[] { _myScene.name, PhotonNetwork.player });
 
 
-
-                // need to replace with CCM_fnc_findMainMusicObject
-
-
-
-                CCM_core.CCM_fnc_logWithTime("Loading done. Searching for music objects...");
-
+                // replace music
+                CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
-                
-
                 string _mainMusicObjectName = _mainMusicObject.name;
-
                 List<string> _possibleTracks = CCM_core.CCM_fnc_getAvailableTracks(_mainMusicObjectName);
 
 
-
-                // start replace audio here using _myList
+                
 
 
 
