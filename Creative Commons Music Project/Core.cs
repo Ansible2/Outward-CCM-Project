@@ -53,6 +53,11 @@ namespace creativeCommonsMusicProject
         public bool CCM_gameObjectPropsAssigned = false;
 
 
+
+
+
+
+
         /* ------------------------------------------------------------------------
         
             CCM_fnc_logWithTime
@@ -91,6 +96,11 @@ namespace creativeCommonsMusicProject
             CCM_combatMusicList.Add("BGM_CombatDungeonFactory(Clone)");
             CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
             CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
+
+
+
+            // need to find and load all clips inside of the corresponding folders
+            // then they can be kept track of
         }
         
 
@@ -213,7 +223,7 @@ namespace creativeCommonsMusicProject
             CCM_onSceneLoaded
 
         ------------------------------------------------------------------------ */
-        private void CCM_onSceneLoaded(Scene _myScene)
+        void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode mode)
         {
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
@@ -292,28 +302,91 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal List<string> CCM_fnc_getAvailableTracks(string _objectName = "")
         {
+            _objectName = _objectName.ToLower();
             List<string> _listOfTracks = new List<string>();
 
-            //_objectName.Contains("dungeon")
+            // need to build up lists of all track types in awake function
+            // then check the game object against these lists to find a track
 
+            
+            // if a name exits
+            if (_objectName != "")
+            {   
+                // dungeon
+                if (_objectName.Contains("dungeon"))
+                {
+                    CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for dungeons");
+                }
+                // combat
+                else if (_objectName.Contains("combat"))
+                {
+                    CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for combat");
+                }
+                // ambient
+                else if (_objectName.Contains("region") || _objectName.Contains("chersonese"))
+                {
+                    // ambient night
+                    if (_objectName.Contains("night"))
+                    {
+                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for ambient night");
+                    }
+                    else
+                    {
+                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for ambient day");
+                    }
+                    
+                }
+                // towns
+                else if (_objectName.Contains("town") || _objectName.Contains("cierzo"))
+                {
+                    // town night
+                    if (_objectName.Contains("night"))
+                    {
+                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for towns day");
+                    }
+                    else
+                    {
+                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for towns night");
+                    }
 
-            // if no name exit
-            if (_objectName == "")
-            {
-                _listOfTracks.Add("");
-
-                
+                }
+                // default
+                else
+                {
+                    CCM_fnc_logWithTime("Found object " + _objectName + " did not match any section of tracks (deeper)");
+                    // add empty string to not break follow on functions
+                    _listOfTracks.Add("");
+                }
             }
             else
             {
-
+                CCM_fnc_logWithTime("Found object " + _objectName + " did not match any section of tracks");
+                // add empty string to not break follow on functions
+                _listOfTracks.Add("");
             }
 
             return _listOfTracks;
         }
 
 
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_findMusicPaths
 
+        ------------------------------------------------------------------------ */
+        internal List<string> CCM_fnc_findMusicPaths(string _folderToSearch)
+        {
+            string[] _files = Directory.GetFiles(_folderToSearch, "*.ogg");
+            var _returnList = new List<string>(_files);
+            //List<string> _returnList = _files.ToList();
+
+            if (_returnList.Count() < 1)
+            {
+                CCM_fnc_logWithTime("File path " + _folderToSearch + " returned no files!");
+            }
+
+            return _returnList;
+        }
 
         /*
         IEnumerator LoadMusic(string songPath)
@@ -364,7 +437,7 @@ namespace creativeCommonsMusicProject
         */
     }
 
-    
+
 }
 
 
