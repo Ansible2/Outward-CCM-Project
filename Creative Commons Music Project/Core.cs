@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,34 +27,64 @@ namespace creativeCommonsMusicProject
         internal const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
         internal const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
         internal const string CCM_ambientDayFolderPath = CCM_mainFolderPath + @"\Ambient Day Tracks";
-        internal const string CCM_cityFolderPath = CCM_mainFolderPath + @"\City Tracks";
+        internal const string CCM_townFolderPath = CCM_mainFolderPath + @"\Town Tracks";
         internal const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
 
+        // lists for keeping track of already played music to avoid playing it again frequently if possible
+        // these will contain file names for the music
+        internal static List<string> CCM_usedCombatTracks = new List<string>();
+        internal static List<string> CCM_usedAmbientNightTracks = new List<string>();
+        internal static List<string> CCM_usedAmbientDayTracks = new List<string>();
+        internal static List<string> CCM_usedTownTracks = new List<string>();
+        internal static List<string> CCM_usedDungeonTracks = new List<string>();
+
+        // these will contain unused file names of music
+        internal static List<string> CCM_combatTracks = new List<string>();
+        internal static List<string> CCM_ambientNightTracks = new List<string>();
+        internal static List<string> CCM_ambientDayTracks = new List<string>();
+        internal static List<string> CCM_townTracks = new List<string>();
+        internal static List<string> CCM_dungeonTracks = new List<string>();
+
+        internal enum CCM_currentTrackType 
+        {
+            combat,
+            ambientNight,
+            ambientDay,
+            town,
+            dungeon
+        };
+
+        // for accessing classes in other files
         CCM_rpc CCM_rpc = new CCM_rpc();
         CCM_scheduled CCM_scheduled = new CCM_scheduled();
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
 
 
         // a list for storing the combat music object names as strings
+        // this is to be able to detect when one is created
         internal static List<string> CCM_combatMusicList = new List<string>();
+        
         // used for controlling the loop in CCM_fnc_startCombatMusicIntercept
         internal static bool CCM_doRunCombatMusicCheck = true;
+        
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
+        // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
         public static Dictionary<PhotonPlayer, string> CCM_dictionary_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
+        
         // used to keep track of each active scenes music track
         public static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
 
-        // music game objects we will use
+        // music game objects we will use to actually play music
         public GameObject CCM_musicHandler_1 = new GameObject("CCM_musicHandler_1");
         public GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
 
         // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
-        // they need to be assigned the properties of a BGM game object
+        // they need to be assigned the properties of a BGM (Background Music) game object
         // this is done (ideally) on the first run of CCM_fnc_findMainMusicObject
         public bool CCM_gameObjectPropsAssigned = false;
 
 
-
+        public static System.Random CCM_getRandom = new System.Random();
 
 
 
@@ -97,10 +128,13 @@ namespace creativeCommonsMusicProject
             CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
             CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
 
+            // collect all filenames from the folders
+            CCM_combatTracks = CCM_fnc_findMusicPaths(CCM_combatFolderPath);
+            CCM_ambientNightTracks = CCM_fnc_findMusicPaths(CCM_ambientNightFolderPath);
+            CCM_ambientDayTracks = CCM_fnc_findMusicPaths(CCM_ambientDayFolderPath);
+            CCM_townTracks = CCM_fnc_findMusicPaths(CCM_townFolderPath);
+            CCM_dungeonTracks = CCM_fnc_findMusicPaths(CCM_dungeonFolderPath);
 
-
-            // need to find and load all clips inside of the corresponding folders
-            // then they can be kept track of
         }
         
 
@@ -297,10 +331,10 @@ namespace creativeCommonsMusicProject
 
         /* ------------------------------------------------------------------------
         
-            CCM_fnc_getAvailableTracks
+            CCM_fnc_getAllAVailableTrackForScene
 
         ------------------------------------------------------------------------ */
-        internal List<string> CCM_fnc_getAvailableTracks(string _objectName = "")
+        internal List<string> CCM_fnc_getAllAVailableTrackForScene(string _objectName = "")
         {
             _objectName = _objectName.ToLower();
             List<string> _listOfTracks = new List<string>();
@@ -308,19 +342,34 @@ namespace creativeCommonsMusicProject
             // need to build up lists of all track types in awake function
             // then check the game object against these lists to find a track
 
-            
+            var _logString = "Found object " + _objectName + " matched tracks for ";
             // if a name exits
             if (_objectName != "")
             {   
                 // dungeon
                 if (_objectName.Contains("dungeon"))
                 {
-                    CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for dungeons");
+                    CCM_fnc_logWithTime(_logString + "dungeons");
+                    // if all tracks are used up
+                    if (CCM_dungeonTracks.Count() < 1)
+                    {
+                        CCM_dungeonTracks = new List<string>(CCM_usedDungeonTracks);
+                        CCM_usedDungeonTracks.Clear();
+                    }
+
+                    _listOfTracks = CCM_dungeonTracks;
                 }
                 // combat
                 else if (_objectName.Contains("combat"))
                 {
-                    CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for combat");
+                    CCM_fnc_logWithTime(_logString + "combat");
+                    if (CCM_combatTracks.Count() < 1)
+                    {
+                        CCM_combatTracks = new List<string>(CCM_usedCombatTracks);
+                        CCM_usedCombatTracks.Clear();
+                    }
+
+                    _listOfTracks = CCM_combatTracks;
                 }
                 // ambient
                 else if (_objectName.Contains("region") || _objectName.Contains("chersonese"))
@@ -328,11 +377,25 @@ namespace creativeCommonsMusicProject
                     // ambient night
                     if (_objectName.Contains("night"))
                     {
-                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for ambient night");
+                        CCM_fnc_logWithTime(_logString + "ambient night");
+                        if (CCM_ambientNightTracks.Count() < 1)
+                        {
+                            CCM_ambientNightTracks = new List<string>(CCM_usedAmbientNightTracks);
+                            CCM_usedAmbientNightTracks.Clear();
+                        }
+
+                        _listOfTracks = CCM_ambientNightTracks;
                     }
                     else
                     {
-                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for ambient day");
+                        CCM_fnc_logWithTime(_logString + "ambient day");
+                        if (CCM_ambientDayTracks.Count() < 1)
+                        {
+                            CCM_ambientDayTracks = new List<string>(CCM_usedAmbientDayTracks);
+                            CCM_usedAmbientDayTracks.Clear();
+                        }
+
+                        _listOfTracks = CCM_ambientDayTracks;
                     }
                     
                 }
@@ -342,25 +405,33 @@ namespace creativeCommonsMusicProject
                     // town night
                     if (_objectName.Contains("night"))
                     {
-                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for towns day");
+                        CCM_fnc_logWithTime(_logString + "towns night");
                     }
                     else
                     {
-                        CCM_fnc_logWithTime("Found object " + _objectName + " matched tracks for towns night");
+                        CCM_fnc_logWithTime(_logString + "towns day");
                     }
+
+                    if (CCM_townTracks.Count() < 1)
+                    {
+                        CCM_townTracks = new List<string>(CCM_usedTownTracks);
+                        CCM_usedTownTracks.Clear();
+                    }
+
+                    _listOfTracks = CCM_townTracks;
 
                 }
                 // default
                 else
                 {
-                    CCM_fnc_logWithTime("Found object " + _objectName + " did not match any section of tracks (deeper)");
+                    CCM_fnc_logWithTime(_logString + "NOTHING DEEPER");
                     // add empty string to not break follow on functions
                     _listOfTracks.Add("");
                 }
             }
             else
             {
-                CCM_fnc_logWithTime("Found object " + _objectName + " did not match any section of tracks");
+                CCM_fnc_logWithTime(_logString + "NOTHING");
                 // add empty string to not break follow on functions
                 _listOfTracks.Add("");
             }
@@ -387,6 +458,32 @@ namespace creativeCommonsMusicProject
 
             return _returnList;
         }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_selectTrackToPlay
+
+        ------------------------------------------------------------------------ */
+        internal string CCM_fnc_selectTrackToPlay(List<string> _trackList)
+        {
+            string _trackFilename = "";
+
+            if (_trackList.Count() < 1)
+            {
+                CCM_fnc_logWithTime("_trackList is empty!");
+            }
+            else
+            {
+                int _randomIndex = CCM_getRandom.Next(_trackList.Count());
+                _trackFilename = _trackList.ElementAt(_randomIndex);
+                _trackList.RemoveAt(_randomIndex);
+            }
+
+            return _trackFilename;
+        }
+
+
 
         /*
         IEnumerator LoadMusic(string songPath)

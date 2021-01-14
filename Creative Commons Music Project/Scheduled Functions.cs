@@ -76,7 +76,7 @@ namespace creativeCommonsMusicProject
                 {
                     CCM_core.CCM_fnc_logWithTime("waiting for loading...");
                     // sleep 1 second
-                    yield return new WaitForSeconds(1);
+                    yield return new WaitForSeconds(0.1f);
                 }
                 CCM_core.CCM_fnc_logWithTime("Loading done...");
 
@@ -93,7 +93,7 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
-                List<string> _possibleTracks = CCM_core.CCM_fnc_getAvailableTracks(_mainMusicObjectName);
+                List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
 
 
                 
