@@ -12,7 +12,7 @@ using Photon.Realtime;
 
 namespace creativeCommonsMusicProject
 {
-    public class CCM_scheduled : BaseUnityPlugin
+    internal class CCM_scheduled : BaseUnityPlugin
     {
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
@@ -94,7 +94,9 @@ namespace creativeCommonsMusicProject
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
+                var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
+                var _clip = CCM_fnc_loadAudioClip(_trackFilePath);
 
                 
 
@@ -126,8 +128,24 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal IEnumerator CCM_fnc_loadAudioClip(string _fliePath)
         {
+            WWW _clipRequest = CCM_fnc_getAudioClip(_fliePath);
+            yield return _clipRequest;
 
+            AudioClip _audioClip = _clipRequest.GetAudioClip();
         }
+
+
+        /* ------------------------------------------------------------------------
         
+            CCM_fnc_getAudioClip
+
+        ------------------------------------------------------------------------ */
+        internal WWW CCM_fnc_getAudioClip(string _fliePath)
+        {
+            _fliePath = CCM_core.CCM_filePathStart + _fliePath;
+            WWW request = new WWW(_fliePath);
+
+            return request;
+        }
     }
 }

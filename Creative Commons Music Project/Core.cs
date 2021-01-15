@@ -23,6 +23,7 @@ namespace creativeCommonsMusicProject
         const string VERSION = "1.0";
 
         // folder paths for user defined music
+        internal const string CCM_filePathStart = "file://";
         internal const string CCM_mainFolderPath = @"Mods\CCM Project";
         internal const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
         internal const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
@@ -45,7 +46,7 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_townTracks = new List<string>();
         internal static List<string> CCM_dungeonTracks = new List<string>();
 
-        internal enum CCM_currentTrackType 
+        internal enum CCM_trackTypes_enum
         {
             combat,
             ambientNight,
@@ -53,6 +54,10 @@ namespace creativeCommonsMusicProject
             town,
             dungeon
         };
+
+        internal int CCM_currentTrackType = -1;
+
+        //internal string CCM_currentTrackType = CCM_trackTypes_enum.ambientDay.ToString();
 
         // for accessing classes in other files
         CCM_rpc CCM_rpc = new CCM_rpc();
@@ -87,7 +92,7 @@ namespace creativeCommonsMusicProject
         public static System.Random CCM_getRandom = new System.Random();
 
 
-
+        
 
         /* ------------------------------------------------------------------------
         
@@ -357,6 +362,7 @@ namespace creativeCommonsMusicProject
                         CCM_usedDungeonTracks.Clear();
                     }
 
+                    CCM_currentTrackType = (int) CCM_trackTypes_enum.dungeon;
                     _listOfTracks = CCM_dungeonTracks;
                 }
                 // combat
@@ -369,6 +375,7 @@ namespace creativeCommonsMusicProject
                         CCM_usedCombatTracks.Clear();
                     }
 
+                    CCM_currentTrackType = (int)CCM_trackTypes_enum.combat;
                     _listOfTracks = CCM_combatTracks;
                 }
                 // ambient
@@ -384,6 +391,7 @@ namespace creativeCommonsMusicProject
                             CCM_usedAmbientNightTracks.Clear();
                         }
 
+                        CCM_currentTrackType = (int)CCM_trackTypes_enum.ambientNight;
                         _listOfTracks = CCM_ambientNightTracks;
                     }
                     else
@@ -395,6 +403,7 @@ namespace creativeCommonsMusicProject
                             CCM_usedAmbientDayTracks.Clear();
                         }
 
+                        CCM_currentTrackType = (int)CCM_trackTypes_enum.ambientDay;
                         _listOfTracks = CCM_ambientDayTracks;
                     }
                     
@@ -418,6 +427,7 @@ namespace creativeCommonsMusicProject
                         CCM_usedTownTracks.Clear();
                     }
 
+                    CCM_currentTrackType = (int)CCM_trackTypes_enum.town;
                     _listOfTracks = CCM_townTracks;
 
                 }
@@ -426,12 +436,16 @@ namespace creativeCommonsMusicProject
                 {
                     CCM_fnc_logWithTime(_logString + "NOTHING DEEPER");
                     // add empty string to not break follow on functions
+
+                    CCM_currentTrackType = -1;
                     _listOfTracks.Add("");
                 }
             }
             else
             {
                 CCM_fnc_logWithTime(_logString + "NOTHING");
+
+                CCM_currentTrackType = -1;
                 // add empty string to not break follow on functions
                 _listOfTracks.Add("");
             }
@@ -467,7 +481,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal string CCM_fnc_selectTrackToPlay(List<string> _trackList)
         {
-            string _trackFilename = "";
+            string _trackFilePath = "";
 
             if (_trackList.Count() < 1)
             {
@@ -476,11 +490,12 @@ namespace creativeCommonsMusicProject
             else
             {
                 int _randomIndex = CCM_getRandom.Next(_trackList.Count());
-                _trackFilename = _trackList.ElementAt(_randomIndex);
+                _trackFilePath = _trackList.ElementAt(_randomIndex);
                 _trackList.RemoveAt(_randomIndex);
             }
 
-            return _trackFilename;
+
+            return _trackFilePath;
         }
 
 
