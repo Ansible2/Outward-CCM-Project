@@ -126,14 +126,16 @@ namespace creativeCommonsMusicProject
             CCM_fnc_loadAudioClip
 
         ------------------------------------------------------------------------ */
-        internal void CCM_fnc_loadAudioClip(string _filePath = "")
+        internal IEnumerator CCM_fnc_loadAudioClip(string _filePath = "")
         {
             //string _filePath = "";
             var _formattedPath = CCM_core.CCM_filePathStart + _filePath;
 
-            /*
+            
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
             {
+                //CCM_core CCM_core = new CCM_core();
+
                 www.SendWebRequest();
 
                 while (!www.isDone)
@@ -150,8 +152,14 @@ namespace creativeCommonsMusicProject
                 var name = Path.GetFileNameWithoutExtension(_filePath);
                 var clip = DownloadHandlerAudioClip.GetContent(www);
                 GameObject.DontDestroyOnLoad(clip);
+
+                GameObject _musicObjectToPlayOn = CCM_core.CCM_fnc_getMusicHandler();
+                AudioSource _objectAudioSource = _musicObjectToPlayOn.GetComponent<AudioSource>();
+                _objectAudioSource.clip = clip;
+
+                _objectAudioSource.Play();
             }
-            */
+            
         }
     }
 }

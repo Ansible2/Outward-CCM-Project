@@ -87,7 +87,7 @@ namespace creativeCommonsMusicProject
 
         // music game objects we will use to actually play music
         public GameObject CCM_musicHandler_1 = new GameObject("CCM_musicHandler_1");
-        public GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
+        public static GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
 
         // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
         // they need to be assigned the properties of a BGM (Background Music) game object
@@ -508,6 +508,26 @@ namespace creativeCommonsMusicProject
 
 
             return _trackFilePath;
+        }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_getMusicHandler
+
+        ------------------------------------------------------------------------ */
+        internal GameObject CCM_fnc_getMusicHandler()
+        {
+            AudioSource _objectAudioSource = CCM_musicHandler_1.GetComponent<AudioSource>();
+            bool _isPlaying = _objectAudioSource.isPlaying;
+            if (_isPlaying)
+            {
+                return CCM_musicHandler_2;
+            }
+            else
+            {
+                return CCM_musicHandler_1;
+            }
         }
 
 
