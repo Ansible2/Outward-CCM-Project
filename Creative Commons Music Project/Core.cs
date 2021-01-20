@@ -18,18 +18,18 @@ namespace creativeCommonsMusicProject
 
     internal class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
     {
+        /* ------------------------------------------------------------------------
+        
+            Create Globals
+
+        ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
         // folder paths for user defined music
         internal const string CCM_filePathStart = "file://";
-        internal const string CCM_mainFolderPath = @"Mods\CCM Project";
-        internal const string CCM_combatFolderPath = CCM_mainFolderPath + @"\Combat Tracks";
-        internal const string CCM_ambientNightFolderPath = CCM_mainFolderPath + @"\Ambient Night Tracks";
-        internal const string CCM_ambientDayFolderPath = CCM_mainFolderPath + @"\Ambient Day Tracks";
-        internal const string CCM_townFolderPath = CCM_mainFolderPath + @"\Town Tracks";
-        internal const string CCM_dungeonFolderPath = CCM_mainFolderPath + @"\Dungeon Tracks";
+        
 
         // lists for keeping track of already played music to avoid playing it again frequently if possible
         // these will contain file names for the music
@@ -46,6 +46,14 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_townTracks = new List<string>();
         internal static List<string> CCM_dungeonTracks = new List<string>();
 
+        // folder path constants
+        internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
+        internal static readonly string CCM_combatFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Combat Tracks");
+        internal static readonly string CCM_ambientNightFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Ambient Night Tracks");
+        internal static readonly string CCM_ambientDayFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Ambient Day Tracks");
+        internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
+        internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
+
         internal enum CCM_trackTypes_enum
         {
             combat,
@@ -56,8 +64,6 @@ namespace creativeCommonsMusicProject
         };
 
         internal int CCM_currentTrackType = -1;
-
-        //internal string CCM_currentTrackType = CCM_trackTypes_enum.ambientDay.ToString();
 
         // for accessing classes in other files
         CCM_rpc CCM_rpc = new CCM_rpc();
@@ -133,13 +139,14 @@ namespace creativeCommonsMusicProject
             CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
             CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
 
-            // collect all filenames from the folders
-            CCM_combatTracks = CCM_fnc_findMusicPaths(CCM_combatFolderPath);
-            CCM_ambientNightTracks = CCM_fnc_findMusicPaths(CCM_ambientNightFolderPath);
-            CCM_ambientDayTracks = CCM_fnc_findMusicPaths(CCM_ambientDayFolderPath);
-            CCM_townTracks = CCM_fnc_findMusicPaths(CCM_townFolderPath);
-            CCM_dungeonTracks = CCM_fnc_findMusicPaths(CCM_dungeonFolderPath);
+                             
 
+            // collect all filenames from the folders
+            CCM_combatTracks = CCM_fnc_findMusicAtPath(CCM_combatFolderPath);
+            CCM_ambientNightTracks = CCM_fnc_findMusicAtPath(CCM_ambientNightFolderPath);
+            CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
+            CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
+            CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
         }
         
 
@@ -459,15 +466,20 @@ namespace creativeCommonsMusicProject
             CCM_fnc_findMusicPaths
 
         ------------------------------------------------------------------------ */
-        internal List<string> CCM_fnc_findMusicPaths(string _folderToSearch)
+        internal List<string> CCM_fnc_findMusicAtPath(string _folderPathToSearch)
         {
-            string[] _files = Directory.GetFiles(_folderToSearch, "*.ogg");
+            if (!Directory.Exists(_folderPathToSearch))
+            {
+                CCM_fnc_logWithTime("Folder path " + _folderPathToSearch + " does not exist!");
+            };
+
+            string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
             var _returnList = new List<string>(_files);
             //List<string> _returnList = _files.ToList();
 
             if (_returnList.Count() < 1)
             {
-                CCM_fnc_logWithTime("File path " + _folderToSearch + " returned no files!");
+                CCM_fnc_logWithTime("File path " + _folderPathToSearch + " returned no files!");
             }
 
             return _returnList;

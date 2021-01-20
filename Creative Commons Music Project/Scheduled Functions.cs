@@ -96,7 +96,7 @@ namespace creativeCommonsMusicProject
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
                 var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
-                var _clip = CCM_fnc_loadAudioClip(_trackFilePath);
+                CCM_fnc_loadAudioClip(_trackFilePath);
 
                 
 
@@ -126,26 +126,32 @@ namespace creativeCommonsMusicProject
             CCM_fnc_loadAudioClip
 
         ------------------------------------------------------------------------ */
-        internal IEnumerator CCM_fnc_loadAudioClip(string _fliePath)
+        internal void CCM_fnc_loadAudioClip(string _filePath = "")
         {
-            WWW _clipRequest = CCM_fnc_getAudioClip(_fliePath);
-            yield return _clipRequest;
+            //string _filePath = "";
+            var _formattedPath = CCM_core.CCM_filePathStart + _filePath;
 
-            AudioClip _audioClip = _clipRequest.GetAudioClip();
-        }
+            /*
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
+            {
+                www.SendWebRequest();
 
+                while (!www.isDone)
+                {
+                    yield return null;
+                }
 
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_getAudioClip
+                if (www.error != null)
+                {
+                    Debug.Log(www.error);
+                    yield break;
+                }
 
-        ------------------------------------------------------------------------ */
-        internal WWW CCM_fnc_getAudioClip(string _fliePath)
-        {
-            _fliePath = CCM_core.CCM_filePathStart + _fliePath;
-            WWW request = new WWW(_fliePath);
-
-            return request;
+                var name = Path.GetFileNameWithoutExtension(_filePath);
+                var clip = DownloadHandlerAudioClip.GetContent(www);
+                GameObject.DontDestroyOnLoad(clip);
+            }
+            */
         }
     }
 }
