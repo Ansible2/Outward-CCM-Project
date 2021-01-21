@@ -12,7 +12,8 @@ using Photon.Realtime;
 
 namespace creativeCommonsMusicProject
 {
-    internal class CCM_scheduled : BaseUnityPlugin
+
+    internal class CCM_scheduled : BaseUnityPlugin  
     {
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
@@ -21,8 +22,12 @@ namespace creativeCommonsMusicProject
             CCM_fnc_startCombatMusicIntercept
 
         ------------------------------------------------------------------------ */
-        internal IEnumerator CCM_fnc_startCombatMusicIntercept()
+        internal static IEnumerator CCM_fnc_startCombatMusicIntercept()
         {
+            CCM_core CCM_core = new CCM_core();
+            ManualLogSource Logg = new ManualLogSource("myLog");
+
+
             CCM_core.CCM_fnc_logWithTime("Started combat music check");
 
             // create 2 lists for finding changes and comapring
@@ -36,8 +41,8 @@ namespace creativeCommonsMusicProject
 
                 // update comparison list
                 _musicListCompare = CCM_core.CCM_fnc_findMusicObjectsInScene();
-                Logger.Log(LogLevel.Message, _musicListCompare.Count);
-                Logger.Log(LogLevel.Message, _musicList.Count);
+                Logg.Log(LogLevel.Message, _musicListCompare.Count);
+                Logg.Log(LogLevel.Message, _musicList.Count);
 
                 // check if any new (combat) music objects were created
                 if (!CCM_core.CCM_fnc_areListsTheSame(_musicList, _musicListCompare))
@@ -82,6 +87,7 @@ namespace creativeCommonsMusicProject
 
                 // tell every machine that is connected about what scene the player is on
                 CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
+                
                 CCM_getPhotonView.CCM_photonView.RPC(
                     "CCM_fnc_changeActiveScene",
                     PhotonTargets.AllViaServer,
@@ -96,8 +102,8 @@ namespace creativeCommonsMusicProject
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
                 var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
-                CCM_fnc_loadAudioClip(_trackFilePath);
-
+                CCM_fnc_loadAndPlayAudioClip(_trackFilePath);
+                
                 
 
 
@@ -123,10 +129,10 @@ namespace creativeCommonsMusicProject
 
         /* ------------------------------------------------------------------------
         
-            CCM_fnc_loadAudioClip
+            CCM_fnc_loadAndPlayAudioClip
 
         ------------------------------------------------------------------------ */
-        internal IEnumerator CCM_fnc_loadAudioClip(string _filePath = "")
+        internal IEnumerator CCM_fnc_loadAndPlayAudioClip(string _filePath)
         {
             //string _filePath = "";
             var _formattedPath = CCM_core.CCM_filePathStart + _filePath;

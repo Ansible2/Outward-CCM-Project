@@ -11,7 +11,7 @@ using Photon;
 using Photon.Realtime;
 
 namespace creativeCommonsMusicProject
-{
+{   
     internal class CCM_rpc
     {
         CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
@@ -38,6 +38,7 @@ namespace creativeCommonsMusicProject
         }
 
 
+
         /* ------------------------------------------------------------------------
         
             CCM_fnc_playMusic
@@ -50,7 +51,7 @@ namespace creativeCommonsMusicProject
             _objectToPlayOn.GetComponent<AudioSource>().Play();
         }
     }
-
+    
 
     // simply used as a reference in other files to the photon view needed for RPCs
     internal class CCM_getPhotonView : UnityEngine.MonoBehaviour

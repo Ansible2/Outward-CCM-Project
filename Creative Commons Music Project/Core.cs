@@ -23,13 +23,19 @@ namespace creativeCommonsMusicProject
             Create Globals
 
         ------------------------------------------------------------------------ */
-        const string ID = "com.Ansible2.CCMproject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
+        const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
+
+        // for accessing classes in other files
+        //CCM_rpc CCM_rpc = new CCM_rpc();
+        //CCM_scheduled CCM_scheduled = new CCM_scheduled();
+        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
+
+
         // folder paths for user defined music
         internal const string CCM_filePathStart = "file://";
-        
 
         // lists for keeping track of already played music to avoid playing it again frequently if possible
         // these will contain file names for the music
@@ -65,12 +71,6 @@ namespace creativeCommonsMusicProject
 
         internal int CCM_currentTrackType = -1;
 
-        // for accessing classes in other files
-        CCM_rpc CCM_rpc = new CCM_rpc();
-        CCM_scheduled CCM_scheduled = new CCM_scheduled();
-        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
-
-
         // a list for storing the combat music object names as strings
         // this is to be able to detect when one is created
         internal static List<string> CCM_combatMusicList = new List<string>();
@@ -87,7 +87,7 @@ namespace creativeCommonsMusicProject
 
         // music game objects we will use to actually play music
         public GameObject CCM_musicHandler_1 = new GameObject("CCM_musicHandler_1");
-        public static GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
+        public GameObject CCM_musicHandler_2 = new GameObject("CCM_musicHandler_2");
 
         // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
         // they need to be assigned the properties of a BGM (Background Music) game object
@@ -96,19 +96,8 @@ namespace creativeCommonsMusicProject
 
 
         public static System.Random CCM_getRandom = new System.Random();
-
-
         
 
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_logWithTime
-
-        ------------------------------------------------------------------------ */
-        internal void CCM_fnc_logWithTime(string myMessage = "")
-        {
-            Logger.Log(LogLevel.Message,Time.time + "--: " + myMessage);
-        }
         
 
         /* ------------------------------------------------------------------------
@@ -118,10 +107,13 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
+
+            Logger.Log(LogLevel.Message, "Hello world");
+            
             // This is your entry-point for your mod.
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
-            //Logger.Log(LogLevel.Message, "Hello world");
+            
             SceneManager.sceneLoaded += CCM_onSceneLoaded;
             
             // fill combat music list
@@ -147,8 +139,20 @@ namespace creativeCommonsMusicProject
             CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
             CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
             CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
+            
         }
+
+
+        /* ------------------------------------------------------------------------
         
+            CCM_fnc_logWithTime
+
+        ------------------------------------------------------------------------ */
+        internal void CCM_fnc_logWithTime(string myMessage = "")
+        {
+            Logger.Log(LogLevel.Message, Time.time + "--: " + myMessage);
+        }
+
 
         /* ------------------------------------------------------------------------
         
@@ -276,7 +280,7 @@ namespace creativeCommonsMusicProject
 
             // wait for loading to be done in a scheduled environment
             // also runs combat music check
-            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
         }
 
 
@@ -468,18 +472,21 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal List<string> CCM_fnc_findMusicAtPath(string _folderPathToSearch)
         {
+            List<string> _returnList = new List<string>();
+
             if (!Directory.Exists(_folderPathToSearch))
             {
                 CCM_fnc_logWithTime("Folder path " + _folderPathToSearch + " does not exist!");
-            };
-
-            string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-            var _returnList = new List<string>(_files);
-            //List<string> _returnList = _files.ToList();
-
-            if (_returnList.Count() < 1)
+            }
+            else
             {
-                CCM_fnc_logWithTime("File path " + _folderPathToSearch + " returned no files!");
+                string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
+                _returnList = _files.ToList();
+
+                if (_returnList.Count() < 1)
+                {
+                    CCM_fnc_logWithTime("File path " + _folderPathToSearch + " returned no files!");
+                }
             }
 
             return _returnList;
