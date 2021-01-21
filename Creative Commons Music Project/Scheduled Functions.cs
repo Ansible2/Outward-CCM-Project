@@ -16,7 +16,7 @@ namespace creativeCommonsMusicProject
     internal class CCM_scheduled : BaseUnityPlugin  
     {
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
-        CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
+        //CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
         /* ------------------------------------------------------------------------
         
             CCM_fnc_startCombatMusicIntercept
@@ -66,8 +66,13 @@ namespace creativeCommonsMusicProject
             CCM_fnc_waitForLoadingDone
 
         ------------------------------------------------------------------------ */
-        internal IEnumerator CCM_fnc_waitForLoadingDone(Scene _myScene)
+        internal static IEnumerator CCM_fnc_waitForLoadingDone(Scene _myScene)
         {
+            CCM_core CCM_core = new CCM_core();
+            ManualLogSource Logg = new ManualLogSource("myLog");
+
+            Logg.Log(LogLevel.Message, "hint");
+
             string _mySceneName = _myScene.name;
 
             // some scenes such as the main menu and loading scenes should not be touched
@@ -80,7 +85,7 @@ namespace creativeCommonsMusicProject
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
                     CCM_core.CCM_fnc_logWithTime("waiting for loading...");
-                    // sleep 1 second
+                    // sleep 0.1 second
                     yield return new WaitForSeconds(0.1f);
                 }
                 CCM_core.CCM_fnc_logWithTime("Loading done...");
@@ -88,12 +93,13 @@ namespace creativeCommonsMusicProject
                 // tell every machine that is connected about what scene the player is on
                 CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
                 
+                /*
                 CCM_getPhotonView.CCM_photonView.RPC(
                     "CCM_fnc_changeActiveScene",
                     PhotonTargets.AllViaServer,
                     new object[] { _myScene.name, PhotonNetwork.player }
                 );
-
+                
 
                 // start music replace music
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
@@ -102,23 +108,25 @@ namespace creativeCommonsMusicProject
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
                 var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
-                CCM_fnc_loadAndPlayAudioClip(_trackFilePath);
+                //CCM_fnc_loadAndPlayAudioClip(_trackFilePath);
                 
                 
 
 
 
-
+                
                 // wait until combat music check if off
                 while (CCM_core.CCM_doRunCombatMusicCheck)
                 {
                     CCM_core.CCM_fnc_logWithTime("waiting for combat music check reset...");
                     yield return new WaitForSeconds(0.1f);
                 }
+                
 
                 CCM_core.CCM_fnc_logWithTime("Reached combat music check");
                 // start combat music check loop
                 StartCoroutine(CCM_fnc_startCombatMusicIntercept());
+                */
             }
             else
             {
@@ -132,8 +140,9 @@ namespace creativeCommonsMusicProject
             CCM_fnc_loadAndPlayAudioClip
 
         ------------------------------------------------------------------------ */
-        internal IEnumerator CCM_fnc_loadAndPlayAudioClip(string _filePath)
+        internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _filePath)
         {
+            CCM_core CCM_core = new CCM_core();
             //string _filePath = "";
             var _formattedPath = CCM_core.CCM_filePathStart + _filePath;
 

@@ -275,12 +275,13 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode mode)
         {
+            CCM_fnc_logWithTime("Scene Changed");
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
             // wait for loading to be done in a scheduled environment
             // also runs combat music check
-            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
         }
 
 
