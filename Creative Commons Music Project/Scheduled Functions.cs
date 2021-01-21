@@ -13,10 +13,16 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject
 {
 
-    internal class CCM_scheduled : BaseUnityPlugin  
+    internal class CCM_scheduled : BaseUnityPlugin
     {
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
-        //CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
+        public static CCM_scheduled CCM_scheduledInstance;
+
+        internal void Awake()
+        {
+            CCM_core.CCM_fnc_logWithTime("CCM_scheduled awake");
+            CCM_scheduledInstance = this;
+        }
         /* ------------------------------------------------------------------------
         
             CCM_fnc_startCombatMusicIntercept
@@ -68,11 +74,6 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal static IEnumerator CCM_fnc_waitForLoadingDone(Scene _myScene)
         {
-            CCM_core CCM_core = new CCM_core();
-            ManualLogSource Logg = new ManualLogSource("myLog");
-
-            Logg.Log(LogLevel.Message, "hint");
-
             string _mySceneName = _myScene.name;
 
             // some scenes such as the main menu and loading scenes should not be touched
@@ -100,21 +101,27 @@ namespace creativeCommonsMusicProject
                     new object[] { _myScene.name, PhotonNetwork.player }
                 );
                 
+                */
 
                 // start music replace music
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
-                List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTrackForScene(_mainMusicObjectName);
+                List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTracksForScene(_mainMusicObjectName);
                 var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
-                //CCM_fnc_loadAndPlayAudioClip(_trackFilePath);
-                
-                
+                CCM_core.CCM_fnc_logWithTime("load and play");
+
+                CCM_core.CCM_coreInstance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_trackFilePath));
+
+                CCM_core.CCM_fnc_logWithTime("load and play after");
 
 
 
-                
+
+
+
+                /*
                 // wait until combat music check if off
                 while (CCM_core.CCM_doRunCombatMusicCheck)
                 {
@@ -125,7 +132,7 @@ namespace creativeCommonsMusicProject
 
                 CCM_core.CCM_fnc_logWithTime("Reached combat music check");
                 // start combat music check loop
-                StartCoroutine(CCM_fnc_startCombatMusicIntercept());
+                monoRef.StartCoroutine(CCM_fnc_startCombatMusicIntercept());
                 */
             }
             else
@@ -142,11 +149,16 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _filePath)
         {
-            CCM_core CCM_core = new CCM_core();
+
+            //CCM_core CCM_core = new CCM_core();
+            //Debug.Log("Hello");
+            CCM_core.CCM_fnc_logWithTime("hello");
+
             //string _filePath = "";
             var _formattedPath = CCM_core.CCM_filePathStart + _filePath;
 
             
+
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
             {
                 //CCM_core CCM_core = new CCM_core();
@@ -158,23 +170,28 @@ namespace creativeCommonsMusicProject
                     yield return null;
                 }
 
+                CCM_core.CCM_fnc_logWithTime("Web request is done");
+
                 if (www.error != null)
                 {
-                    Debug.Log(www.error);
+                    CCM_core.CCM_fnc_logWithTime("Web request encountered error");
                     yield break;
                 }
 
                 var name = Path.GetFileNameWithoutExtension(_filePath);
                 var clip = DownloadHandlerAudioClip.GetContent(www);
-                GameObject.DontDestroyOnLoad(clip);
+                //GameObject.DontDestroyOnLoad(clip);
 
                 GameObject _musicObjectToPlayOn = CCM_core.CCM_fnc_getMusicHandler();
+                CCM_core.CCM_fnc_logWithTime("Using music object " + _musicObjectToPlayOn.name);
                 AudioSource _objectAudioSource = _musicObjectToPlayOn.GetComponent<AudioSource>();
                 _objectAudioSource.clip = clip;
 
+                CCM_core.CCM_fnc_logWithTime("Do play");
                 _objectAudioSource.Play();
             }
             
         }
+
     }
 }
