@@ -18,11 +18,6 @@ namespace creativeCommonsMusicProject
         CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
         public static CCM_scheduled CCM_scheduledInstance;
 
-        internal void Awake()
-        {
-            CCM_core.CCM_fnc_logWithTime("CCM_scheduled awake");
-            CCM_scheduledInstance = this;
-        }
         /* ------------------------------------------------------------------------
         
             CCM_fnc_startCombatMusicIntercept
@@ -82,46 +77,51 @@ namespace creativeCommonsMusicProject
             {
                 CCM_core.CCM_fnc_logWithTime("Found real scene: " + _mySceneName);
 
-                // wait for all loading to finish
+                // wait for all scene loading to finish
+                CCM_core.CCM_fnc_logWithTime("Waiting for loading...");
+                yield return new WaitUntil(() => NetworkLevelLoader.Instance.IsOverallLoadingDone);
+            /*
                 while (!NetworkLevelLoader.Instance.IsOverallLoadingDone)
                 {
                     CCM_core.CCM_fnc_logWithTime("waiting for loading...");
                     // sleep 0.1 second
                     yield return new WaitForSeconds(0.1f);
                 }
+            */
                 CCM_core.CCM_fnc_logWithTime("Loading done...");
 
                 // tell every machine that is connected about what scene the player is on
                 CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
                 
-                /*
+            /*
                 CCM_getPhotonView.CCM_photonView.RPC(
                     "CCM_fnc_changeActiveScene",
                     PhotonTargets.AllViaServer,
                     new object[] { _myScene.name, PhotonNetwork.player }
-                );
-                
-                */
+                );    
+            */
 
                 // start music replace music
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTracksForScene(_mainMusicObjectName);
-                var _trackFilePath = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
+                var _trackFileName = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
-                CCM_core.CCM_fnc_logWithTime("load and play");
-
-                CCM_core.CCM_coreInstance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_trackFilePath));
-
-                CCM_core.CCM_fnc_logWithTime("load and play after");
-
-
-
-
+                CCM_core.CCM_fnc_logWithTime("Load audio call");
+                CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_trackFileName,CCM_core.CCM_currentTrackType));
+                
+                // wait for audio to load
+                CCM_core.CCM_fnc_logWithTime("waiting for audio to load...");
+                yield return new WaitUntil(() => CCM_core.CCM_loadingAudio);
+                CCM_core.CCM_fnc_logWithTime("Audio play & load pass");
 
 
-                /*
+
+
+
+
+            /*
                 // wait until combat music check if off
                 while (CCM_core.CCM_doRunCombatMusicCheck)
                 {
@@ -133,7 +133,7 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Reached combat music check");
                 // start combat music check loop
                 monoRef.StartCoroutine(CCM_fnc_startCombatMusicIntercept());
-                */
+            */
             }
             else
             {
@@ -147,22 +147,18 @@ namespace creativeCommonsMusicProject
             CCM_fnc_loadAndPlayAudioClip
 
         ------------------------------------------------------------------------ */
-        internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _filePath)
+        [PunRPC]
+        internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _fileName,int _trackType = 0)
         {
+            CCM_core.CCM_fnc_logWithTime("Loading audio...");
+            string _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_trackType);
 
-            //CCM_core CCM_core = new CCM_core();
-            //Debug.Log("Hello");
-            CCM_core.CCM_fnc_logWithTime("hello");
+            string _formattedPath = CCM_core.CCM_fnc_buildFilePath(_folderPath, _fileName, true);
 
-            //string _filePath = "";
-            var _formattedPath = CCM_core.CCM_filePathStart + _filePath;
-
-            
+            CCM_core.CCM_loadingAudio = true;
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
             {
-                //CCM_core CCM_core = new CCM_core();
-
                 www.SendWebRequest();
 
                 while (!www.isDone)
@@ -178,14 +174,13 @@ namespace creativeCommonsMusicProject
                     yield break;
                 }
 
-                var name = Path.GetFileNameWithoutExtension(_filePath);
                 var clip = DownloadHandlerAudioClip.GetContent(www);
-                //GameObject.DontDestroyOnLoad(clip);
 
                 GameObject _musicObjectToPlayOn = CCM_core.CCM_fnc_getMusicHandler();
                 CCM_core.CCM_fnc_logWithTime("Using music object " + _musicObjectToPlayOn.name);
                 AudioSource _objectAudioSource = _musicObjectToPlayOn.GetComponent<AudioSource>();
                 _objectAudioSource.clip = clip;
+                _objectAudioSource.clip.name = _fileName; // file name has extension
 
                 CCM_core.CCM_fnc_logWithTime("Do play");
                 _objectAudioSource.Play();

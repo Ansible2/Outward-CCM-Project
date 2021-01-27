@@ -27,7 +27,7 @@ namespace creativeCommonsMusicProject
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
-        public static CCM_core CCM_coreInstance;
+        internal static CCM_core CCM_Instance;
 
         // for accessing classes in other files
         //CCM_rpc CCM_rpc = new CCM_rpc();
@@ -61,6 +61,8 @@ namespace creativeCommonsMusicProject
         internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
         internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
 
+        internal static bool CCM_loadingAudio = false;
+
         internal enum CCM_trackTypes_enum
         {
             combat,
@@ -70,6 +72,7 @@ namespace creativeCommonsMusicProject
             dungeon
         };
 
+        // for keeping track of the CCM_trackTypes_enum
         internal static int CCM_currentTrackType = -1;
 
         // a list for storing the combat music object names as strings
@@ -108,7 +111,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            CCM_coreInstance = this;
+            CCM_Instance = this;
 
             Logger.Log(LogLevel.Message, "Hello world");
             
@@ -470,7 +473,7 @@ namespace creativeCommonsMusicProject
 
         /* ------------------------------------------------------------------------
         
-            CCM_fnc_findMusicPaths
+            CCM_fnc_findMusicAtPath
 
         ------------------------------------------------------------------------ */
         internal List<string> CCM_fnc_findMusicAtPath(string _folderPathToSearch)
@@ -483,12 +486,23 @@ namespace creativeCommonsMusicProject
             }
             else
             {
+                // this will get all files of .ogg, however, this includes their paths
                 string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-                _returnList = _files.ToList();
+                List<string> _tempList = _files.ToList();
 
-                if (_returnList.Count() < 1)
+                if (_tempList.Count() < 1)
                 {
                     CCM_fnc_logWithTime("File path " + _folderPathToSearch + " returned no files!");
+                }
+                else
+                {
+                    // get only the file names for returns
+                    string _tempFileName;
+                    foreach (string _filePath in _tempList)
+                    {
+                        _tempFileName = Path.GetFileName(_filePath);
+                        _returnList.Add(_tempFileName);
+                    }
                 }
             }
 
@@ -530,18 +544,79 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal static GameObject CCM_fnc_getMusicHandler()
         {
-            CCM_core CCM_core = new CCM_core();
-            AudioSource _objectAudioSource = CCM_core.CCM_musicHandler_1.GetComponent<AudioSource>();
+            AudioSource _objectAudioSource = CCM_musicHandler_1.GetComponent<AudioSource>();
             bool _isPlaying = _objectAudioSource.isPlaying;
             if (_isPlaying)
             {
-                return CCM_core.CCM_musicHandler_2;
+                return CCM_musicHandler_2;
             }
             else
             {
-                return CCM_core.CCM_musicHandler_1;
+                return CCM_musicHandler_1;
             }
         }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_getTrackTypeFolderPath
+
+        ------------------------------------------------------------------------ */
+        internal static string CCM_fnc_getTrackTypeFolderPath(int _trackType)
+        {
+            switch (_trackType)
+            {
+                case (int)CCM_trackTypes_enum.ambientDay:
+                    {
+                        return CCM_ambientDayFolderPath;
+                    }
+                case (int)CCM_trackTypes_enum.ambientNight:
+                    {
+                        return CCM_ambientNightFolderPath;
+                    }
+                case (int)CCM_trackTypes_enum.combat:
+                    {
+                        return CCM_combatFolderPath;
+                    }
+                case (int)CCM_trackTypes_enum.dungeon:
+                    {
+                        return CCM_dungeonFolderPath;
+                    }
+                case (int) CCM_trackTypes_enum.town:
+                    {
+                        return CCM_townFolderPath;
+                    }
+                default:
+                    {
+                        CCM_fnc_logWithTime("Returned empty string for folder path");
+                        return "";
+                    }
+            }
+        }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_buildFilePath
+
+        ------------------------------------------------------------------------ */
+        internal static string CCM_fnc_buildFilePath(string _folderPath, string _fileName, bool _addFileExtension = false)
+        {
+            string _filePath = _folderPath + @"\" + _fileName;
+            
+            if (_addFileExtension)
+            {
+                _filePath = CCM_filePathStart + _filePath;
+            }
+
+            CCM_fnc_logWithTime("Returned File Path: " + _filePath);
+            
+            return _filePath;
+        }
+
+
+
+
 
 
 
