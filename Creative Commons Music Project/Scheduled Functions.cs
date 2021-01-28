@@ -119,8 +119,6 @@ namespace creativeCommonsMusicProject
 
 
 
-
-
             /*
                 // wait until combat music check if off
                 while (CCM_core.CCM_doRunCombatMusicCheck)
@@ -181,12 +179,36 @@ namespace creativeCommonsMusicProject
                 AudioSource _objectAudioSource = _musicObjectToPlayOn.GetComponent<AudioSource>();
                 _objectAudioSource.clip = clip;
                 _objectAudioSource.clip.name = _fileName; // file name has extension
+                //_objectAudioSource.volume
+
+                CCM_core.CCM_loadingAudio = false;
 
                 CCM_core.CCM_fnc_logWithTime("Do play");
                 _objectAudioSource.Play();
+                CCM_fnc_fadeAudioSource(_objectAudioSource, 2, CCM_core.CCM_musicVolume);
+                CCM_core.CCM_nowPlayingMusicHandler = _musicObjectToPlayOn;
+                CCM_core.CCM_nowPlayingAudioSource = _objectAudioSource;
             }
-            
         }
 
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_fnc_fadeAudioSource
+
+        ------------------------------------------------------------------------ */
+        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSoucre,float _duration,float _targetVolume)
+        {
+            float currentTime = 0;
+            float _startingVolume = _audioSoucre.volume;
+
+            while (currentTime < _duration)
+            {
+                currentTime += Time.deltaTime;
+                _audioSoucre.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
+                yield return null;
+            }
+            yield break;
+        }
     }
 }

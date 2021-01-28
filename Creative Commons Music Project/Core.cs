@@ -84,22 +84,30 @@ namespace creativeCommonsMusicProject
         
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
         // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
-        public static Dictionary<PhotonPlayer, string> CCM_dictionary_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
+        internal static Dictionary<PhotonPlayer, string> CCM_dictionary_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
         
         // used to keep track of each active scenes music track
-        public static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
+        internal static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
 
         // music game objects we will use to actually play music
-        public static GameObject CCM_musicHandler_1;
-        public static GameObject CCM_musicHandler_2;
+        internal static GameObject CCM_musicHandler_1;
+        internal static GameObject CCM_musicHandler_2;
+        internal static AudioSource CCM_musicAudiSource_1;
+        internal static AudioSource CCM_musicAudiSource_2;
+        internal static float CCM_musicVolume;
+
+        // this keeps track of which music handler is actually currently intended to be played on
+        // for instance, when transitioning to a new track, this one
+        internal static GameObject CCM_nowPlayingMusicHandler;
+        internal static AudioSource CCM_nowPlayingAudioSource;
 
         // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
         // they need to be assigned the properties of a BGM (Background Music) game object
         // this is done (ideally) on the first run of CCM_fnc_findMainMusicObject
-        public static bool CCM_gameObjectPropsAssigned = false;
+        internal static bool CCM_gameObjectPropsAssigned = false;
 
 
-        public static System.Random CCM_getRandom = new System.Random();
+        internal static System.Random CCM_getRandom = new System.Random();
         
 
         
@@ -119,8 +127,10 @@ namespace creativeCommonsMusicProject
             // BepInEx has created a GameObject and added our MyMod class as a component to it.
 
             
-            SceneManager.sceneLoaded += CCM_onSceneLoaded;
-            
+            SceneManager.sceneLoaded += CCM_event_onSceneChanged;
+
+            //NetworkLevelLoader.Instance.onSceneLoadingDone += CCM_event_onSceneDoneLoading;
+
             // fill combat music list
             // only clones become active and play the music
             // can't use the standard ones with GameObject.Find
@@ -144,7 +154,6 @@ namespace creativeCommonsMusicProject
             CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
             CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
             CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
-            
         }
 
 
@@ -275,18 +284,31 @@ namespace creativeCommonsMusicProject
 
         /* ------------------------------------------------------------------------
         
-            CCM_onSceneLoaded
+            CCM_event_onSceneChanged
 
         ------------------------------------------------------------------------ */
-        void CCM_onSceneLoaded(Scene _myScene, LoadSceneMode mode)
+        internal void CCM_event_onSceneChanged(Scene _myScene, LoadSceneMode mode)
         {
-            CCM_fnc_logWithTime("Scene Changed");
+            CCM_fnc_logWithTime("CCM_event_onSceneChanged called");
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
             // wait for loading to be done in a scheduled environment
             // also runs combat music check
             StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+        }
+
+
+        /* ------------------------------------------------------------------------
+        
+            CCM_event_onSceneDoneLoading
+
+        ------------------------------------------------------------------------ */
+        internal void CCM_event_onSceneDoneLoading()
+        {
+            CCM_fnc_logWithTime("CCM_event_onSceneDoneLoading called");
+
+            //CCM_fnc_findMainMusicObject(SceneManager.GetActiveScene());
         }
 
 
@@ -309,11 +331,11 @@ namespace creativeCommonsMusicProject
                 bool _wasLooping, _wasPlaying;
                 foreach (var _x in _myList)
                 {
+                    // stop playing music
+                    _wasPlaying = CCM_fnc_stopMusicFromPlaying(_x);
                     // stop looping
                     _wasLooping = CCM_fnc_stopMusicFromLooping(_x);
 
-                    // stop playing music
-                    _wasPlaying = CCM_fnc_stopMusicFromPlaying(_x);
                     CCM_logSource.Log(LogLevel.Message, _x.name);
                     CCM_logSource.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
 
@@ -335,12 +357,24 @@ namespace creativeCommonsMusicProject
                     // assign properties (if not already) to custom music objects
                     if (!CCM_gameObjectPropsAssigned)
                     {
-                        CCM_gameObjectPropsAssigned = true;
+                        CCM_musicVolume = _mainMusicObject.GetComponent<AudioSource>().volume;
+
                         // copy settings to our objects for playing music
                         CCM_musicHandler_1 = Instantiate(_mainMusicObject);
                         CCM_musicHandler_1.name = "CCM_musicHandler_1";
+                        DontDestroyOnLoad(CCM_musicHandler_1);
+                        CCM_musicAudiSource_1 = CCM_musicHandler_1.GetComponent<AudioSource>();
+                        CCM_musicAudiSource_1.volume = 0;
+
+
                         CCM_musicHandler_2 = Instantiate(_mainMusicObject);
                         CCM_musicHandler_2.name = "CCM_musicHandler_2";
+                        DontDestroyOnLoad(CCM_musicHandler_2);
+                        CCM_musicAudiSource_2 = CCM_musicHandler_2.GetComponent<AudioSource>();
+                        CCM_musicAudiSource_2.volume = 0;
+
+
+                        CCM_gameObjectPropsAssigned = true;
 
                         CCM_logSource.Log(LogLevel.Message, "Assigned CCM music handler objects the properties of " + _mainMusicObject);
                     }
@@ -615,10 +649,7 @@ namespace creativeCommonsMusicProject
         }
 
 
-
-
-
-
+        
 
         /*
         IEnumerator LoadMusic(string songPath)
