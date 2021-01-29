@@ -3,34 +3,27 @@ Function: CCM_fnc_findMainMusicObject
 
 Description:
 	Because there is only one BGM music object active at a time, this function is used
-     to find that object return it 
+     to find that object return it. During this, it also stops any music objects it detects
+     from both looping and playing.
 
 Parameters:
-	0:  <> - 
+	0: _sceneToCheck <Scene> - The scene from within to check
 
 Returns:
-	<> - 
+	<GameObject> - The music object determined to be the one playing music
 
 Examples:
     (begin example)
-		
+		var _mainMusicObject = CCM_fnc_findMainMusicObject(SceneManager.GetActiveScene());
     (end)
 
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
 
 
 namespace creativeCommonsMusicProject
@@ -39,7 +32,8 @@ namespace creativeCommonsMusicProject
     {
         internal static GameObject CCM_fnc_findMainMusicObject(Scene _sceneToCheck)
         {
-            GameObject _mainMusicObject = null;
+            //GameObject _mainMusicObject = null;
+            GameObject _mainMusicObject = new GameObject;
             if (CCM_fnc_isSceneReal(_sceneToCheck))
             {
                 // get music objects currently active in the scene
@@ -67,7 +61,6 @@ namespace creativeCommonsMusicProject
                     }
                 }
 
-                
             }
 
             return _mainMusicObject;

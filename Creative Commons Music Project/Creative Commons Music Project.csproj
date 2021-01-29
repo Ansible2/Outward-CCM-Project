@@ -87,10 +87,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Functions\CCM_fnc_areListsTheSame.cs" />
     <Compile Include="Core Functions\CCM_fnc_findMusicObjectsInScene.cs" />
     <Compile Include="Core Functions\CCM_fnc_isSceneReal.cs" />
-    <Compile Include="Core Functions\CodeFile1.cs" />
-    <Compile Include="Core Functions\CodeFile2.cs" />
+    <Compile Include="Core Functions\CCM_fnc_findMainMusicObject.cs" />
+    <Compile Include="Core Functions\CCM_fnc_assignMusicHandlerProperties.cs" />
+    <Compile Include="Core Functions\CCM_fnc_getTrackType.cs" />
+    <Compile Include="Core Functions\CCM_fnc_stopMusicFromLooping.cs" />
+    <Compile Include="Core Functions\CCM_fnc_stopMusicFromPlaying.cs" />
+    <Compile Include="Core Functions\CCM_fnc_getAllAVailableTrackForScene.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="Scheduled Functions.cs" />
     <Compile Include="Core.cs" />

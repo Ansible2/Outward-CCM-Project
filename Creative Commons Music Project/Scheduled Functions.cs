@@ -102,7 +102,7 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_myScene);
                 string _mainMusicObjectName = _mainMusicObject.name;
-                List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAVailableTracksForScene(_mainMusicObjectName);
+                List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAvailableReplacementTracks(_mainMusicObjectName);
                 var _trackFileName = CCM_core.CCM_fnc_selectTrackToPlay(_possibleTracks_list);
 
                 CCM_core.CCM_fnc_logWithTime("Load audio call");
