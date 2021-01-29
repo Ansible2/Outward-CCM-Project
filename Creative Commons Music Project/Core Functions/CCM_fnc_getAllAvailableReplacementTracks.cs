@@ -5,8 +5,6 @@ Description:
 	Gets a list of possible track filenames for a given game object.
     Depending on the name of the game object, certain tracks will be returned.
 
-    This will also set the currentTrackType
-
 Parameters:
 	0: _objectName <STRING> - The name of the object that the music will play on
 
