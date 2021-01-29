@@ -16,7 +16,7 @@ namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
 
-    internal class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
+    internal partial class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
     {
         /* ------------------------------------------------------------------------
         
@@ -32,7 +32,6 @@ namespace creativeCommonsMusicProject
         // for accessing classes in other files
         //CCM_rpc CCM_rpc = new CCM_rpc();
         //CCM_scheduled CCM_scheduled = new CCM_scheduled();
-        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
 
         internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
         // folder paths for user defined music
@@ -108,10 +107,10 @@ namespace creativeCommonsMusicProject
 
 
         internal static System.Random CCM_getRandom = new System.Random();
-        
 
-        
 
+        internal static PhotonView CCM_photonView;
+        
         /* ------------------------------------------------------------------------
         
             awake function
@@ -121,15 +120,13 @@ namespace creativeCommonsMusicProject
         {
             CCM_Instance = this;
 
-            Logger.Log(LogLevel.Message, "Hello world");
-            
-            // This is your entry-point for your mod.
-            // BepInEx has created a GameObject and added our MyMod class as a component to it.
-
-            
+            //CCM_photonView = GetComponent<PhotonView>();
+            //CCM_logSource.LogMessage(CCM_photonView);
             SceneManager.sceneLoaded += CCM_event_onSceneChanged;
 
             //NetworkLevelLoader.Instance.onSceneLoadingDone += CCM_event_onSceneDoneLoading;
+
+            CCM_photonView = GetComponent<PhotonView>();
 
             // fill combat music list
             // only clones become active and play the music
@@ -165,64 +162,6 @@ namespace creativeCommonsMusicProject
         internal static void CCM_fnc_logWithTime(string myMessage = "")
         {
             CCM_core.CCM_logSource.Log(LogLevel.Message, Time.time + "--: " + myMessage);
-        }
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_isSceneReal
-
-        ------------------------------------------------------------------------ */
-        internal static bool CCM_fnc_isSceneReal(Scene _scene)
-        {
-            var _name = _scene.name.ToLower();
-            CCM_fnc_logWithTime("Checking scene: " + _name);
-
-            bool _isSceneReal = (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
-            CCM_fnc_logWithTime("Scene real? " + _isSceneReal);
-
-            return _isSceneReal;
-        }
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_findMusicObjectsInScene
-
-        ------------------------------------------------------------------------ */
-        internal static List<GameObject> CCM_fnc_findMusicObjectsInScene(bool _findAll = false)
-        {
-            List<GameObject> _myList = new List<GameObject>();
-            if (_findAll)
-            {
-                _myList = Resources.FindObjectsOfTypeAll<GameObject>()
-                    .Where(x => x.name.StartsWith("BGM_")).ToList();
-            }
-            else
-            {
-                // collect names of already found objects for comparison
-                // lists are by default pass by ref in classes
-                List<string> _myListNames = new List<string>();
-                foreach (var _y in _myList)
-                {
-                    _myListNames.Add(_y.name);
-                }
-
-                foreach (var _x in CCM_combatMusicList)
-                {
-                    if (!_myListNames.Contains(_x))
-                    {
-                        var _theObject = GameObject.Find(_x);
-                        if (_theObject != null)
-                        {
-                            _myList.Add(_theObject);
-                            CCM_fnc_logWithTime("Added an object");
-                        }
-                    }
-                }
-            }
-
-            return _myList;
         }
 
 
@@ -271,7 +210,9 @@ namespace creativeCommonsMusicProject
             bool _isPlaying = _objectAudioSource.isPlaying;
             if (_isPlaying)
             {
-                _objectAudioSource.Stop();
+                CCM_Instance.StartCoroutine(CCM_scheduled.CCM_fnc_fadeAudioSource(_objectAudioSource, 3, 0));
+
+                //_objectAudioSource.Stop();
 
                 return true;
             }
@@ -317,72 +258,7 @@ namespace creativeCommonsMusicProject
             CCM_fnc_findMainMusicObject
 
         ------------------------------------------------------------------------ */
-        internal static GameObject CCM_fnc_findMainMusicObject(Scene _sceneToCheck)
-        {
-            GameObject _mainMusicObject = null;
-            if (CCM_fnc_isSceneReal(_sceneToCheck))
-            {
-                // get music objects currently active in the scene
-                var _myList = CCM_fnc_findMusicObjectsInScene(true);
-
-                // Print list of music objects & their clips
-                // find music object to use for playing
-                CCM_fnc_logWithTime("Music Objects Found:");
-                bool _wasLooping, _wasPlaying;
-                foreach (var _x in _myList)
-                {
-                    // stop playing music
-                    _wasPlaying = CCM_fnc_stopMusicFromPlaying(_x);
-                    // stop looping
-                    _wasLooping = CCM_fnc_stopMusicFromLooping(_x);
-
-                    CCM_logSource.Log(LogLevel.Message, _x.name);
-                    CCM_logSource.Log(LogLevel.Message, _x.GetComponent<AudioSource>().clip);
-
-                    // if object was both playing and looping it would be the object that we can use to play music, so save it
-                    if (_wasLooping && _wasPlaying)
-                    {
-                        _mainMusicObject = _x;
-                        CCM_logSource.Log(LogLevel.Message, "Found a main music object: " + _mainMusicObject);
-                    }
-                }
-
-                // if main music object is not found select an object
-                if (_mainMusicObject == null)
-                {
-                    CCM_fnc_logWithTime("_mainMusicObject is null, finding replacement...");
-                }
-                else
-                {
-                    // assign properties (if not already) to custom music objects
-                    if (!CCM_gameObjectPropsAssigned)
-                    {
-                        CCM_musicVolume = _mainMusicObject.GetComponent<AudioSource>().volume;
-
-                        // copy settings to our objects for playing music
-                        CCM_musicHandler_1 = Instantiate(_mainMusicObject);
-                        CCM_musicHandler_1.name = "CCM_musicHandler_1";
-                        DontDestroyOnLoad(CCM_musicHandler_1);
-                        CCM_musicAudiSource_1 = CCM_musicHandler_1.GetComponent<AudioSource>();
-                        CCM_musicAudiSource_1.volume = 0;
-
-
-                        CCM_musicHandler_2 = Instantiate(_mainMusicObject);
-                        CCM_musicHandler_2.name = "CCM_musicHandler_2";
-                        DontDestroyOnLoad(CCM_musicHandler_2);
-                        CCM_musicAudiSource_2 = CCM_musicHandler_2.GetComponent<AudioSource>();
-                        CCM_musicAudiSource_2.volume = 0;
-
-
-                        CCM_gameObjectPropsAssigned = true;
-
-                        CCM_logSource.Log(LogLevel.Message, "Assigned CCM music handler objects the properties of " + _mainMusicObject);
-                    }
-                }
-            }
-
-            return _mainMusicObject;
-        }
+        
 
 
         /* ------------------------------------------------------------------------
@@ -650,6 +526,43 @@ namespace creativeCommonsMusicProject
 
 
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /*
         IEnumerator LoadMusic(string songPath)

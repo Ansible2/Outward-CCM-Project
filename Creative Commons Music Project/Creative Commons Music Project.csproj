@@ -87,6 +87,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Functions\CCM_fnc_findMusicObjectsInScene.cs" />
+    <Compile Include="Core Functions\CCM_fnc_isSceneReal.cs" />
+    <Compile Include="Core Functions\CodeFile1.cs" />
+    <Compile Include="Core Functions\CodeFile2.cs" />
+    <Compile Include="Template.cs" />
     <Compile Include="Scheduled Functions.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="RPC Functions.cs" />

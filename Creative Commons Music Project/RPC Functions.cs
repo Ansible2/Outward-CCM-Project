@@ -13,10 +13,8 @@ using Photon.Realtime;
 namespace creativeCommonsMusicProject
 {   
     internal class CCM_rpc
-    {
-        CCM_core CCM_core = new CCM_core(); // how to get another class in a different file
-        
-        
+    {      
+
         /* ------------------------------------------------------------------------
         
             CCM_fnc_changeActiveScene
@@ -26,7 +24,6 @@ namespace creativeCommonsMusicProject
         internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
         {
             bool _playerInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsKey(_player);
-            
             if (_playerInDictionary)
             {
                 CCM_core.CCM_dictionary_activePlayerScenes.Add(_player, _sceneName);
@@ -37,32 +34,61 @@ namespace creativeCommonsMusicProject
             }
         }
 
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_playMusic
-
-        ------------------------------------------------------------------------ */
-        [PunRPC]
-        internal void CCM_fnc_playMusic(GameObject _objectToPlayOn, AudioClip _clipToPlay)
-        {
-            _objectToPlayOn.GetComponent<AudioSource>().clip = _clipToPlay;
-            _objectToPlayOn.GetComponent<AudioSource>().Play();
-        }
     }
     
-
+    /*
     // simply used as a reference in other files to the photon view needed for RPCs
-    internal class CCM_getPhotonView : UnityEngine.MonoBehaviour
+    internal class CCM_getPhotonView : Photon.MonoBehaviour
     {
-        internal PhotonView CCM_photonView;
-        void Start()
+        internal static PhotonView CCM_photonView;
+        internal void Awake()
         {
             CCM_photonView = GetComponent<PhotonView>();
+            CCM_core.CCM_logSource.LogMessage(CCM_photonView);
+            CCM_core.CCM_fnc_logWithTime("CCM photon view ^");
         }
     }
+    */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
     public class MyCustomRPC : Photon.MonoBehaviour

@@ -15,9 +15,6 @@ namespace creativeCommonsMusicProject
 
     internal class CCM_scheduled : BaseUnityPlugin
     {
-        CCM_getPhotonView CCM_getPhotonView = new CCM_getPhotonView();
-        public static CCM_scheduled CCM_scheduledInstance;
-
         /* ------------------------------------------------------------------------
         
             CCM_fnc_startCombatMusicIntercept
@@ -185,19 +182,18 @@ namespace creativeCommonsMusicProject
 
                 CCM_core.CCM_fnc_logWithTime("Do play");
                 _objectAudioSource.Play();
-                CCM_fnc_fadeAudioSource(_objectAudioSource, 2, CCM_core.CCM_musicVolume);
+                CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_fadeAudioSource(_objectAudioSource, 3, CCM_core.CCM_musicVolume));
                 CCM_core.CCM_nowPlayingMusicHandler = _musicObjectToPlayOn;
                 CCM_core.CCM_nowPlayingAudioSource = _objectAudioSource;
             }
         }
-
 
         /* ------------------------------------------------------------------------
         
             CCM_fnc_fadeAudioSource
 
         ------------------------------------------------------------------------ */
-        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSoucre,float _duration,float _targetVolume)
+        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSoucre,float _duration = 3,float _targetVolume = 0.5f, bool _stopAfter = false)
         {
             float currentTime = 0;
             float _startingVolume = _audioSoucre.volume;
@@ -207,6 +203,11 @@ namespace creativeCommonsMusicProject
                 currentTime += Time.deltaTime;
                 _audioSoucre.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
                 yield return null;
+            }
+
+            if (_stopAfter)
+            {
+                _audioSoucre.Stop();
             }
             yield break;
         }
