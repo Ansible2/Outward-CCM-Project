@@ -27,6 +27,7 @@ namespace creativeCommonsMusicProject
         const string NAME = "CCM Project";
         const string VERSION = "1.0";
 
+        // used for running static coroutines
         internal static CCM_core CCM_Instance;
 
         // for accessing classes in other files
@@ -193,109 +194,6 @@ namespace creativeCommonsMusicProject
 
             //CCM_fnc_findMainMusicObject(SceneManager.GetActiveScene());
         }
-
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_getMusicHandler
-
-        ------------------------------------------------------------------------ */
-        internal static GameObject CCM_fnc_getMusicHandler()
-        {
-            AudioSource _objectAudioSource = CCM_musicHandler_1.GetComponent<AudioSource>();
-            bool _isPlaying = _objectAudioSource.isPlaying;
-            if (_isPlaying)
-            {
-                return CCM_musicHandler_2;
-            }
-            else
-            {
-                return CCM_musicHandler_1;
-            }
-        }
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_getTrackTypeFolderPath
-
-        ------------------------------------------------------------------------ */
-        internal static string CCM_fnc_getTrackTypeFolderPath(int _trackType)
-        {
-            switch (_trackType)
-            {
-                case (int)CCM_trackTypes_enum.ambientDay:
-                    {
-                        return CCM_ambientDayFolderPath;
-                    }
-                case (int)CCM_trackTypes_enum.ambientNight:
-                    {
-                        return CCM_ambientNightFolderPath;
-                    }
-                case (int)CCM_trackTypes_enum.combat:
-                    {
-                        return CCM_combatFolderPath;
-                    }
-                case (int)CCM_trackTypes_enum.dungeon:
-                    {
-                        return CCM_dungeonFolderPath;
-                    }
-                case (int) CCM_trackTypes_enum.town:
-                    {
-                        return CCM_townFolderPath;
-                    }
-                default:
-                    {
-                        CCM_fnc_logWithTime("Returned empty string for folder path");
-                        return "";
-                    }
-            }
-        }
-
-
-        /* ------------------------------------------------------------------------
-        
-            CCM_fnc_buildFilePath
-
-        ------------------------------------------------------------------------ */
-        internal static string CCM_fnc_buildFilePath(string _folderPath, string _fileName, bool _addFileExtension = false)
-        {
-            string _filePath = _folderPath + @"\" + _fileName;
-            
-            if (_addFileExtension)
-            {
-                _filePath = CCM_filePathStart + _filePath;
-            }
-
-            CCM_fnc_logWithTime("Returned File Path: " + _filePath);
-            
-            return _filePath;
-        }
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

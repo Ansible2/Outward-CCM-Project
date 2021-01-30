@@ -88,8 +88,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core Functions\CCM_fnc_areListsTheSame.cs" />
+    <Compile Include="Core Functions\CCM_fnc_buildFilePath.cs" />
     <Compile Include="Core Functions\CCM_fnc_findMusicAtPath.cs" />
     <Compile Include="Core Functions\CCM_fnc_findMusicObjectsInScene.cs" />
+    <Compile Include="Core Functions\CCM_fnc_getMusicHandler.cs" />
     <Compile Include="Core Functions\CCM_fnc_getTrackList.cs" />
     <Compile Include="Core Functions\CCM_fnc_getUsedTrackList.cs" />
     <Compile Include="Core Functions\CCM_fnc_isSceneReal.cs" />
@@ -100,11 +102,16 @@
     <Compile Include="Core Functions\CCM_fnc_stopMusicFromLooping.cs" />
     <Compile Include="Core Functions\CCM_fnc_stopMusicFromPlaying.cs" />
     <Compile Include="Core Functions\CCM_fnc_getAllAvailableReplacementTracks.cs" />
+    <Compile Include="Core Functions\CCM_fnc_getTrackTypeFolderPath.cs" />
+    <Compile Include="Coroutine Functions\CCM_fnc_fadeAudioSource.cs" />
+    <Compile Include="Coroutine Functions\CCM_fnc_loadAndPlayAudioClip.cs" />
+    <Compile Include="Coroutine Functions\CCM_fnc_startCombatMusicIntercept.cs" />
+    <Compile Include="Coroutine Functions\CCM_fnc_waitForLoadingDone.cs" />
     <Compile Include="Template.cs" />
-    <Compile Include="Scheduled Functions.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="RPC Functions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

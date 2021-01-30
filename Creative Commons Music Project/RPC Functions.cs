@@ -12,7 +12,7 @@ using Photon.Realtime;
 
 namespace creativeCommonsMusicProject
 {   
-    internal class CCM_rpc
+    internal class CCM_rpc : Photon.PunBehaviour
     {      
 
         /* ------------------------------------------------------------------------
