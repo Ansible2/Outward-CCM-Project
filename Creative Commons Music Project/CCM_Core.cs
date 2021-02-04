@@ -18,6 +18,15 @@ namespace creativeCommonsMusicProject
 
     internal partial class CCM_core : BaseUnityPlugin
     {
+        /*
+        internal class testClass : Photon.MonoBehaviour
+        {
+            internal void Awake()
+            {
+                CCM_fnc_logWithTime("does this work");
+            }
+        }
+        */
         /* ------------------------------------------------------------------------
         
             Create Globals
@@ -118,7 +127,8 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            
+            DontDestroyOnLoad(this);
+            gameObject.AddComponent<CCM_rpc>();
             CCM_Instance = this;
 
             //CCM_photonView = GetComponent<PhotonView>();
@@ -150,7 +160,6 @@ namespace creativeCommonsMusicProject
             CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
             CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
             CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
-            
         }
 
 
@@ -199,7 +208,7 @@ namespace creativeCommonsMusicProject
             //CCM_rpc.CCM_photonView.RPC("testRPC", PhotonTargets.MasterClient);
             //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
 
-            CCM_rpc.testRPC_query();
+            CCM_rpc.TestRPC();
         }
 
 

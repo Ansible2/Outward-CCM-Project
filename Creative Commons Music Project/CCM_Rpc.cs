@@ -1,13 +1,16 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+*/
+using BepInEx.Logging;
 using UnityEngine;
 
 namespace creativeCommonsMusicProject
 {   
-    public partial class CCM_rpc : Photon.MonoBehaviour
+    internal partial class CCM_rpc : Photon.MonoBehaviour
     {
         /* ------------------------------------------------------------------------
             Create Globals
@@ -20,29 +23,38 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            //CCM_rpcInstance = this;
-
+            DontDestroyOnLoad(this);
+            CCM_rpcInstance = this;
+            CCM_core.CCM_fnc_logWithTime("logging this");
+            CCM_core.CCM_logSource.Log(LogLevel.Message, this);
+            
             //CCM_photonView = PhotonView.Get(this);
-            //CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
-            //CCM_core.CCM_fnc_logWithTime("hey");
+            CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
+            CCM_photonView.viewID = 1067;
+
+            CCM_core.CCM_fnc_logWithTime(CCM_photonView.ToString());
+            CCM_core.CCM_fnc_logWithTime("hey");
             Debug.Log("Hey");
         }
 
 
         
-        public void TestRPC()
+        internal static void TestRPC()
         {
+            CCM_core.CCM_fnc_logWithTime("Testing RPC");
+            // this does execute, but it happens before we connect to photon
             CCM_photonView.RPC("doTest", PhotonTargets.All);
         }
 
-        private void doTest()
+        [PunRPC]
+        void doTest()
         {
             CCM_core.CCM_fnc_logWithTime("Hey PUN");
         }
 
         internal static void testRPC_query()
         {
-            CCM_rpcInstance.TestRPC();
+            TestRPC();
         }
     }
 }

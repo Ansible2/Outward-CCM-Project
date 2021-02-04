@@ -22,7 +22,7 @@ Author(s):
 ---------------------------------------------------------------------------- */
 namespace creativeCommonsMusicProject
 {
-    public partial class CCM_rpc : Photon.MonoBehaviour
+    partial class CCM_rpc
     {
         [PunRPC]
         internal static void CCM_fnc_changeActiveScene(string _sceneName, int _playerId)
