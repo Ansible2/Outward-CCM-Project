@@ -12,7 +12,7 @@ Returns:
 
 Examples:
     (begin example)
-		StartCoroutine(CCM_fnc_waitForLoadingDone());
+		StartCoroutine(CCM_fnc_waitForLoadingDone(_sceneToWaitFor));
     (end)
 
 Author(s):
@@ -36,6 +36,7 @@ namespace creativeCommonsMusicProject
 {
     internal partial class CCM_scheduled : BaseUnityPlugin
     {
+        
         internal static IEnumerator CCM_fnc_waitForLoadingDone(Scene _scene)
         {
             string _mySceneName = _scene.name;
@@ -62,8 +63,9 @@ namespace creativeCommonsMusicProject
                 // tell every machine that is connected about what scene the player is on
                 CCM_core.CCM_fnc_logWithTime("Telling server to update all on players current scene...");
 
+                //CCM_fnc_changeActiveSceneQuery(_scene.name, PhotonNetwork.player);
             /*
-                CCM_getPhotonView.CCM_photonView.RPC(
+                CCM_core.CCM_photonView.RPC(
                     "CCM_fnc_changeActiveScene",
                     PhotonTargets.AllViaServer,
                     new object[] { _scene.name, PhotonNetwork.player }
@@ -79,7 +81,7 @@ namespace creativeCommonsMusicProject
                 List<string> _possibleTracks_list = CCM_core.CCM_fnc_getAllAvailableReplacementTracks(_trackType);
                 var _trackFileName = CCM_core.CCM_fnc_grabRandomTrack(_possibleTracks_list);
 
-                CCM_core.CCM_fnc_logWithTime("Load audio call");
+                CCM_core.CCM_fnc_logWithTime("Calling Audio Load...");
                 CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_trackFileName, CCM_core.CCM_currentTrackType));
 
                 // wait for audio to load

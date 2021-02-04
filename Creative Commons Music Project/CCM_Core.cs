@@ -1,22 +1,22 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
+﻿//using System;
+//using System.Linq;
+//using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
+//using UnityEngine.Networking;
+//using Photon;
+//using Photon.Realtime;
 
 
 namespace creativeCommonsMusicProject
 {
     [BepInPlugin(ID, NAME, VERSION)]
 
-    internal partial class CCM_core : BaseUnityPlugin //Photon.MonoBehaviour
+    internal partial class CCM_core : BaseUnityPlugin
     {
         /* ------------------------------------------------------------------------
         
@@ -84,7 +84,7 @@ namespace creativeCommonsMusicProject
         
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
         // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
-        internal static Dictionary<PhotonPlayer, string> CCM_dictionary_activePlayerScenes = new Dictionary<PhotonPlayer, string>();
+        internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
         
         // used to keep track of each active scenes music track
         internal static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
@@ -104,14 +104,13 @@ namespace creativeCommonsMusicProject
         // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
         // they need to be assigned the properties of a BGM (Background Music) game object
         // this is done (ideally) on the first run of CCM_fnc_findMainMusicObject
-        internal static bool CCM_gameObjectPropsAssigned = false;
+        internal static bool CCM_gameObjectPropsAssigned = false;     
 
 
         internal static System.Random CCM_getRandom = new System.Random();
 
 
-        internal static PhotonView CCM_photonView;
-        
+
         /* ------------------------------------------------------------------------
         
             awake function
@@ -119,6 +118,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
+            
             CCM_Instance = this;
 
             //CCM_photonView = GetComponent<PhotonView>();
@@ -126,8 +126,6 @@ namespace creativeCommonsMusicProject
             SceneManager.sceneLoaded += CCM_event_onSceneChanged;
 
             //NetworkLevelLoader.Instance.onSceneLoadingDone += CCM_event_onSceneDoneLoading;
-
-            CCM_photonView = GetComponent<PhotonView>();
 
             // fill combat music list
             // only clones become active and play the music
@@ -152,6 +150,7 @@ namespace creativeCommonsMusicProject
             CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
             CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
             CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
+            
         }
 
 
@@ -174,12 +173,33 @@ namespace creativeCommonsMusicProject
         internal void CCM_event_onSceneChanged(Scene _myScene, LoadSceneMode mode)
         {
             CCM_fnc_logWithTime("CCM_event_onSceneChanged called");
+
+            if (PhotonNetwork.offlineMode)
+            {
+                CCM_fnc_logWithTime("Photon is offline");
+            }
+            else
+            {
+                CCM_fnc_logWithTime("Photon is online");
+            }
+
+            if (PhotonNetwork.player == null)
+            {
+                CCM_fnc_logWithTime("Photon player is not defined");
+            }
+            else
+            {
+                CCM_fnc_logWithTime("Photon player is defined");
+            }
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
-            // wait for loading to be done in a scheduled environment
-            // also runs combat music check
-            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+            //CCM_rpc.CCM_photonView.RPC("testRPC", PhotonTargets.MasterClient);
+
+            //CCM_rpc.CCM_photonView.RPC("testRPC", PhotonTargets.MasterClient);
+            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+
+            CCM_rpc.testRPC_query();
         }
 
 
@@ -194,8 +214,6 @@ namespace creativeCommonsMusicProject
 
             //CCM_fnc_findMainMusicObject(SceneManager.GetActiveScene());
         }
-
-
 
 
 

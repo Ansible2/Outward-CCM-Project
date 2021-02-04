@@ -34,12 +34,13 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _fileName, int _trackType = 0)
         {
-            CCM_core.CCM_fnc_logWithTime("Loading audio...");
+            CCM_core.CCM_loadingAudio = true;
+            CCM_core.CCM_fnc_logWithTime("Loading audio...");         
+
             string _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_trackType);
 
             string _formattedPath = CCM_core.CCM_fnc_buildFilePath(_folderPath, _fileName, true);
-
-            CCM_core.CCM_loadingAudio = true;
+            
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
             {

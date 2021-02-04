@@ -18,12 +18,9 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using BepInEx;
-
-
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static string CCM_fnc_getTrackTypeFolderPath(int _trackType)
         {

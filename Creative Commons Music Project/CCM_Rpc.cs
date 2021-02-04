@@ -1,42 +1,58 @@
-﻿using System.Linq;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using BepInEx;
-using BepInEx.Logging;
+using System.Linq;
+using System.Text;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
 
 namespace creativeCommonsMusicProject
 {   
-    internal class CCM_rpc : Photon.PunBehaviour
-    {      
+    public partial class CCM_rpc : Photon.MonoBehaviour
+    {
+        /* ------------------------------------------------------------------------
+            Create Globals
+        ------------------------------------------------------------------------ */
+        internal static CCM_rpc CCM_rpcInstance;
+        internal static PhotonView CCM_photonView;
 
         /* ------------------------------------------------------------------------
-        
-            CCM_fnc_changeActiveScene
-
+            awake function
         ------------------------------------------------------------------------ */
-        [PunRPC]
-        internal void CCM_fnc_changeActiveScene(string _sceneName,PhotonPlayer _player)
+        internal void Awake()
         {
-            bool _playerInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsKey(_player);
-            if (_playerInDictionary)
-            {
-                CCM_core.CCM_dictionary_activePlayerScenes.Add(_player, _sceneName);
-            }
-            else
-            {
-                CCM_core.CCM_dictionary_activePlayerScenes[_player] = _sceneName;
-            }
+            //CCM_rpcInstance = this;
+
+            //CCM_photonView = PhotonView.Get(this);
+            //CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
+            //CCM_core.CCM_fnc_logWithTime("hey");
+            Debug.Log("Hey");
         }
 
+
+        
+        public void TestRPC()
+        {
+            CCM_photonView.RPC("doTest", PhotonTargets.All);
+        }
+
+        private void doTest()
+        {
+            CCM_core.CCM_fnc_logWithTime("Hey PUN");
+        }
+
+        internal static void testRPC_query()
+        {
+            CCM_rpcInstance.TestRPC();
+        }
     }
-    
-    /*
+}
+
+
+
+
+
+
+/*
     // simply used as a reference in other files to the photon view needed for RPCs
     internal class CCM_getPhotonView : Photon.MonoBehaviour
     {
@@ -49,14 +65,6 @@ namespace creativeCommonsMusicProject
         }
     }
     */
-}
-
-
-
-
-
-
-
 
 
 

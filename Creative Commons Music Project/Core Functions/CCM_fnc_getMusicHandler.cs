@@ -19,13 +19,12 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using BepInEx;
 using UnityEngine;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static GameObject CCM_fnc_getMusicHandler()
         {

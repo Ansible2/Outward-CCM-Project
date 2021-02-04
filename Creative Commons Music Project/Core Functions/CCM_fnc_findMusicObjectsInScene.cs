@@ -22,13 +22,12 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using System.Linq;
 using System.Collections.Generic;
-using BepInEx;
 using UnityEngine;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static List<GameObject> CCM_fnc_findMusicObjectsInScene(bool _findAll = false)
         {

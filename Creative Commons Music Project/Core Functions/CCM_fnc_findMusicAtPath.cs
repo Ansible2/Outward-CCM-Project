@@ -22,12 +22,11 @@ Author(s):
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using BepInEx;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal List<string> CCM_fnc_findMusicAtPath(string _folderPathToSearch)
         {

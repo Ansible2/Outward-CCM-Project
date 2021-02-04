@@ -21,13 +21,12 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using System.Linq;
 using System.Collections.Generic;
-using BepInEx;
 using UnityEngine;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static bool CCM_fnc_areListsTheSame(List<GameObject> _list1, List<GameObject> _list2)
         {

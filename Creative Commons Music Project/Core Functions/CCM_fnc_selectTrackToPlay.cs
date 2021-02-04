@@ -22,12 +22,11 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using System.Linq;
 using System.Collections.Generic;
-using BepInEx;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static string CCM_fnc_grabRandomTrack(List<string> _trackList)
         {

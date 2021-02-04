@@ -20,12 +20,11 @@ Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
 using System.Collections.Generic;
-using BepInEx;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static List<string> CCM_fnc_getUsedTrackList(int _trackType = -1)
         {

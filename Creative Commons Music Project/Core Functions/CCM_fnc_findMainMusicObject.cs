@@ -20,7 +20,6 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,12 +27,12 @@ using UnityEngine.SceneManagement;
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static GameObject CCM_fnc_findMainMusicObject(Scene _sceneToCheck)
         {
             //GameObject _mainMusicObject = null;
-            GameObject _mainMusicObject = new GameObject;
+            GameObject _mainMusicObject = new GameObject();
             if (CCM_fnc_isSceneReal(_sceneToCheck))
             {
                 // get music objects currently active in the scene

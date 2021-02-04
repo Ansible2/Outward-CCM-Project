@@ -22,13 +22,12 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using BepInEx;
 using UnityEngine;
 
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_core : BaseUnityPlugin
+    partial class CCM_core
     {
         internal static bool CCM_fnc_stopMusicFromPlaying(AudioSource _audioSourceToStop, bool _fadeOut = true)
         {
