@@ -21,10 +21,9 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using System.Collections;
 using BepInEx;
+using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
 
 
 namespace creativeCommonsMusicProject
@@ -40,6 +39,8 @@ namespace creativeCommonsMusicProject
             string _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_trackType);
 
             string _formattedPath = CCM_core.CCM_fnc_buildFilePath(_folderPath, _fileName, true);
+
+            CCM_core.CCM_fnc_logWithTime("Attempting to play audio at path: " + _formattedPath);
             
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
@@ -55,13 +56,14 @@ namespace creativeCommonsMusicProject
 
                 if (www.error != null)
                 {
-                    CCM_core.CCM_fnc_logWithTime("Web request encountered error");
+                    CCM_core.CCM_fnc_logWithTime("Web request encountered the following error:");
+                    CCM_core.CCM_fnc_logWithTime(www.error);
                     yield break;
                 }
 
                 var clip = DownloadHandlerAudioClip.GetContent(www);
 
-                GameObject _musicObjectToPlayOn = CCM_core.CCM_fnc_getMusicHandler();
+                var _musicObjectToPlayOn = CCM_core.CCM_fnc_getMusicHandler();
                 CCM_core.CCM_fnc_logWithTime("Using music object " + _musicObjectToPlayOn.name);
                 AudioSource _objectAudioSource = _musicObjectToPlayOn.GetComponent<AudioSource>();
                 _objectAudioSource.clip = clip;

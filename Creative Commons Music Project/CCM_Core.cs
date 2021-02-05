@@ -39,10 +39,6 @@ namespace creativeCommonsMusicProject
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
 
-        // for accessing classes in other files
-        //CCM_rpc CCM_rpc = new CCM_rpc();
-        //CCM_scheduled CCM_scheduled = new CCM_scheduled();
-
         internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
         // folder paths for user defined music
         internal const string CCM_filePathStart = "file://";
@@ -183,32 +179,10 @@ namespace creativeCommonsMusicProject
         {
             CCM_fnc_logWithTime("CCM_event_onSceneChanged called");
 
-            if (PhotonNetwork.offlineMode)
-            {
-                CCM_fnc_logWithTime("Photon is offline");
-            }
-            else
-            {
-                CCM_fnc_logWithTime("Photon is online");
-            }
-
-            if (PhotonNetwork.player == null)
-            {
-                CCM_fnc_logWithTime("Photon player is not defined");
-            }
-            else
-            {
-                CCM_fnc_logWithTime("Photon player is defined");
-            }
             // combat music will always be reset on scene changes
             CCM_doRunCombatMusicCheck = false;
 
-            //CCM_rpc.CCM_photonView.RPC("testRPC", PhotonTargets.MasterClient);
-
-            //CCM_rpc.CCM_photonView.RPC("testRPC", PhotonTargets.MasterClient);
-            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
-
-            CCM_rpc.TestRPC();
+            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
         }
 
 

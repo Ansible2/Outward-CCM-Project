@@ -60,6 +60,7 @@ namespace creativeCommonsMusicProject
                     }
                 }
 
+                CCM_fnc_assignMusicHandlerProperties(_mainMusicObject);
             }
 
             return _mainMusicObject;

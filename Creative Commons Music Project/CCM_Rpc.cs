@@ -25,18 +25,11 @@ namespace creativeCommonsMusicProject
         {
             DontDestroyOnLoad(this);
             CCM_rpcInstance = this;
-            CCM_core.CCM_fnc_logWithTime("logging this");
-            CCM_core.CCM_logSource.Log(LogLevel.Message, this);
             
             //CCM_photonView = PhotonView.Get(this);
             CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
             CCM_photonView.viewID = 1067;
-
-            CCM_core.CCM_fnc_logWithTime(CCM_photonView.ToString());
-            CCM_core.CCM_fnc_logWithTime("hey");
-            Debug.Log("Hey");
         }
-
 
         
         internal static void TestRPC()
