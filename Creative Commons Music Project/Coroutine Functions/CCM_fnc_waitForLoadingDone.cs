@@ -30,7 +30,6 @@ namespace creativeCommonsMusicProject
 {
     internal partial class CCM_scheduled : BaseUnityPlugin
     {
-        
         internal static IEnumerator CCM_fnc_waitForLoadingDone(Scene _scene)
         {
             string _mySceneName = _scene.name;
@@ -52,6 +51,8 @@ namespace creativeCommonsMusicProject
                     yield return new WaitForSeconds(0.1f);
                 }
             */
+
+                
                 CCM_core.CCM_fnc_logWithTime("Loading done...");
 
                 // tell every machine that is connected about what scene the player is on
@@ -66,7 +67,7 @@ namespace creativeCommonsMusicProject
                     );    
                 */
 
-
+                
                 // start music replace music
                 CCM_core.CCM_fnc_logWithTime("Finding main music object to change in scene...");
                 GameObject _mainMusicObject = CCM_core.CCM_fnc_findMainMusicObject(_scene);
@@ -85,7 +86,6 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("Audio play & load pass");
 
                 
-
 
                 /*
                     // wait until combat music check if off

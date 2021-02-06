@@ -28,26 +28,7 @@ namespace creativeCommonsMusicProject
             
             //CCM_photonView = PhotonView.Get(this);
             CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
-            CCM_photonView.viewID = 1067;
-        }
-
-        
-        internal static void TestRPC()
-        {
-            CCM_core.CCM_fnc_logWithTime("Testing RPC");
-            // this does execute, but it happens before we connect to photon
-            CCM_photonView.RPC("doTest", PhotonTargets.All);
-        }
-
-        [PunRPC]
-        void doTest()
-        {
-            CCM_core.CCM_fnc_logWithTime("Hey PUN");
-        }
-
-        internal static void testRPC_query()
-        {
-            TestRPC();
+            CCM_photonView.viewID = 61526;
         }
     }
 }

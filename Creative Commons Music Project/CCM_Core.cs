@@ -7,6 +7,8 @@ using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ExitGames;
+using HarmonyLib;
 //using UnityEngine.Networking;
 //using Photon;
 //using Photon.Realtime;
@@ -127,28 +129,11 @@ namespace creativeCommonsMusicProject
             gameObject.AddComponent<CCM_rpc>();
             CCM_Instance = this;
 
-            //CCM_photonView = GetComponent<PhotonView>();
-            //CCM_logSource.LogMessage(CCM_photonView);
-            SceneManager.sceneLoaded += CCM_event_onSceneChanged;
+            CCM_fnc_instantiateHarmony();
 
+
+            SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
             //NetworkLevelLoader.Instance.onSceneLoadingDone += CCM_event_onSceneDoneLoading;
-
-            // fill combat music list
-            // only clones become active and play the music
-            // can't use the standard ones with GameObject.Find
-            CCM_combatMusicList.Add("BGM_StandardCombat(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatAbrassar(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatChersonese(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatEnmerkar(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatHallowedMarsh(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatAntiquePlateau(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatBossDLC1(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatDungeonAntique(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatDungeonFactory(Clone)");
-            CCM_combatMusicList.Add("BGM_CombatMinibossDLC1(Clone)");
-            CCM_combatMusicList.Add("BGM_DungeonAntique(Clone)");
-
-                             
 
             // collect all filenames from the folders
             CCM_combatTracks = CCM_fnc_findMusicAtPath(CCM_combatFolderPath);
@@ -160,9 +145,7 @@ namespace creativeCommonsMusicProject
 
 
         /* ------------------------------------------------------------------------
-        
             CCM_fnc_logWithTime
-
         ------------------------------------------------------------------------ */
         internal static void CCM_fnc_logWithTime(string myMessage = "")
         {
@@ -171,38 +154,48 @@ namespace creativeCommonsMusicProject
 
 
         /* ------------------------------------------------------------------------
-        
-            CCM_event_onSceneChanged
-
+            CCM_fnc_instantiateHarmony
         ------------------------------------------------------------------------ */
-        internal void CCM_event_onSceneChanged(Scene _myScene, LoadSceneMode mode)
+        private static void CCM_fnc_instantiateHarmony()
         {
-            CCM_fnc_logWithTime("CCM_event_onSceneChanged called");
-
-            // combat music will always be reset on scene changes
-            CCM_doRunCombatMusicCheck = false;
-
-            StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+            var harmony = new Harmony("com.Ansible2.CCM");
+            harmony.PatchAll();
         }
 
+        /* ------------------------------------------------------------------------
+            CCM_event_onSceneChanged
+        ------------------------------------------------------------------------ */
+        internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode mode)
+        {
+            CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted called for Scene: " + _goingToScene.name);
+
+            // combat music will always be reset on scene changes
+            //CCM_doRunCombatMusicCheck = false;
+
+            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
+        }
 
         /* ------------------------------------------------------------------------
-        
-            CCM_event_onSceneDoneLoading
-
+            CCM_event_onSceneChanged
         ------------------------------------------------------------------------ */
         internal void CCM_event_onSceneDoneLoading()
         {
             CCM_fnc_logWithTime("CCM_event_onSceneDoneLoading called");
-
-            //CCM_fnc_findMainMusicObject(SceneManager.GetActiveScene());
         }
 
-
-
-
-
-
+        /* ------------------------------------------------------------------------
+            CCM_GAM_playMusic_postFix
+        ------------------------------------------------------------------------ */
+        [HarmonyPatch(typeof(GlobalAudioManager), "PlayMusic")]
+        class PlayMusicPatch
+        {
+            [HarmonyPostfix]
+            static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
+            {
+                int _trackType = CCM_fnc_getTrackType(__result.clip.name);
+                
+            }
+        }
 
 
 
@@ -263,6 +256,12 @@ namespace creativeCommonsMusicProject
 
 
 }
+
+
+
+/*
+1. Player starts game:
+    - Need to use harmony to get inside of the music function responsible for creating music objects or playing them
 
 
 

@@ -38,13 +38,11 @@ namespace creativeCommonsMusicProject
             }
         }
 
-        internal void CCM_fnc_changeActiveSceneQuery(string _sceneName, int _playerId)
+        internal void CCM_fnc_changeActiveScene_RPC(string _sceneName, int _playerId)
         {
-            PhotonView photonView = PhotonView.Get(this);
-
-            photonView.RPC(
+            CCM_photonView.RPC(
                 "CCM_fnc_changeActiveScene",
-                PhotonTargets.AllViaServer,
+                PhotonTargets.AllBufferedViaServer,
                 new object[] { _sceneName, _playerId }
             );
         }

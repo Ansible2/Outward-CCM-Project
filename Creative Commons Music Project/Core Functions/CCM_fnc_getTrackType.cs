@@ -30,7 +30,7 @@ namespace creativeCommonsMusicProject
             // .Contains() is case sensetive
             _objectName = _objectName.ToLower();
             int _type = -1;
-            string _logString = "Found that object " + _objectName + " matched tracks for ";
+            string _logString = "CCM_fnc_getTrackType: Found that object " + _objectName + " matched tracks for ";
 
             if (_objectName.Contains("dungeon"))
             {
@@ -64,7 +64,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_fnc_logWithTime("Did not find any track type to match " + _objectName);
+                CCM_fnc_logWithTime("CCM_fnc_getTrackType: Did not find any track type to match " + _objectName);
             }
 
             return _type;
