@@ -31,7 +31,7 @@ namespace creativeCommonsMusicProject
         */
         /* ------------------------------------------------------------------------
         
-            Create Globals
+            Prepare Globals
 
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
@@ -68,6 +68,9 @@ namespace creativeCommonsMusicProject
         internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
         internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
 
+        
+
+        // true when currently loading an audio file
         internal static bool CCM_loadingAudio = false;
 
         internal enum CCM_trackTypes_enum
@@ -85,16 +88,14 @@ namespace creativeCommonsMusicProject
         // a list for storing the combat music object names as strings
         // this is to be able to detect when one is created
         internal static List<string> CCM_combatMusicList = new List<string>();
-        
-        // used for controlling the loop in CCM_fnc_startCombatMusicIntercept
-        internal static bool CCM_doRunCombatMusicCheck = true;
-        
+           
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
         // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
         internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
         
         // used to keep track of each active scenes music track
-        internal static Dictionary<Scene, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<Scene, string>();
+        // layout is scene/track
+        internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
 
         // music game objects we will use to actually play music
         internal static GameObject CCM_musicHandler_1;
@@ -125,7 +126,8 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this.gameObject);
+            this.gameObject.name = "CCM Core GameObject";
             gameObject.AddComponent<CCM_rpc>();
             CCM_Instance = this;
 
@@ -162,40 +164,38 @@ namespace creativeCommonsMusicProject
             harmony.PatchAll();
         }
 
-        /* ------------------------------------------------------------------------
-            CCM_event_onSceneChanged
-        ------------------------------------------------------------------------ */
-        internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode mode)
-        {
-            CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted called for Scene: " + _goingToScene.name);
 
-            // combat music will always be reset on scene changes
-            //CCM_doRunCombatMusicCheck = false;
 
-            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
-        }
 
-        /* ------------------------------------------------------------------------
-            CCM_event_onSceneChanged
-        ------------------------------------------------------------------------ */
-        internal void CCM_event_onSceneDoneLoading()
-        {
-            CCM_fnc_logWithTime("CCM_event_onSceneDoneLoading called");
-        }
 
-        /* ------------------------------------------------------------------------
-            CCM_GAM_playMusic_postFix
-        ------------------------------------------------------------------------ */
-        [HarmonyPatch(typeof(GlobalAudioManager), "PlayMusic")]
-        class PlayMusicPatch
-        {
-            [HarmonyPostfix]
-            static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
-            {
-                int _trackType = CCM_fnc_getTrackType(__result.clip.name);
-                
-            }
-        }
+
+
+
+
+
+
+
+
+/*
+
+    When play music event comes up, get the track type
+    
+    Send a request to the server for a track to play
+        - player will send a target id (either photonNetwork.player or Id?) to receive a global to set for the track
+            - The player will be waiting for this global to not be null before playing the music.
+        
+        - The server will halt all others requesting a track (for the same scene) until completeing the first request
+         which it will then provide to others requesting.
+
+        - if the track is for combat it will ignore what is currently in the CCM_dictionary_activeScenesCurrentMusic
+         unless it is also a combat track
+        
+        - The server will get what the scene is currently playing or it will get a new track an set the scene's current playing one
+    
+    The server will then send a message back to the requester that will set a global that the client is waiting on to determine what track to load
+    
+*/
+
 
 
 

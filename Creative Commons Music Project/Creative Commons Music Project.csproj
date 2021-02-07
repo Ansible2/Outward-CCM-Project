@@ -32,11 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Core Functions\CCM_fnc_areListsTheSame.cs" />
+    <Compile Include="Core Events\CCM_event_onSceneChanged.cs" />
+    <Compile Include="Core Events\CCM_event_onVanillaMusicPlayed.cs" />
+    <Compile Include="old\CCM_fnc_areListsTheSame.cs" />
     <Compile Include="Core Functions\CCM_fnc_buildFilePath.cs" />
+    <Compile Include="Core Functions\CCM_fnc_requestTrackToPlay.cs" />
+    <Compile Include="Core Functions\CCM_fnc_setTrackToPlay.cs" />
     <Compile Include="RPC Functions\CCM_fnc_changeActiveScene.cs" />
     <Compile Include="Core Functions\CCM_fnc_findMusicAtPath.cs" />
-    <Compile Include="Core Functions\CCM_fnc_findMusicObjectsInScene.cs" />
+    <Compile Include="old\CCM_fnc_findMusicObjectsInScene.cs" />
     <Compile Include="Core Functions\CCM_fnc_getMusicHandler.cs" />
     <Compile Include="Core Functions\CCM_fnc_getTrackList.cs" />
     <Compile Include="Core Functions\CCM_fnc_getUsedTrackList.cs" />
@@ -45,14 +49,14 @@
     <Compile Include="Core Functions\CCM_fnc_assignMusicHandlerProperties.cs" />
     <Compile Include="Core Functions\CCM_fnc_getTrackType.cs" />
     <Compile Include="Core Functions\CCM_fnc_selectTrackToPlay.cs" />
-    <Compile Include="Core Functions\CCM_fnc_stopMusicFromLooping.cs" />
-    <Compile Include="Core Functions\CCM_fnc_stopMusicFromPlaying.cs" />
+    <Compile Include="old\CCM_fnc_stopMusicFromLooping.cs" />
+    <Compile Include="old\CCM_fnc_stopMusicFromPlaying.cs" />
     <Compile Include="Core Functions\CCM_fnc_getAllAvailableReplacementTracks.cs" />
     <Compile Include="Core Functions\CCM_fnc_getTrackTypeFolderPath.cs" />
-    <Compile Include="Coroutine Functions\CCM_fnc_fadeAudioSource.cs" />
-    <Compile Include="Coroutine Functions\CCM_fnc_loadAndPlayAudioClip.cs" />
-    <Compile Include="Coroutine Functions\CCM_fnc_startCombatMusicIntercept.cs" />
-    <Compile Include="Coroutine Functions\CCM_fnc_waitForLoadingDone.cs" />
+    <Compile Include="Core Functions\CCM_spawn_fadeAudioSource.cs" />
+    <Compile Include="RPC Functions\CCM_spawn_loadAndPlayAudioClip.cs" />
+    <Compile Include="old\CCM_fnc_startCombatMusicIntercept.cs" />
+    <Compile Include="old\CCM_fnc_waitForLoadingDone.cs" />
     <Compile Include="CCM_Core.cs" />
     <Compile Include="CCM_Rpc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -15,7 +15,7 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             Create Globals
         ------------------------------------------------------------------------ */
-        internal static CCM_rpc CCM_rpcInstance;
+        //internal static CCM_rpc CCM_rpcComponent;
         internal static PhotonView CCM_photonView;
 
         /* ------------------------------------------------------------------------
@@ -23,8 +23,8 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            DontDestroyOnLoad(this);
-            CCM_rpcInstance = this;
+            //DontDestroyOnLoad(this);
+            //CCM_rpcComponent = this;
             
             //CCM_photonView = PhotonView.Get(this);
             CCM_photonView = this.gameObject.GetOrAddComponent<PhotonView>();
@@ -50,7 +50,7 @@ namespace creativeCommonsMusicProject
             CCM_core.CCM_fnc_logWithTime("CCM photon view ^");
         }
     }
-    */
+*/
 
 
 

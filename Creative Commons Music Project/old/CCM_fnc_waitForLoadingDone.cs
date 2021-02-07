@@ -78,7 +78,7 @@ namespace creativeCommonsMusicProject
                 var _trackFileName = CCM_core.CCM_fnc_grabRandomTrack(_possibleTracks_list);
 
                 CCM_core.CCM_fnc_logWithTime("Calling Audio Load...");
-                CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_trackFileName, _trackType));
+                CCM_core.CCM_Instance.StartCoroutine(CCM_rpc.CCM_spawn_loadAndPlayAudioClip(_trackFileName, _trackType));
 
                 // wait for audio to load
                 CCM_core.CCM_fnc_logWithTime("waiting for audio to load...");

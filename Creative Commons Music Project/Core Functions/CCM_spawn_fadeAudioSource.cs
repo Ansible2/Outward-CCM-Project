@@ -1,5 +1,5 @@
 ﻿/* ----------------------------------------------------------------------------
-Function: CCM_fnc_fadeAudioSource
+Function: CCM_spawn_fadeAudioSource
 
 Description:
 	Fades an AudioSource to a given volume.
@@ -17,7 +17,7 @@ Returns:
 
 Examples:
     (begin example)
-		StartCoroutine(CCM_fnc_startCombatMusicIntercept(_someAudioSource,3,0,true));
+		StartCoroutine(CCM_spawn_fadeAudioSource(_someAudioSource,3,0,true));
     (end)
 
 Author(s):
@@ -30,9 +30,9 @@ using UnityEngine;
 
 namespace creativeCommonsMusicProject
 {
-    internal partial class CCM_scheduled : BaseUnityPlugin
+    partial class CCM_core
     {
-        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
+        internal static IEnumerator CCM_spawn_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
         {
             float currentTime = 0;
             float _startingVolume = _audioSoucre.volume;

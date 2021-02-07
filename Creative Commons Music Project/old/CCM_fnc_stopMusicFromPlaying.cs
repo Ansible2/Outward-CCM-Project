@@ -36,7 +36,7 @@ namespace creativeCommonsMusicProject
             {
                 if (_fadeOut)
                 {
-                    CCM_Instance.StartCoroutine(CCM_scheduled.CCM_fnc_fadeAudioSource(_audioSourceToStop, 3, 0, true));
+                    CCM_Instance.StartCoroutine(CCM_core.CCM_spawn_fadeAudioSource(_audioSourceToStop, 3, 0, true));
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace creativeCommonsMusicProject
             {
                 if (_fadeOut)
                 {
-                    CCM_Instance.StartCoroutine(CCM_scheduled.CCM_fnc_fadeAudioSource(_objectAudioSource, 3, 0, true));
+                    CCM_Instance.StartCoroutine(CCM_core.CCM_spawn_fadeAudioSource(_objectAudioSource, 3, 0, true));
                 }
                 else
                 {
