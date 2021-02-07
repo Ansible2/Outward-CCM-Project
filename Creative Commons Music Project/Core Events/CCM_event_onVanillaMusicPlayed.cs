@@ -57,7 +57,7 @@ namespace creativeCommonsMusicProject
         {
             CCM_fnc_logWithTime("CCM_spawn_playMusic: was called...");
 
-            CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID);
+            CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
 
             bool _trackIsCombat = _trackType == (int)CCM_trackTypes_enum.combat;
             if (_trackIsCombat)

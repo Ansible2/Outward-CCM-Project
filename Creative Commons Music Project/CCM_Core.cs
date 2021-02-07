@@ -68,7 +68,8 @@ namespace creativeCommonsMusicProject
         internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
         internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
 
-        
+
+        internal static Scene CCM_currentScene;
 
         // true when currently loading an audio file
         internal static bool CCM_loadingAudio = false;

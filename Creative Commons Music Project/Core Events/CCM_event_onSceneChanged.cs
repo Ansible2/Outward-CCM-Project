@@ -30,7 +30,12 @@ namespace creativeCommonsMusicProject
     {
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
-            CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
+            if (CCM_fnc_isSceneReal(_goingToScene))
+            {
+                CCM_currentScene = _goingToScene;
+                CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
+            }
+            
             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
 
             //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
