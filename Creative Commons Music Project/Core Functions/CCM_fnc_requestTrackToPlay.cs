@@ -58,8 +58,9 @@ namespace creativeCommonsMusicProject
         {
 
             // this still needs to be able to return tracks that are already in active scenes for other players
-
-            if (CCM_core.CCM_dictionary_activeScenesCurrentMusic.ContainsKey(_playersScene) && (!CCM_list_scenesChoosingMusicFor.Contains(_playersScene)))
+            bool _sceneHasCurrentMusic = CCM_core.CCM_dictionary_activeScenesCurrentMusic.ContainsKey(_playersScene);
+            bool _sceneMusicIsBeingChosen = CCM_list_scenesChoosingMusicFor.Contains(_playersScene);
+            if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen)
             {
                 string _sceneTrackFileName = CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(
@@ -73,7 +74,7 @@ namespace creativeCommonsMusicProject
 
                 bool _updateDictionaries = true;
                 // if scene is already getting music selected for it
-                if (CCM_list_scenesChoosingMusicFor.Contains(_playersScene))
+                if (_sceneMusicIsBeingChosen)
                 {
                     _updateDictionaries = false;
                     while (CCM_list_scenesChoosingMusicFor.Contains(_playersScene))
@@ -94,7 +95,7 @@ namespace creativeCommonsMusicProject
                     List<string> _possibleTracks = CCM_core.CCM_fnc_getAllAvailableReplacementTracks(_trackType);
                     _randomTrackFilename = CCM_core.CCM_fnc_grabRandomTrack(_possibleTracks);
 
-                    if (CCM_core.CCM_dictionary_activeScenesCurrentMusic.ContainsKey(_playersScene))
+                    if (_sceneHasCurrentMusic)
                     {
                         CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene] = _randomTrackFilename;
                     }
