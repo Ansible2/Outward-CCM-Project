@@ -1,5 +1,5 @@
 ﻿/* ----------------------------------------------------------------------------
-Function: CCM_spawn_createMusicRoutineForScene
+Function: CCM_spawn_startMusicRoutineForScene
 
 Description:
 	When a scened first gets music played, a music "routine" is started.
@@ -50,14 +50,14 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static void CCM_spawn_createMusicRoutineForScene()
+        internal static void CCM_spawn_startMusicRoutineForScene()
         {
-            CCM_Instance.StartCoroutine(CCM_fnc_startMusicRoutine());
+            CCM_Instance.StartCoroutine(CCM_fnc_startMusicRoutineForScene());
         }
 
-        internal static IEnumerator CCM_fnc_createMusicRoutineForScene()
+        internal static IEnumerator CCM_fnc_startMusicRoutineForScene()
         {
-
+            CCM_dictionary_sceneRoutineObjects
         }
     }
 }

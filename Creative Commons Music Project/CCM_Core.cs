@@ -97,6 +97,11 @@ namespace creativeCommonsMusicProject
         // layout is scene/track
         internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
 
+
+        // Music Routine objects
+        internal static Dictionary<string, GameObject> CCM_dictionary_sceneRoutineObjects = new Dictionary<string, GameObject>();
+
+
         // keeps track of the currently playing music type for each scene that is active
         internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
         
