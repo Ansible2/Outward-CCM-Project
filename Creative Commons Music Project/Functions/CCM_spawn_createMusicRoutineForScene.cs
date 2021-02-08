@@ -1,14 +1,13 @@
 ﻿/* ----------------------------------------------------------------------------
-Function: CCM_spawn_fadeAudioSource
+Function: CCM_spawn_createMusicRoutineForScene
 
 Description:
-	When a scened first gets music played
+	When a scened first gets music played, a music "routine" is started.
+    
+    It will handle when music is supposed to played at random times.
 
 Parameters:
 	0: _audioSoucre <AudioSource> - The AudioSource to fade
-    1: _duration <FLOAT> - Over how long should the fade take place
-    2: _targetVolume <FLOAT> - The volume you want the audio to be at at the end of the fade
-    3: _stopAfter <BOOL> - Should the AudioSource be commanded to stop after the fade
 
 Returns:
 	NOTHING
@@ -28,16 +27,35 @@ using System.Text;
 using UnityEngine;
 using System.Collections;
 
+
+
+
+
+
+
+
+/*
+    create a gameobject to attach this routine to.
+    Add these gameObjects to a list so that each is known to the server.
+    Change the name of the gameobject to be the scene name + someting like "routine"
+    When you need to reference a certain scenes routine, just look it up with that string.
+    To stop a routine, destroy the gameObject associated to the scene.
+*/
+
+
+
+
+
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static void CCM_spawn_startMusicRoutine()
+        internal static void CCM_spawn_createMusicRoutineForScene()
         {
             CCM_Instance.StartCoroutine(CCM_fnc_startMusicRoutine());
         }
 
-        internal static IEnumerator CCM_fnc_startMusicRoutine()
+        internal static IEnumerator CCM_fnc_createMusicRoutineForScene()
         {
 
         }

@@ -17,7 +17,11 @@ Returns:
 
 Examples:
     (begin example)
-		StartCoroutine(CCM_spawn_fadeAudioSource(_someAudioSource,3,0,true));
+		StartCoroutine(CCM_fnc_fadeAudioSource(_someAudioSource,3,0,true));
+        
+        OR
+        
+        CCM_spawn_fadeAudioSource(_someAudioSource,3,0,true)
     (end)
 
 Author(s):

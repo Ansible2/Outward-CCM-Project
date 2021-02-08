@@ -44,6 +44,8 @@ namespace creativeCommonsMusicProject
 
                 if (_trackType != -1)
                 {
+                    __result.mute = true;
+
                     CCM_currentTrackType = _trackType;
                     CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
 

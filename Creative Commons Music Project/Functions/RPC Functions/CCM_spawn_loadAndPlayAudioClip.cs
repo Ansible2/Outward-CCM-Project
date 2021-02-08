@@ -77,7 +77,7 @@ namespace creativeCommonsMusicProject
 
                 CCM_core.CCM_fnc_logWithTime("CCM_spawn_loadAndPlayAudioClip: Do play");
                 _objectAudioSource.Play();
-                CCM_core.CCM_Instance.StartCoroutine(CCM_core.CCM_spawn_fadeAudioSource(_objectAudioSource, 3, CCM_core.CCM_musicVolume));
+                CCM_core.CCM_spawn_fadeAudioSource(_objectAudioSource, 3, CCM_core.CCM_musicVolume);
                 CCM_core.CCM_nowPlayingMusicHandler = _musicObjectToPlayOn;
                 CCM_core.CCM_nowPlayingAudioSource = _objectAudioSource;
             }
