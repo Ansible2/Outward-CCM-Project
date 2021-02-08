@@ -41,10 +41,10 @@ namespace creativeCommonsMusicProject
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
 
-        internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
-        // folder paths for user defined music
-        internal const string CCM_filePathStart = "file://";
 
+        /* ------------------------------------------------------------------------
+            Lists
+        ------------------------------------------------------------------------ */
         // lists for keeping track of already played music to avoid playing it again frequently if possible
         // these will contain file names for the music
         internal static List<string> CCM_usedCombatTracks = new List<string>();
@@ -60,6 +60,32 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_townTracks = new List<string>();
         internal static List<string> CCM_dungeonTracks = new List<string>();
 
+
+        // keeps track of the music routines running for each scene to schedule music 
+        internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
+
+
+        /* ------------------------------------------------------------------------
+            Dictionaries
+        ------------------------------------------------------------------------ */
+        // used to keep track of each player's' current scene. dictionary is global and synced between all players
+        // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
+        internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
+
+        // used to keep track of each active scenes music track
+        // layout is scene/track
+        internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
+
+        // Music Routine objects
+        internal static Dictionary<string, GameObject> CCM_dictionary_sceneRoutineObjects = new Dictionary<string, GameObject>();
+        
+        // keeps track of the currently playing music type for each scene that is active
+        internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
+
+
+        /* ------------------------------------------------------------------------
+            String Constants
+        ------------------------------------------------------------------------ */
         // folder path constants
         internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
         internal static readonly string CCM_combatFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Combat Tracks");
@@ -67,8 +93,22 @@ namespace creativeCommonsMusicProject
         internal static readonly string CCM_ambientDayFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Ambient Day Tracks");
         internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
         internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
+        // used for naming scheme on music-routine objects
+        internal static readonly string CCM_musicRoutinePostfixString = "-MusicRoutineObject";
+
+        // folder paths for user defined music
+        internal const string CCM_filePathStart = "file://";
 
 
+        /* ------------------------------------------------------------------------
+            Misc
+        ------------------------------------------------------------------------ */
+        // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
+        // they need to be assigned the properties of a BGM (Background Music) game object
+        // So when they can be instantiated with the same properites it will be set to true
+        internal static bool CCM_gameObjectPropsAssigned = false;
+
+        // self explanitory
         internal static Scene CCM_currentScene;
 
         // true when currently loading an audio file
@@ -77,35 +117,25 @@ namespace creativeCommonsMusicProject
         internal enum CCM_trackTypes_enum
         {
             combat,
+            ambient,
             ambientNight,
             ambientDay,
             town,
+            townNight,
+            townDay,
             dungeon
         };
-
         // for keeping track of the CCM_trackTypes_enum
         internal static int CCM_currentTrackType = -1;
 
-        // keeps track of the music routines running for each scene to schedule music 
-        internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
-           
-        // used to keep track of each player's' current scene. dictionary is global and synced between all players
-        // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
-        internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
-        
-        // used to keep track of each active scenes music track
-        // layout is scene/track
-        internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
+        internal static System.Random CCM_getRandom = new System.Random();
+
+        internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
 
 
-        // Music Routine objects
-        internal static Dictionary<string, GameObject> CCM_dictionary_sceneRoutineObjects = new Dictionary<string, GameObject>();
-
-
-        // keeps track of the currently playing music type for each scene that is active
-        internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
-        
-
+        /* ------------------------------------------------------------------------
+            Music Handlers
+        ------------------------------------------------------------------------ */
         // music game objects we will use to actually play music
         internal static GameObject CCM_musicHandler_1;
         internal static GameObject CCM_musicHandler_2;
@@ -118,13 +148,6 @@ namespace creativeCommonsMusicProject
         internal static GameObject CCM_nowPlayingMusicHandler;
         internal static AudioSource CCM_nowPlayingAudioSource;
 
-        // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
-        // they need to be assigned the properties of a BGM (Background Music) game object
-        // this is done (ideally) on the first run of CCM_fnc_findMainMusicObject
-        internal static bool CCM_gameObjectPropsAssigned = false;     
-
-
-        internal static System.Random CCM_getRandom = new System.Random();
 
 
 
@@ -177,33 +200,9 @@ namespace creativeCommonsMusicProject
 
 
 
-
-
-
-
-
-
-
-
-/*
-
-    When play music event comes up, get the track type
-    
-    Send a request to the server for a track to play
-        - player will send a target id (either photonNetwork.player or Id?) to receive a global to set for the track
-            - The player will be waiting for this global to not be null before playing the music.
-        
-        - The server will halt all others requesting a track (for the same scene) until completeing the first request
-         which it will then provide to others requesting.
-
-        - if the track is for combat it will ignore what is currently in the CCM_dictionary_activeScenesCurrentMusic
-         unless it is also a combat track
-        
-        - The server will get what the scene is currently playing or it will get a new track an set the scene's current playing one
-    
-    The server will then send a message back to the requester that will set a global that the client is waiting on to determine what track to load
-    
-*/
+        // You don't need to hook into any stop music function (atleast for combat tracks) as it appears there will be another playmusic called to restart the ambient one
+        // THIS NEEDS TO BE CONFIRMED IN THE GAMES CODE HOWEVER
+        // You have to make sure that you don't need to hook into the QueueMusic function instead to detect this for instance as it might just unmute the other game object instead of calling the playMusic function again
 
 
 
