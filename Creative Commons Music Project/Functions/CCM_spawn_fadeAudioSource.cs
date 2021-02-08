@@ -56,6 +56,7 @@ namespace creativeCommonsMusicProject
             if (_stopAfter)
             {
                 _audioSoucre.Stop();
+                _audioSoucre.clip.UnloadAudioData();
             }
             yield break;
         }

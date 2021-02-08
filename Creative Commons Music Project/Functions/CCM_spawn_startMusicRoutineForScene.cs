@@ -7,14 +7,17 @@ Description:
     It will handle when music is supposed to played at random times.
 
 Parameters:
-	0: _audioSoucre <AudioSource> - The AudioSource to fade
+	0: _sceneName <STRING> - The name of the scene this is to be play music for
+    1: _trackType <int> - The corresponding int track type as in the CCM_trackTypes_enum
+    2: _deletePrevious <BOOL> - If a previous routine exists for the scene, 
+        should it be deleted before creating the new one
 
 Returns:
 	NOTHING
 
 Examples:
     (begin example)
-		StartCoroutine(CCM_spawn_fadeAudioSource(_someAudioSource,3,0,true));
+		CCM_spawn_startMusicRoutineForScene("a scene name", (int)CCM_trackTypes_enum.combat, true);
     (end)
 
 Author(s):
@@ -52,10 +55,10 @@ namespace creativeCommonsMusicProject
     {
         internal static void CCM_spawn_startMusicRoutineForScene(string _sceneName, int _trackType, bool _deletePrevious = true)
         {
-            bool _routineExitsForScene = CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName);
-            if (_routineExitsForScene && _deletePrevious)
+            //bool _routineExistsForScene = CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName);
+            if (_deletePrevious)
             {
-                // call a function to delete the previous game object for it
+                CCM_fnc_stopMusicRoutine(_sceneName);
             }
 
             // create object
@@ -64,26 +67,25 @@ namespace creativeCommonsMusicProject
 
             MonoBehaviour _musicRoutineInstance = _musicRoutineObject.GetOrAddComponent<MonoBehaviour>();
             CCM_dictionary_sceneRoutineObjects.Add(_sceneName, _musicRoutineObject);
-            _musicRoutineInstance.StartCoroutine(CCM_fnc_startMusicRoutineForScene(_sceneName, _musicRoutineObject, _trackType));
-
+            
+            
+            _musicRoutineInstance.StartCoroutine(_fn_beginRoutine(_sceneName, _musicRoutineObject, _trackType));
         }
 
-        private static IEnumerator CCM_fnc_startMusicRoutineForScene(string _sceneName, GameObject _musicRoutineObject, int _trackType)
+        private static IEnumerator _fn_beginRoutine(string _sceneName, GameObject _musicRoutineObject, int _trackType)
         {
             while (CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName))
             {
-                yield return new WaitForSeconds(CCM_fnc_decideTimeBetweenTracks(_trackType));
+                yield return new WaitForSeconds(_fn_decideTimeBetweenTracks(_trackType));
 
                 // get new track
                 // set track in dictionary CCM_dictionary_activeScenesCurrentMusic
                 // get everyone in the scence
                 // RPC load And play onto everyone
             }
-
-
         }
 
-        private static int CCM_fnc_decideTimeBetweenTracks(int _trackType)
+        private static int _fn_decideTimeBetweenTracks(int _trackType)
         {
             int _sleepTime = 0;
 
