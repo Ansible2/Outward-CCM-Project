@@ -2,9 +2,7 @@
 Function: CCM_spawn_fadeAudioSource
 
 Description:
-	Fades an AudioSource to a given volume.
-
-    It can also stop music at the end of the fades when desired.
+	When a scened first gets music played
 
 Parameters:
 	0: _audioSoucre <AudioSource> - The AudioSource to fade
@@ -23,33 +21,25 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using System.Collections;
-using BepInEx;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
-
+using System.Collections;
 
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static IEnumerator CCM_spawn_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
+        internal static void CCM_spawn_startMusicRoutine()
         {
-            float currentTime = 0;
-            float _startingVolume = _audioSoucre.volume;
-
-            while (currentTime < _duration)
-            {
-                currentTime += Time.deltaTime;
-                _audioSoucre.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
-                yield return null;
-            }
-
-            if (_stopAfter)
-            {
-                _audioSoucre.Stop();
-            }
-            yield break;
+            CCM_Instance.StartCoroutine(CCM_fnc_startMusicRoutine());
         }
 
+        internal static IEnumerator CCM_fnc_startMusicRoutine()
+        {
+
+        }
     }
 }

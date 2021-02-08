@@ -53,7 +53,13 @@ namespace creativeCommonsMusicProject
         }
 
 
-        static IEnumerator CCM_spawn_playMusic(int _trackType)
+
+        internal static void CCM_spawn_playMusic(int _trackType)
+        {
+            CCM_Instance.StartCoroutine(CCM_fnc_playMusic(_trackType));
+        }
+
+        internal static IEnumerator CCM_fnc_playMusic(int _trackType)
         {
             CCM_fnc_logWithTime("CCM_spawn_playMusic: was called...");
 
@@ -73,7 +79,7 @@ namespace creativeCommonsMusicProject
             string _trackFilename = CCM_trackToPlay;
             CCM_trackToPlay = "";
 
-            CCM_Instance.StartCoroutine(CCM_rpc.CCM_spawn_loadAndPlayAudioClip(_trackFilename, _trackType, _trackIsCombat));
+            CCM_rpc.CCM_rpcComponent.CCM_spawn_loadAndPlayAudioClip(_trackFilename, _trackType, _trackIsCombat);
         }
     }
 }

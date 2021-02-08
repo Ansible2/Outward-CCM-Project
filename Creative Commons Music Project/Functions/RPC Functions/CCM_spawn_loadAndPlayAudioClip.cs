@@ -30,7 +30,13 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_rpc
     {
-        internal static IEnumerator CCM_spawn_loadAndPlayAudioClip(string _fileName, int _trackType = 0, bool _canInterrupt = false)
+        [PunRPC]
+        internal void CCM_spawn_loadAndPlayAudioClip(string _fileName, int _trackType = 0, bool _canInterrupt = false)
+        {
+            CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_loadAndPlayAudioClip(_fileName, _trackType, _canInterrupt));
+        }
+
+        internal static IEnumerator CCM_fnc_loadAndPlayAudioClip(string _fileName, int _trackType = 0, bool _canInterrupt = false)
         {
             CCM_core.CCM_loadingAudio = true;
             CCM_core.CCM_fnc_logWithTime("CCM_spawn_loadAndPlayAudioClip: Loading audio...");         
@@ -80,7 +86,7 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_loadAndPlayAudioClip_RPC(string _fileName, int _trackType = 0, bool _canInterrupt = false)
         {
-            StartCoroutine(CCM_spawn_loadAndPlayAudioClip(_fileName, _trackType, _canInterrupt));
+            CCM_spawn_loadAndPlayAudioClip(_fileName, _trackType, _canInterrupt);
         }
     }
 }

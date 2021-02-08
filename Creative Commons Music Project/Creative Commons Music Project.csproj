@@ -34,9 +34,10 @@
   <ItemGroup>
     <Compile Include="Core Events\CCM_event_onSceneChanged.cs" />
     <Compile Include="Core Events\CCM_event_onVanillaMusicPlayed.cs" />
+    <Compile Include="Core Functions\CCM_spawn_startSceneMusicRoutine.cs" />
     <Compile Include="old\CCM_fnc_areListsTheSame.cs" />
     <Compile Include="Core Functions\CCM_fnc_buildFilePath.cs" />
-    <Compile Include="Core Functions\CCM_fnc_requestTrackToPlay.cs" />
+    <Compile Include="RPC Functions\CCM_fnc_requestTrackToPlay.cs" />
     <Compile Include="RPC Functions\CCM_fnc_changeActiveScene.cs" />
     <Compile Include="Core Functions\CCM_fnc_findMusicAtPath.cs" />
     <Compile Include="old\CCM_fnc_findMusicObjectsInScene.cs" />

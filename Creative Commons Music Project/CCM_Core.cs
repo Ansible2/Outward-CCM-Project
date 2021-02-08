@@ -86,9 +86,8 @@ namespace creativeCommonsMusicProject
         // for keeping track of the CCM_trackTypes_enum
         internal static int CCM_currentTrackType = -1;
 
-        // a list for storing the combat music object names as strings
-        // this is to be able to detect when one is created
-        internal static List<string> CCM_combatMusicList = new List<string>();
+        // keeps track of the music routines running for each scene to schedule music 
+        internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
            
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
         // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
@@ -97,6 +96,10 @@ namespace creativeCommonsMusicProject
         // used to keep track of each active scenes music track
         // layout is scene/track
         internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
+
+        // keeps track of the currently playing music type for each scene that is active
+        internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
+        
 
         // music game objects we will use to actually play music
         internal static GameObject CCM_musicHandler_1;

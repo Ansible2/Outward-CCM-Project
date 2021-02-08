@@ -42,25 +42,40 @@ namespace creativeCommonsMusicProject
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _trackType, int _playerId, string _playersScene)
         {
             CCM_photonView.RPC(
-                "CCM_fnc_requestTrackToPlay",
+                "CCM_spawn_requestTrackToPlay",
                 PhotonTargets.MasterClient,
                 new object[] { _trackType, _playerId , _playersScene }
             );
         }
 
         [PunRPC]
-        internal void CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
+        internal void CCM_spawn_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
-            CCM_core.CCM_Instance.StartCoroutine(CCM_spawn_requestTrackToPlay(_trackType, _playerId, _playersScene));
+            CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene));
         }
 
-        internal static IEnumerator CCM_spawn_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
+        internal static IEnumerator CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
+            bool _trackTypeChanged = false;
+            if (CCM_core.CCM_dictionary_activeScenesTrackType.ContainsKey(_playersScene))
+            {
+                if (CCM_core.CCM_dictionary_activeScenesTrackType[_playersScene] != _trackType)
+                {
+                    _trackTypeChanged = true;
+                    CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: track type was changed for " + _playersScene);
+                }
+            }
+            else
+            {
+                CCM_core.CCM_dictionary_activeScenesTrackType.Add(_playersScene, _trackType);
+            }
+
+
 
             // this still needs to be able to return tracks that are already in active scenes for other players
             bool _sceneHasCurrentMusic = CCM_core.CCM_dictionary_activeScenesCurrentMusic.ContainsKey(_playersScene);
             bool _sceneMusicIsBeingChosen = CCM_list_scenesChoosingMusicFor.Contains(_playersScene);
-            if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen)
+            if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen && !_trackTypeChanged)
             {
                 string _sceneTrackFileName = CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(

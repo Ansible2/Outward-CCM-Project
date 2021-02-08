@@ -39,6 +39,15 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " was not in the dictionary, adding...");
                 CCM_core.CCM_dictionary_activePlayerScenes.Add(_playerId, _sceneName);
             }
+
+
+
+            bool _sceneStillInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsValue(_sceneName);
+            if (!_sceneStillInDictionary)
+            {
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: Scene: " + _sceneName + " is no longer active for any players");
+                // clear out relevant dictionaries & lists
+            }
         }
 
         internal static void CCM_fnc_changeActiveScene_RPC(string _sceneName, int _playerId)
