@@ -72,10 +72,12 @@ namespace creativeCommonsMusicProject
         {
             while (CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName))
             {
-                // 
+                yield return new WaitForSeconds(CCM_fnc_decideTimeBetweenTracks(_trackType));
 
-
-                yield return new WaitForSeconds(1);
+                // get new track
+                // set track in dictionary CCM_dictionary_activeScenesCurrentMusic
+                // get everyone in the scence
+                // RPC load And play onto everyone
             }
 
 
