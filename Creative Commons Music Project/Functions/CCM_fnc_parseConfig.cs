@@ -104,7 +104,8 @@ namespace creativeCommonsMusicProject
         }
 
         /* ----------------------------------------------------------------------------
-           _fn_loadAndStoreAudioClip
+           _fn_loadAndStoreAudioClip    (AudioClips are loaded at the start and stored due to a need to know their duration in order to queue songs for the future. 
+                                        I could've used another library for this, but it is the smoothest for development and playback though costly for memory)
         ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_loadAndStoreAudioClip(string _filename)
         {
