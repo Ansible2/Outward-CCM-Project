@@ -154,8 +154,6 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            CCM_Lists
-
             CCM_fnc_parseConfig();
 
             DontDestroyOnLoad(this.gameObject);
