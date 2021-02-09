@@ -26,30 +26,37 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using BepInEx.Logging;
+using System.Collections;
+using UnityEngine.Networking;
 
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal const string CCM_configFileName = "CCM Config.xml";
+        internal const string CCM_configFileName = @"CCM Config.xml";
+
+        // true when currently loading an audio file
+        internal static bool CCM_loadingAudio = false;
 
         internal static void CCM_fnc_parseConfig()
         {
             string _pathToConfig = Path.Combine(CCM_mainFolderPath, CCM_configFileName);
             
-            if (!File.Exists(_pathToConfig))
+            if (File.Exists(_pathToConfig))
             {
-                CCM_logSource.Log(LogLevel.Fatal, "Config file could not be found at: " + _pathToConfig);
+                var _xmlConfigFile = XDocument.Load(_pathToConfig);
+                _fn_buildAudioClipLibrary(_xmlConfigFile);
+                _fn_grabTrackSettings(_xmlConfigFile);
             }
             else
             {
-                var _xmlConfigFile = XDocument.Load(_pathToConfig);
-
-                
+                CCM_logSource.Log(LogLevel.Fatal, "Config file could not be found at: " + _pathToConfig);
             }
-            
         }
 
+        /* ----------------------------------------------------------------------------
+            _fn_buildAudioClipLibrary
+        ---------------------------------------------------------------------------- */
         private static void _fn_buildAudioClipLibrary(XDocument _xmlConfigFile)
         {
             var _list = _xmlConfigFile.Root.Descendants("tracks");
@@ -57,28 +64,105 @@ namespace creativeCommonsMusicProject
             foreach (var _x in _list)
             {
                 var _fileName = _x.Element("filename").Value;
-                var _trackTypes = _x.Element("track_types").Descendants("track_type");
-                
-                foreach (var _y in _trackTypes)
+                if (_fn_doesFileExist(_fileName))
                 {
-                    _fn_pushBackToTrackList(_y.Value, _fileName);
+                    // collects all configed track types for the track
+                    var _trackTypes = _x.Element("track_types").Descendants("track_type").ToList();
+
+                    if (_trackTypes.Count() != 0)
+                    {
+                        foreach (var _y in _trackTypes)
+                        {
+                            _fn_pushBackToTrackList(_y.Value, _fileName);
+                        }
+
+                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_fileName));
+                    }
+                    else
+                    {
+                        CCM_logSource.LogError("Did not find any track types for file: " + _fileName + " within " + CCM_configFileName);
+                    }
                 }
-
-
-                //CCM_fnc_logWithTime();
+                else
+                {
+                    CCM_logSource.LogError("Did not find track file: " + _fileName + " within tracks folder!");
+                }
             }
         }
 
+        /* ----------------------------------------------------------------------------
+           _fn_grabTrackSettings
+        ---------------------------------------------------------------------------- */
         private static void _fn_grabTrackSettings(XDocument _xmlConfigFile)
         {
-            var _list = _xmlConfigFile.Root.Descendants("track_spacing");
+            var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing");
+            foreach (var _x in _trackSpacings)
+            {
+                //int _val = (int)_x;
+                //int _value = int.Parse(_x.Value);
+            }
         }
 
-        private static void _fn_loadAudioClip(string _filename)
+        /* ----------------------------------------------------------------------------
+           _fn_loadAndStoreAudioClip
+        ---------------------------------------------------------------------------- */
+        private static IEnumerator _fn_loadAndStoreAudioClip(string _filename)
         {
+            var _pathToFile = Path.Combine(CCM_filePathStart, CCM_tracksFolderPath, _filename);
+            AudioType _audioType = CCM_fnc_getAudioTypeFromString(_filename);
 
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
+            {
+                while (CCM_loadingAudio)
+                {
+                    yield return new WaitForSeconds(0.05f);
+                }
+
+                CCM_loadingAudio = true;
+                www.SendWebRequest();
+
+                while (!www.isDone)
+                {
+                    yield return new WaitForSeconds(0.05f);
+                }
+                CCM_loadingAudio = false;
+
+                CCM_fnc_logWithTime("_fn_loadAndStoreAudioClip: Web request is done for " + _filename);
+
+                if (www.error != null)
+                {
+                    CCM_fnc_logWithTime("_fn_loadAndStoreAudioClip: Web request encountered the following error: " + www.error);
+                    yield break;
+                }
+
+                var _clip = DownloadHandlerAudioClip.GetContent(www);
+                DontDestroyOnLoad(_clip);
+
+                CCM_dictionary_audioClipFromString.Add(_filename, _clip);
+            }
+            
+            yield break;
         }
 
+        /* ----------------------------------------------------------------------------
+           _fn_doesFileExist
+        ---------------------------------------------------------------------------- */
+        private static bool _fn_doesFileExist(string _filename)
+        {
+            var _pathToFile = Path.Combine(CCM_tracksFolderPath, _filename);
+
+            bool _doesFileExist = true;
+            if (!File.Exists(_pathToFile))
+            {
+                _doesFileExist = false;
+            }
+                        
+            return _doesFileExist;
+        }
+
+        /* ----------------------------------------------------------------------------
+           _fn_pushBackToTrackList
+        ---------------------------------------------------------------------------- */
         private static void _fn_pushBackToTrackList(string _trackType, string _filename)
         {
             _trackType = _trackType.ToLower();
@@ -92,22 +176,27 @@ namespace creativeCommonsMusicProject
                     }
                 case "townnight":
                     {
+                        CCM_townNightTracks.Add(_filename);
                         break;
                     }
                 case "ambientday":
                     {
+                        CCM_ambientDayTracks.Add(_filename);
                         break;
                     }
                 case "ambientnight":
                     {
+                        CCM_ambientNightTracks.Add(_filename);
                         break;
                     }
                 case "dungeon":
                     {
+                        CCM_dungeonTracks.Add(_filename);
                         break;
                     }
                 case "combat":
                     {
+                        CCM_combatTracks.Add(_filename);
                         break;
                     }
                 default:
@@ -117,6 +206,12 @@ namespace creativeCommonsMusicProject
                     }
             }
         }
+        
+        
+        
+        
+        
+        
         /* This is how you build your own "types"
         class CCM_track
         {

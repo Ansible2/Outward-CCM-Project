@@ -93,11 +93,15 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         // folder path constants
         internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
+        internal static readonly string CCM_tracksFolderPath = Path.Combine(CCM_mainFolderPath + @"\Tracks");
+
+        /*
         internal static readonly string CCM_combatFolderPath = Path.Combine(CCM_mainFolderPath + @"\Combat Tracks");
         internal static readonly string CCM_ambientNightFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Night Tracks");
         internal static readonly string CCM_ambientDayFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Day Tracks");
         internal static readonly string CCM_townFolderPath = Path.Combine(CCM_mainFolderPath + @"\Town Tracks");
         internal static readonly string CCM_dungeonFolderPath = Path.Combine(CCM_mainFolderPath + @"\Dungeon Tracks");
+        */
         // used for naming scheme on music-routine objects
         internal static readonly string CCM_musicRoutinePostfixString = "-MusicRoutineObject";
 
@@ -116,9 +120,7 @@ namespace creativeCommonsMusicProject
         // self explanitory
         internal static Scene CCM_currentScene;
 
-        // true when currently loading an audio file
-        internal static bool CCM_loadingAudio = false;
-
+        
         internal enum CCM_trackTypes_enum
         {
             combat,
