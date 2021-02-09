@@ -34,6 +34,7 @@ namespace creativeCommonsMusicProject
     partial class CCM_core
     {
         internal const string CCM_configFileName = @"CCM Config.xml";
+        
 
         // true when currently loading an audio file
         internal static bool CCM_loadingAudio = false;
@@ -59,28 +60,41 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void _fn_buildAudioClipLibrary(XDocument _xmlConfigFile)
         {
+            // so we don't get duplicates, store already gotten files
+            List<string> _alreadyStoredTracks = new List<string>();
+
             var _list = _xmlConfigFile.Root.Descendants("tracks");
 
             foreach (var _x in _list)
             {
-                var _fileName = _x.Element("filename").Value;
+                var _fileName = _x.Element("filename").Value.ToLower();
+                // make sure provided filename is actually in the tracks folder
                 if (_fn_doesFileExist(_fileName))
                 {
-                    // collects all configed track types for the track
-                    var _trackTypes = _x.Element("track_types").Descendants("track_type").ToList();
-
-                    if (_trackTypes.Count() != 0)
+                    // check for duplicates
+                    if (_alreadyStoredTracks.Contains(_fileName))
                     {
-                        foreach (var _y in _trackTypes)
-                        {
-                            _fn_pushBackToTrackList(_y.Value, _fileName);
-                        }
-
-                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_fileName));
+                        CCM_logSource.LogError("Configed track: " + _fileName + " within " + CCM_configFileName + " is a duplicate!");
                     }
                     else
                     {
-                        CCM_logSource.LogError("Did not find any track types for file: " + _fileName + " within " + CCM_configFileName);
+                        // collects all configed track types for the track
+                        var _trackTypes = _x.Element("track_types").Descendants("track_type").ToList();
+
+                        if (_trackTypes.Count() != 0)
+                        {
+                            foreach (var _y in _trackTypes)
+                            {
+                                _fn_pushBackToTrackList(_y.Value, _fileName);
+                            }
+
+                            _alreadyStoredTracks.Add(_fileName);
+                            CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_fileName));
+                        }
+                        else
+                        {
+                            CCM_logSource.LogError("Did not find any track types for file: " + _fileName + " within " + CCM_configFileName);
+                        }
                     }
                 }
                 else
@@ -138,6 +152,7 @@ namespace creativeCommonsMusicProject
 
                 var _clip = DownloadHandlerAudioClip.GetContent(www);
                 DontDestroyOnLoad(_clip);
+                _clip.name = _filename;
 
                 CCM_dictionary_audioClipFromString.Add(_filename, _clip);
             }

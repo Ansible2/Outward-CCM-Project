@@ -37,8 +37,6 @@ namespace creativeCommonsMusicProject
             }
             
             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
-
-            //StartCoroutine(CCM_scheduled.CCM_fnc_waitForLoadingDone(_myScene));
         }
     }
 }

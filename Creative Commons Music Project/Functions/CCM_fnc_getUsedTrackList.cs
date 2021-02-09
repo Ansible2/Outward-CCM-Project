@@ -47,9 +47,14 @@ namespace creativeCommonsMusicProject
                         _listOfTracks = CCM_usedAmbientDayTracks;
                         break;
                     }
-                case ((int)CCM_trackTypes_enum.town):
+                case ((int)CCM_trackTypes_enum.townDay):
                     {
-                        _listOfTracks = CCM_usedTownTracks;
+                        _listOfTracks = CCM_usedTownDayTracks;
+                        break;
+                    }
+                case ((int)CCM_trackTypes_enum.townNight):
+                    {
+                        _listOfTracks = CCM_usedTownNightTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.dungeon):

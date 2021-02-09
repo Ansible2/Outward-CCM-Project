@@ -49,24 +49,18 @@ namespace creativeCommonsMusicProject
                     CCM_currentTrackType = _trackType;
                     CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
 
-                    CCM_spawn_playMusic(_trackType);
+                    _fn_requestTrackFromMaster(_trackType);
                 }
             }
         }
 
 
-
-        internal static void CCM_spawn_playMusic(int _trackType)
+        private static void _fn_requestTrackFromMaster(int _trackType)
         {
-            CCM_Instance.StartCoroutine(CCM_fnc_playMusic(_trackType));
-        }
-
-        internal static IEnumerator CCM_fnc_playMusic(int _trackType)
-        {
-            CCM_fnc_logWithTime("CCM_spawn_playMusic: was called...");
+            CCM_fnc_logWithTime("_fn_requestTrackFromMaster: was called...");
 
             CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
-
+            /*
             bool _trackIsCombat = _trackType == (int)CCM_trackTypes_enum.combat;
             if (_trackIsCombat)
             {
@@ -78,10 +72,11 @@ namespace creativeCommonsMusicProject
             {
                 yield return new WaitForSeconds(0.1f);
             }
-            string _trackFilename = CCM_trackToPlay;
-            CCM_trackToPlay = "";
+            //string _trackFilename = CCM_trackToPlay;
+            //CCM_trackToPlay = "";
 
-            CCM_rpc.CCM_rpcComponent.CCM_spawn_loadAndPlayAudioClip(_trackFilename, _trackType, _trackIsCombat);
+            //CCM_rpc.CCM_rpcComponent.CCM_spawn_loadAndPlayAudioClip(_trackFilename, _trackType, _trackIsCombat);
+            */
         }
     }
 }

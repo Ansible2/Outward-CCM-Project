@@ -79,9 +79,9 @@ namespace creativeCommonsMusicProject
             {
                 string _sceneTrackFileName = CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(
-                    "CCM_fnc_requestTrackToPlay_sendBack",
+                    "CCM_fnc_playMusic",
                     PhotonNetwork.player.Get(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
-                    new object[] { _sceneTrackFileName }
+                    new object[] { _sceneTrackFileName, true }
                 );
             }
             else
@@ -127,17 +127,11 @@ namespace creativeCommonsMusicProject
                 }
 
                 CCM_photonView.RPC(
-                    "CCM_fnc_requestTrackToPlay_sendBack",
+                    "CCM_fnc_playMusic",
                     PhotonNetwork.player.Get(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
-                    new object[] { _randomTrackFilename }
+                    new object[] { _randomTrackFilename , true}
                 );
             }
-        }
-
-        [PunRPC]
-        internal void CCM_fnc_requestTrackToPlay_sendBack(string _trackFilename)
-        {
-            CCM_core.CCM_trackToPlay = _trackFilename;
         }
     }
 }

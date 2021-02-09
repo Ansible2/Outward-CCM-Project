@@ -69,14 +69,25 @@ namespace creativeCommonsMusicProject
 
                         break;
                     }
-                case ((int)CCM_trackTypes_enum.town):
+                case ((int)CCM_trackTypes_enum.townDay):
                     {
-                        if (CCM_townTracks.Count() < 1)
+                        if (CCM_townDayTracks.Count() < 1)
                         {
-                            CCM_townTracks = new List<string>(CCM_usedTownTracks);
-                            CCM_usedTownTracks.Clear();
+                            CCM_townDayTracks = new List<string>(CCM_usedTownDayTracks);
+                            CCM_usedTownDayTracks.Clear();
                         }
-                        _listOfTracks = CCM_townTracks;
+                        _listOfTracks = CCM_townDayTracks;
+
+                        break;
+                    }
+                case ((int)CCM_trackTypes_enum.townNight):
+                    {
+                        if (CCM_townNightTracks.Count() < 1)
+                        {
+                            CCM_townNightTracks = new List<string>(CCM_usedTownNightTracks);
+                            CCM_usedTownNightTracks.Clear();
+                        }
+                        _listOfTracks = CCM_townNightTracks;
 
                         break;
                     }
