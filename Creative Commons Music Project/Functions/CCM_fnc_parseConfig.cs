@@ -187,32 +187,32 @@ namespace creativeCommonsMusicProject
             {
                 case "townday":
                     {
-                        CCM_townDayTracks.Add(_filename);
+                        CCM_list_townDayTracks.Add(_filename);
                         break;
                     }
                 case "townnight":
                     {
-                        CCM_townNightTracks.Add(_filename);
+                        CCM_list_townNightTracks.Add(_filename);
                         break;
                     }
                 case "ambientday":
                     {
-                        CCM_ambientDayTracks.Add(_filename);
+                        CCM_list_ambientDayTracks.Add(_filename);
                         break;
                     }
                 case "ambientnight":
                     {
-                        CCM_ambientNightTracks.Add(_filename);
+                        CCM_list_ambientNightTracks.Add(_filename);
                         break;
                     }
                 case "dungeon":
                     {
-                        CCM_dungeonTracks.Add(_filename);
+                        CCM_list_dungeonTracks.Add(_filename);
                         break;
                     }
                 case "combat":
                     {
-                        CCM_combatTracks.Add(_filename);
+                        CCM_list_combatTracks.Add(_filename);
                         break;
                     }
                 default:

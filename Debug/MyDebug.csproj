@@ -78,11 +78,16 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="old\CCM_fnc_areListsTheSame.cs" />
+    <Compile Include="old\CCM_fnc_buildFilePath.cs" />
+    <Compile Include="old\CCM_fnc_findMainMusicObject.cs" />
+    <Compile Include="old\CCM_fnc_findMusicAtPath.cs" />
     <Compile Include="old\CCM_fnc_findMusicObjectsInScene.cs" />
+    <Compile Include="old\CCM_fnc_getTrackTypeFolderPath.cs" />
     <Compile Include="old\CCM_fnc_startCombatMusicIntercept.cs" />
     <Compile Include="old\CCM_fnc_stopMusicFromLooping.cs" />
     <Compile Include="old\CCM_fnc_stopMusicFromPlaying.cs" />
     <Compile Include="old\CCM_fnc_waitForLoadingDone.cs" />
+    <Compile Include="old\CCM_spawn_loadAndPlayAudioClip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Template.cs" />
   </ItemGroup>

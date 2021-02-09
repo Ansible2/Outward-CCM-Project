@@ -34,32 +34,32 @@ namespace creativeCommonsMusicProject
             {
                 case ((int)CCM_trackTypes_enum.combat):
                     {
-                        _listOfTracks = CCM_combatTracks;
+                        _listOfTracks = CCM_list_combatTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientNight):
                     {
-                        _listOfTracks = CCM_ambientNightTracks;
+                        _listOfTracks = CCM_list_ambientNightTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientDay):
                     {
-                        _listOfTracks = CCM_ambientDayTracks;
+                        _listOfTracks = CCM_list_ambientDayTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townDay):
                     {
-                        _listOfTracks = CCM_townDayTracks;
+                        _listOfTracks = CCM_list_townDayTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townNight):
                     {
-                        _listOfTracks = CCM_townNightTracks;
+                        _listOfTracks = CCM_list_townNightTracks;
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.dungeon):
                     {
-                        _listOfTracks = CCM_dungeonTracks;
+                        _listOfTracks = CCM_list_dungeonTracks;
                         break;
                     }
                 default:

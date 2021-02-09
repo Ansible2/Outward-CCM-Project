@@ -26,18 +26,18 @@ namespace MyDebug
 
         // lists for keeping track of already played music to avoid playing it again frequently if possible
         // these will contain file names for the music
-        internal static List<string> CCM_usedCombatTracks = new List<string>();
-        internal static List<string> CCM_usedAmbientNightTracks = new List<string>();
-        internal static List<string> CCM_usedAmbientDayTracks = new List<string>();
+        internal static List<string> CCM_list_usedCombatTracks = new List<string>();
+        internal static List<string> CCM_list_usedAmbientNightTracks = new List<string>();
+        internal static List<string> CCM_list_usedAmbientDayTracks = new List<string>();
         internal static List<string> CCM_usedTownTracks = new List<string>();
-        internal static List<string> CCM_usedDungeonTracks = new List<string>();
+        internal static List<string> CCM_list_usedDungeonTracks = new List<string>();
 
         // these will contain unused file names of music
-        internal static List<string> CCM_combatTracks = new List<string>();
-        internal static List<string> CCM_ambientNightTracks = new List<string>();
-        internal static List<string> CCM_ambientDayTracks = new List<string>();
+        internal static List<string> CCM_list_combatTracks = new List<string>();
+        internal static List<string> CCM_list_ambientNightTracks = new List<string>();
+        internal static List<string> CCM_list_ambientDayTracks = new List<string>();
         internal static List<string> CCM_townTracks = new List<string>();
-        internal static List<string> CCM_dungeonTracks = new List<string>();
+        internal static List<string> CCM_list_dungeonTracks = new List<string>();
 
         // folder path constants
         internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");

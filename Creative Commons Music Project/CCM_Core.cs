@@ -20,15 +20,6 @@ namespace creativeCommonsMusicProject
 
     internal partial class CCM_core : BaseUnityPlugin
     {
-        /*
-        internal class testClass : Photon.MonoBehaviour
-        {
-            internal void Awake()
-            {
-                CCM_fnc_logWithTime("does this work");
-            }
-        }
-        */
         /* ------------------------------------------------------------------------
         
             Prepare Globals
@@ -47,20 +38,20 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         // lists for keeping track of already played music to avoid playing it again frequently if possible
         // these will contain file names for the music
-        internal static List<string> CCM_usedCombatTracks = new List<string>();
-        internal static List<string> CCM_usedAmbientNightTracks = new List<string>();
-        internal static List<string> CCM_usedAmbientDayTracks = new List<string>();
-        internal static List<string> CCM_usedTownDayTracks = new List<string>();
-        internal static List<string> CCM_usedTownNightTracks = new List<string>();
-        internal static List<string> CCM_usedDungeonTracks = new List<string>();
+        internal static List<string> CCM_list_usedCombatTracks = new List<string>();
+        internal static List<string> CCM_list_usedAmbientNightTracks = new List<string>();
+        internal static List<string> CCM_list_usedAmbientDayTracks = new List<string>();
+        internal static List<string> CCM_list_usedTownDayTracks = new List<string>();
+        internal static List<string> CCM_list_usedTownNightTracks = new List<string>();
+        internal static List<string> CCM_list_usedDungeonTracks = new List<string>();
 
         // these will contain unused file names of music
-        internal static List<string> CCM_combatTracks = new List<string>();
-        internal static List<string> CCM_ambientNightTracks = new List<string>();
-        internal static List<string> CCM_ambientDayTracks = new List<string>();
-        internal static List<string> CCM_townDayTracks = new List<string>();
-        internal static List<string> CCM_townNightTracks = new List<string>();
-        internal static List<string> CCM_dungeonTracks = new List<string>();
+        internal static List<string> CCM_list_combatTracks = new List<string>();
+        internal static List<string> CCM_list_ambientNightTracks = new List<string>();
+        internal static List<string> CCM_list_ambientDayTracks = new List<string>();
+        internal static List<string> CCM_list_townDayTracks = new List<string>();
+        internal static List<string> CCM_list_townNightTracks = new List<string>();
+        internal static List<string> CCM_list_dungeonTracks = new List<string>();
 
 
         // keeps track of the music routines running for each scene to schedule music 
@@ -163,7 +154,9 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            CCM_fnc_buildAudioClipLibrary();
+            CCM_Lists
+
+            CCM_fnc_parseConfig();
 
             DontDestroyOnLoad(this.gameObject);
             this.gameObject.name = "CCM Core GameObject";
