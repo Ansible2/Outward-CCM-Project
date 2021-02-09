@@ -39,6 +39,9 @@ namespace creativeCommonsMusicProject
     {
         internal static List<string> CCM_list_scenesChoosingMusicFor = new List<string>();
 
+        /* ----------------------------------------------------------------------------
+            CCM_fnc_requestTrackToPlay_RPC
+        ---------------------------------------------------------------------------- */
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _trackType, int _playerId, string _playersScene)
         {
             CCM_photonView.RPC(
@@ -48,12 +51,20 @@ namespace creativeCommonsMusicProject
             );
         }
 
+
+        /* ----------------------------------------------------------------------------
+            CCM_spawn_requestTrackToPlay
+        ---------------------------------------------------------------------------- */
         [PunRPC]
         internal void CCM_spawn_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
             CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene));
         }
 
+
+        /* ----------------------------------------------------------------------------
+            CCM_fnc_requestTrackToPlay
+        ---------------------------------------------------------------------------- */
         internal static IEnumerator CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
             bool _trackTypeChanged = false;

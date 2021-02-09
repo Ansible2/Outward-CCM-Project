@@ -48,6 +48,9 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /* ----------------------------------------------------------------------------
+            CCM_spawn_startMusicRoutineForScene
+        ---------------------------------------------------------------------------- */
         internal static void CCM_spawn_startMusicRoutineForScene(string _sceneName, int _trackType, bool _deletePrevious = true)
         {
             //bool _routineExistsForScene = CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName);
@@ -67,6 +70,9 @@ namespace creativeCommonsMusicProject
             _musicRoutineInstance.StartCoroutine(_fn_beginRoutine(_sceneName, _musicRoutineObject, _trackType));
         }
 
+        /* ----------------------------------------------------------------------------
+            _fn_beginRoutine
+        ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_beginRoutine(string _sceneName, GameObject _musicRoutineObject, int _trackType)
         {
             while (CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName))
@@ -80,6 +86,9 @@ namespace creativeCommonsMusicProject
             }
         }
 
+        /* ----------------------------------------------------------------------------
+            _fn_decideTimeBetweenTracks
+        ---------------------------------------------------------------------------- */
         private static int _fn_decideTimeBetweenTracks(int _trackType)
         {
             int _sleepTime = 0;
