@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+
+
+
+
+
+<!--All Track Types: ["TownDay","TownNight","AmbientDay","AmbientNight","Dungeon","Combat"]-->
+<!--
+	<track>
+		<filename>  </filename>
+		<track_types> [] </track_types>
+	</track>
+-->
+
+
+<SETTINGS_ROOT>
+  <!--Track list-->
+	<tracks>
+
+		<track>
+			<filename> sb_sassini.ogg </filename>
+			<track_types>
+        <track_type> TownDay </track_type>
+        <track_type> TownNight </track_type>
+        <track_type> AmbientDay </track_type>
+        <track_type> AmbientNight </track_type>
+        <track_type> Dungeon </track_type>
+        <track_type> Combat </track_type>
+      </track_types>
+		</track>
+
+	</tracks>
+
+
+
+
+  <!--Track Spacing-->
+	<track_spacing>
+
+		<trackSpacing_townDay>10</trackSpacing_townDay>
+
+		<trackSpacing_townNight>10</trackSpacing_townNight>
+
+		<trackSpacing_ambientDay>10</trackSpacing_ambientDay>
+
+		<trackSpacing_ambientNight>10</trackSpacing_ambientNight>
+
+		<trackSpacing_dungeon>10</trackSpacing_dungeon>
+
+		<trackSpacing_combat>10</trackSpacing_combat>
+
+	</track_spacing>
+
+</SETTINGS_ROOT>

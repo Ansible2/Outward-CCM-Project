@@ -23,13 +23,8 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 using System.Collections;
-
 
 
 
@@ -91,7 +86,8 @@ namespace creativeCommonsMusicProject
 
             // use a switch for different spacing depending on type
             // can also use CCM_getRandom for a random factor
-
+            
+            
             return _sleepTime;
         }
     }

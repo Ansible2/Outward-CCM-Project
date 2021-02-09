@@ -20,6 +20,7 @@ Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
 using System.Collections;
+using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
@@ -42,9 +43,13 @@ namespace creativeCommonsMusicProject
             CCM_core.CCM_fnc_logWithTime("CCM_spawn_loadAndPlayAudioClip: Loading audio...");         
 
             string _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_trackType);
-            string _formattedPath = CCM_core.CCM_fnc_buildFilePath(_folderPath, _fileName, true);
+            //string _formattedPath = CCM_core.CCM_fnc_buildFilePath(_folderPath, _fileName, true);
+            string _formattedPath = Path.Combine(CCM_core.CCM_filePathStart, _folderPath, _fileName);
 
             CCM_core.CCM_fnc_logWithTime("CCM_spawn_loadAndPlayAudioClip: Attempting to play audio at path: " + _formattedPath);
+
+            AudioType _audioType = CCM_core.CCM_fnc_getAudioTypeFromString(_fileName);
+            
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_formattedPath, AudioType.OGGVORBIS))
             {

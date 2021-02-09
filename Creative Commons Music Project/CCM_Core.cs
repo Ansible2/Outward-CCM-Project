@@ -1,6 +1,6 @@
-﻿//using System;
-//using System.Linq;
-//using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using BepInEx;
@@ -9,9 +9,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using ExitGames;
 using HarmonyLib;
-//using UnityEngine.Networking;
-//using Photon;
-//using Photon.Realtime;
+using UnityEngine.Networking;
+using Photon;
+using Photon.Realtime;
 
 
 namespace creativeCommonsMusicProject
@@ -50,21 +50,23 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_usedCombatTracks = new List<string>();
         internal static List<string> CCM_usedAmbientNightTracks = new List<string>();
         internal static List<string> CCM_usedAmbientDayTracks = new List<string>();
-        internal static List<string> CCM_usedTownTracks = new List<string>();
+        internal static List<string> CCM_usedTownDayTracks = new List<string>();
+        internal static List<string> CCM_usedTownNightTracks = new List<string>();
         internal static List<string> CCM_usedDungeonTracks = new List<string>();
 
         // these will contain unused file names of music
         internal static List<string> CCM_combatTracks = new List<string>();
         internal static List<string> CCM_ambientNightTracks = new List<string>();
         internal static List<string> CCM_ambientDayTracks = new List<string>();
-        internal static List<string> CCM_townTracks = new List<string>();
+        internal static List<string> CCM_townDayTracks = new List<string>();
+        internal static List<string> CCM_townNightTracks = new List<string>();
         internal static List<string> CCM_dungeonTracks = new List<string>();
 
 
         // keeps track of the music routines running for each scene to schedule music 
         internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
 
-
+        
         /* ------------------------------------------------------------------------
             Dictionaries
         ------------------------------------------------------------------------ */
@@ -82,17 +84,20 @@ namespace creativeCommonsMusicProject
         // keeps track of the currently playing music type for each scene that is active
         internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
 
+        // This is used locally for each machine to take a given filename and get back the audioClip of the file
+        internal static Dictionary<string, AudioClip> CCM_dictionary_audioClipFromString = new Dictionary<string, AudioClip>();
+
 
         /* ------------------------------------------------------------------------
             String Constants
         ------------------------------------------------------------------------ */
         // folder path constants
         internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
-        internal static readonly string CCM_combatFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Combat Tracks");
-        internal static readonly string CCM_ambientNightFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Ambient Night Tracks");
-        internal static readonly string CCM_ambientDayFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Ambient Day Tracks");
-        internal static readonly string CCM_townFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Town Tracks");
-        internal static readonly string CCM_dungeonFolderPath = Path.GetFullPath(CCM_mainFolderPath + @"\Dungeon Tracks");
+        internal static readonly string CCM_combatFolderPath = Path.Combine(CCM_mainFolderPath + @"\Combat Tracks");
+        internal static readonly string CCM_ambientNightFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Night Tracks");
+        internal static readonly string CCM_ambientDayFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Day Tracks");
+        internal static readonly string CCM_townFolderPath = Path.Combine(CCM_mainFolderPath + @"\Town Tracks");
+        internal static readonly string CCM_dungeonFolderPath = Path.Combine(CCM_mainFolderPath + @"\Dungeon Tracks");
         // used for naming scheme on music-routine objects
         internal static readonly string CCM_musicRoutinePostfixString = "-MusicRoutineObject";
 
@@ -117,10 +122,8 @@ namespace creativeCommonsMusicProject
         internal enum CCM_trackTypes_enum
         {
             combat,
-            ambient,
             ambientNight,
             ambientDay,
-            town,
             townNight,
             townDay,
             dungeon
@@ -158,6 +161,8 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
+            CCM_fnc_buildAudioClipLibrary();
+
             DontDestroyOnLoad(this.gameObject);
             this.gameObject.name = "CCM Core GameObject";
             gameObject.AddComponent<CCM_rpc>();
@@ -165,23 +170,15 @@ namespace creativeCommonsMusicProject
 
             CCM_fnc_instantiateHarmony();
 
-
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
-            //NetworkLevelLoader.Instance.onSceneLoadingDone += CCM_event_onSceneDoneLoading;
 
-            // collect all filenames from the folders
-            CCM_combatTracks = CCM_fnc_findMusicAtPath(CCM_combatFolderPath);
-            CCM_ambientNightTracks = CCM_fnc_findMusicAtPath(CCM_ambientNightFolderPath);
-            CCM_ambientDayTracks = CCM_fnc_findMusicAtPath(CCM_ambientDayFolderPath);
-            CCM_townTracks = CCM_fnc_findMusicAtPath(CCM_townFolderPath);
-            CCM_dungeonTracks = CCM_fnc_findMusicAtPath(CCM_dungeonFolderPath);
         }
 
 
         /* ------------------------------------------------------------------------
             CCM_fnc_logWithTime
         ------------------------------------------------------------------------ */
-        internal static void CCM_fnc_logWithTime(string myMessage = "")
+        internal static void CCM_fnc_logWithTime(object myMessage)
         {
             CCM_core.CCM_logSource.Log(LogLevel.Message, Time.time + "--: " + myMessage);
         }
@@ -264,39 +261,6 @@ namespace creativeCommonsMusicProject
 
 
 }
-
-
-
-/*
-1. Player starts game:
-    - Need to use harmony to get inside of the music function responsible for creating music objects or playing them
-
-
-
-// combat music objects are created upon combat initiation
-// scene changes are not triggered for combat so you need either an event or frame check for it
-/*
- * 1. Get the current scene
- * 2. Find all the game objects that have music attached to them in the current scene
- * 3. Of all the game objects find: if they are playing AND/OR they are looping and stop both
- * 4. Determine the music to play based upon the name of the object/location 
- * 5. change the music clip
- * 6. start playing the music again
- * 7. Detect when the music has stopped OR when combat music has been created using an onEachFrame type method (such as update)
- *      Combat music should be able to continue to loop, just needs to be random select
- * 8a. When music simply stops select from another in the list (should similar to KISKA random music system keep a list of used tracks
- * 8b. When combat music starts just change the clip based upon a random selection from a combat music list
- */
-
-
-/*
-
-    The Server should keep track of each active scene's song
-    
-    Active scenes can be told to the server by players by using scene onLoad event
-     to tell the server what they're active scene is
-
-*/
 
 
 

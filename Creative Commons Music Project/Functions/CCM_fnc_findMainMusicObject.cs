@@ -20,6 +20,7 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
+/*
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -67,3 +68,4 @@ namespace creativeCommonsMusicProject
         }
     }
 }
+*/

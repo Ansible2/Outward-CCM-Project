@@ -59,8 +59,16 @@ namespace creativeCommonsMusicProject
             }
             else if (_objectName.Contains("town") || _objectName.Contains("cierzo"))
             {
-                CCM_fnc_logWithTime(_logString + "towns");
-                _type = (int)CCM_trackTypes_enum.town;
+                if (_objectName.Contains("night"))
+                {
+                    CCM_fnc_logWithTime(_logString + "Towns night");
+                    _type = (int)CCM_trackTypes_enum.townNight;
+                }
+                else
+                {
+                    CCM_fnc_logWithTime(_logString + "Towns day");
+                    _type = (int)CCM_trackTypes_enum.townDay;
+                }
             }
             else
             {
