@@ -2,18 +2,19 @@
 Function: CCM_fnc_getTrackList
 
 Description:
-	Returns a reference to the corresponging global (unused tracks) list for the
+	Returns a reference to the corresponging CCM_Lists list for the
      requested type.
 
 Parameters:
 	0: _type <int> - The numerical type based upon the CCM_trackTypes_enum
+    1: _used <BOOL> - Get the parnter used track list
 
 Returns:
 	<LIST of STRINGs> - Returns a reference to the list of the given type
 
 Examples:
     (begin example)
-		var _unusedCombatTrackList = CCM_fnc_getTrackList(0);
+		var _unusedCombatTrackList = CCM_fnc_getTrackList((int)CCM_trackTypes_enum.combat);
     (end)
 
 Author(s):
@@ -26,7 +27,7 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static List<string> CCM_fnc_getTrackList(int _trackType = -1)
+        internal static List<string> CCM_fnc_getTrackList(int _trackType = -1, bool _used = false)
         {
             List<string> _listOfTracks;
 
@@ -34,32 +35,74 @@ namespace creativeCommonsMusicProject
             {
                 case ((int)CCM_trackTypes_enum.combat):
                     {
-                        _listOfTracks = CCM_list_combatTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_combatTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_combatTracks;
+                        }
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientNight):
                     {
-                        _listOfTracks = CCM_list_ambientNightTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_ambientNightTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_ambientNightTracks;
+                        }
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientDay):
                     {
-                        _listOfTracks = CCM_list_ambientDayTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_ambientDayTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_ambientDayTracks;
+                        }
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townDay):
                     {
-                        _listOfTracks = CCM_list_townDayTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_townDayTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_townDayTracks;
+                        }
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townNight):
                     {
-                        _listOfTracks = CCM_list_townNightTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_townNightTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_townNightTracks;
+                        }
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.dungeon):
                     {
-                        _listOfTracks = CCM_list_dungeonTracks;
+                        if (_used)
+                        {
+                            _listOfTracks = CCM_Lists.used_dungeonTracks;
+                        }
+                        else
+                        {
+                            _listOfTracks = CCM_Lists.unused_dungeonTracks;
+                        }
                         break;
                     }
                 default:

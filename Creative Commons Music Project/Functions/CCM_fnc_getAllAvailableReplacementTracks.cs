@@ -29,82 +29,79 @@ namespace creativeCommonsMusicProject
     {
         internal static List<string> CCM_fnc_getAllAvailableReplacementTracks(int _trackType = -1)
         {
-            List<string> _listOfTracks = new List<string>();
+            List<string> _listOfTracks;
 
             switch (_trackType)
             {
                 case ((int)CCM_trackTypes_enum.combat) :
                     {
-                        if (CCM_list_combatTracks.Count() < 1)
+                        if (CCM_Lists.unused_combatTracks.Count() < 1)
                         {
-                            CCM_list_combatTracks = new List<string>(CCM_list_usedCombatTracks);
-                            CCM_list_usedCombatTracks.Clear();
+                            CCM_Lists.unused_combatTracks = new List<string>(CCM_Lists.used_combatTracks);
+                            CCM_Lists.used_combatTracks.Clear();
                         }
-
-                        _listOfTracks = CCM_list_combatTracks;
+                        _listOfTracks = CCM_Lists.unused_combatTracks;
 
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientNight):
                     {
-                        if (CCM_list_ambientNightTracks.Count() < 1)
+                        if (CCM_Lists.unused_ambientNightTracks.Count() < 1)
                         {
-                            CCM_list_ambientNightTracks = new List<string>(CCM_list_usedAmbientNightTracks);
-                            CCM_list_usedAmbientNightTracks.Clear();
+                            CCM_Lists.unused_ambientNightTracks = new List<string>(CCM_Lists.used_ambientNightTracks);
+                            CCM_Lists.used_ambientNightTracks.Clear();
                         }
-
-                        _listOfTracks = CCM_list_ambientNightTracks;
+                        _listOfTracks = CCM_Lists.unused_ambientNightTracks;
 
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.ambientDay):
                     {
-                        if (CCM_list_ambientDayTracks.Count() < 1)
+                        if (CCM_Lists.unused_ambientDayTracks.Count() < 1)
                         {
-                            CCM_list_ambientDayTracks = new List<string>(CCM_list_usedAmbientDayTracks);
-                            CCM_list_usedAmbientDayTracks.Clear();
+                            CCM_Lists.unused_ambientDayTracks = new List<string>(CCM_Lists.used_ambientDayTracks);
+                            CCM_Lists.used_ambientDayTracks.Clear();
                         }
-
-                        _listOfTracks = CCM_list_ambientDayTracks;
+                        _listOfTracks = CCM_Lists.unused_ambientDayTracks;
 
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townDay):
                     {
-                        if (CCM_list_townDayTracks.Count() < 1)
+                        if (CCM_Lists.unused_townDayTracks.Count() < 1)
                         {
-                            CCM_list_townDayTracks = new List<string>(CCM_list_usedTownDayTracks);
-                            CCM_list_usedTownDayTracks.Clear();
+                            CCM_Lists.unused_townDayTracks = new List<string>(CCM_Lists.used_townDayTracks);
+                            CCM_Lists.used_townDayTracks.Clear();
                         }
-                        _listOfTracks = CCM_list_townDayTracks;
+                        _listOfTracks = CCM_Lists.unused_townDayTracks;
 
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.townNight):
                     {
-                        if (CCM_list_townNightTracks.Count() < 1)
+                        if (CCM_Lists.unused_townNightTracks.Count() < 1)
                         {
-                            CCM_list_townNightTracks = new List<string>(CCM_list_usedTownNightTracks);
-                            CCM_list_usedTownNightTracks.Clear();
+                            CCM_Lists.unused_townNightTracks = new List<string>(CCM_Lists.used_townNightTracks);
+                            CCM_Lists.used_townNightTracks.Clear();
                         }
-                        _listOfTracks = CCM_list_townNightTracks;
+                        _listOfTracks = CCM_Lists.unused_townNightTracks;
 
                         break;
                     }
                 case ((int)CCM_trackTypes_enum.dungeon):
                     {
-                        if (CCM_list_dungeonTracks.Count() < 1)
+                        if (CCM_Lists.unused_dungeonTracks.Count() < 1)
                         {
-                            CCM_list_dungeonTracks = new List<string>(CCM_list_usedDungeonTracks);
-                            CCM_list_usedDungeonTracks.Clear();
+                            CCM_Lists.unused_dungeonTracks = new List<string>(CCM_Lists.used_dungeonTracks);
+                            CCM_Lists.used_dungeonTracks.Clear();
                         }
-
-                        _listOfTracks = CCM_list_dungeonTracks;
+                        _listOfTracks = CCM_Lists.unused_dungeonTracks;
 
                         break;
                     }
                 default:
                     {
+                        _listOfTracks = new List<string>();
                         _listOfTracks.Add("");
                         break;
                     }

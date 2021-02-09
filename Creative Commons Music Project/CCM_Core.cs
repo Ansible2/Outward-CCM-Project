@@ -32,12 +32,34 @@ namespace creativeCommonsMusicProject
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
 
-
         /* ------------------------------------------------------------------------
             Lists
         ------------------------------------------------------------------------ */
-        // lists for keeping track of already played music to avoid playing it again frequently if possible
-        // these will contain file names for the music
+        internal static class CCM_Lists
+        {
+            // lists for keeping track of already played music to avoid playing it again frequently if possible
+            // these will contain file names for the music
+            internal static List<string> used_combatTracks = new List<string>();
+            internal static List<string> used_ambientNightTracks = new List<string>();
+            internal static List<string> used_ambientDayTracks = new List<string>();
+            internal static List<string> used_townDayTracks = new List<string>();
+            internal static List<string> used_townNightTracks = new List<string>();
+            internal static List<string> used_dungeonTracks = new List<string>();
+
+            // these will contain unused file names of music
+            internal static List<string> unused_combatTracks = new List<string>();
+            internal static List<string> unused_ambientNightTracks = new List<string>();
+            internal static List<string> unused_ambientDayTracks = new List<string>();
+            internal static List<string> unused_townDayTracks = new List<string>();
+            internal static List<string> unused_townNightTracks = new List<string>();
+            internal static List<string> unused_dungeonTracks = new List<string>();
+
+            // keeps track of the music routines running for each scene to schedule music 
+            internal static List<string> scenesWithMusicRoutines = new List<string>();
+        }
+
+
+
         internal static List<string> CCM_list_usedCombatTracks = new List<string>();
         internal static List<string> CCM_list_usedAmbientNightTracks = new List<string>();
         internal static List<string> CCM_list_usedAmbientDayTracks = new List<string>();
@@ -53,14 +75,36 @@ namespace creativeCommonsMusicProject
         internal static List<string> CCM_list_townNightTracks = new List<string>();
         internal static List<string> CCM_list_dungeonTracks = new List<string>();
 
-
         // keeps track of the music routines running for each scene to schedule music 
         internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
 
-        
+
         /* ------------------------------------------------------------------------
             Dictionaries
         ------------------------------------------------------------------------ */
+        internal static class CCM_Dictionaries
+        {
+            // used to keep track of each player's' current scene. dictionary is global and synced between all players
+            // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
+            internal static Dictionary<int, string> activePlayerScenes = new Dictionary<int, string>();
+
+            // used to keep track of each active scenes music track
+            // layout is scene/track
+            internal static Dictionary<string, string> activeScenesCurrentMusic = new Dictionary<string, string>();
+
+            // Music Routine objects
+            internal static Dictionary<string, GameObject> sceneRoutineObjects = new Dictionary<string, GameObject>();
+
+            // keeps track of the currently playing music type for each scene that is active
+            internal static Dictionary<string, int> activeScenesTrackType = new Dictionary<string, int>();
+
+            // This is used locally for each machine to take a given filename and get back the audioClip of the file
+            internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
+        }
+
+
+
+
         // used to keep track of each player's' current scene. dictionary is global and synced between all players
         // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
         internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
