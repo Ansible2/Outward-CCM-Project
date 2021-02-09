@@ -7,10 +7,17 @@
 
 <!--All Track Types: ["TownDay","TownNight","AmbientDay","AmbientNight","Dungeon","Combat"]-->
 <!--
-	<track>
-		<filename>  </filename>
-		<track_types> [] </track_types>
-	</track>
+  <track>
+    <filename> sb_sassini.ogg </filename>
+    <track_types>
+      <track_type> TownDay </track_type>
+      <track_type> TownNight </track_type>
+      <track_type> AmbientDay </track_type>
+      <track_type> AmbientNight </track_type>
+      <track_type> Dungeon </track_type>
+      <track_type> Combat </track_type>
+    </track_types>
+  </track>
 -->
 
 
