@@ -112,8 +112,14 @@ namespace creativeCommonsMusicProject
         private static void _fn_grabTrackSettings(XDocument _xmlConfigFile)
         {
             var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing");
+            int _min, _max;
+
             foreach (var _x in _trackSpacings)
             {
+                string _name = _x.Value;
+                _min = (int)_x.Element("min");
+                _max = (int)_x.Element("max");
+                
                 //int _val = (int)_x;
                 //int _value = int.Parse(_x.Value);
             }
