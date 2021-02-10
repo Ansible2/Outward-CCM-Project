@@ -29,6 +29,7 @@ using BepInEx.Logging;
 using System.Collections;
 using UnityEngine.Networking;
 
+
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
@@ -58,6 +59,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_buildAudioClipLibrary
         ---------------------------------------------------------------------------- */
+        ///<summary>Does stuff</summary>
         private static void _fn_buildAudioClipLibrary(XDocument _xmlConfigFile)
         {
             // so we don't get duplicates, store already gotten files
@@ -251,7 +253,12 @@ namespace creativeCommonsMusicProject
 
 
 
-
+// random between two ints
+/*
+    Random r = new Random();
+	int rInt = r.Next(0, 100); //for ints
+	Console.WriteLine(rInt);
+*/
 
 
 

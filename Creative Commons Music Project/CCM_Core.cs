@@ -59,26 +59,6 @@ namespace creativeCommonsMusicProject
         }
 
 
-
-        internal static List<string> CCM_list_usedCombatTracks = new List<string>();
-        internal static List<string> CCM_list_usedAmbientNightTracks = new List<string>();
-        internal static List<string> CCM_list_usedAmbientDayTracks = new List<string>();
-        internal static List<string> CCM_list_usedTownDayTracks = new List<string>();
-        internal static List<string> CCM_list_usedTownNightTracks = new List<string>();
-        internal static List<string> CCM_list_usedDungeonTracks = new List<string>();
-
-        // these will contain unused file names of music
-        internal static List<string> CCM_list_combatTracks = new List<string>();
-        internal static List<string> CCM_list_ambientNightTracks = new List<string>();
-        internal static List<string> CCM_list_ambientDayTracks = new List<string>();
-        internal static List<string> CCM_list_townDayTracks = new List<string>();
-        internal static List<string> CCM_list_townNightTracks = new List<string>();
-        internal static List<string> CCM_list_dungeonTracks = new List<string>();
-
-        // keeps track of the music routines running for each scene to schedule music 
-        internal static List<string> CCM_scenesWithMusicRoutines = new List<string>();
-
-
         /* ------------------------------------------------------------------------
             Dictionaries
         ------------------------------------------------------------------------ */
@@ -206,7 +186,6 @@ namespace creativeCommonsMusicProject
             CCM_Instance = this;
 
             CCM_fnc_instantiateHarmony();
-
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
 
         }
