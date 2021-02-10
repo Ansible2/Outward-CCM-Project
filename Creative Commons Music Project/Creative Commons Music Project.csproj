@@ -43,7 +43,6 @@
     <Compile Include="Functions\RPC Functions\CCM_fnc_changeActiveScene.cs" />
     <Compile Include="Functions\CCM_fnc_getMusicHandler.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackList.cs" />
-    <Compile Include="Functions\CCM_fnc_getUsedTrackList.cs" />
     <Compile Include="Functions\CCM_fnc_isSceneReal.cs" />
     <Compile Include="Functions\CCM_fnc_assignMusicHandlerProperties.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackType.cs" />

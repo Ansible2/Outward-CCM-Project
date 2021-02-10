@@ -42,7 +42,7 @@ namespace creativeCommonsMusicProject
 
         internal static void CCM_fnc_parseConfig()
         {
-            string _pathToConfig = Path.Combine(CCM_mainFolderPath, CCM_configFileName);
+            string _pathToConfig = Path.Combine(CCM_Paths.mainFolderPath, CCM_configFileName);
             
             if (File.Exists(_pathToConfig))
             {
@@ -125,7 +125,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_loadAndStoreAudioClip(string _filename)
         {
-            var _pathToFile = Path.Combine(CCM_filePathStart, CCM_tracksFolderPath, _filename);
+            var _pathToFile = Path.Combine(CCM_Paths.FILE_PREFIX, CCM_Paths.tracks_folderPath, _filename);
             AudioType _audioType = CCM_fnc_getAudioTypeFromString(_filename);
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
@@ -156,7 +156,7 @@ namespace creativeCommonsMusicProject
                 DontDestroyOnLoad(_clip);
                 _clip.name = _filename;
 
-                CCM_dictionary_audioClipFromString.Add(_filename, _clip);
+                CCM_Dictionaries.audioClipFromString.Add(_filename, _clip);
             }
             
             yield break;
@@ -167,7 +167,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static bool _fn_doesFileExist(string _filename)
         {
-            var _pathToFile = Path.Combine(CCM_tracksFolderPath, _filename);
+            var _pathToFile = Path.Combine(CCM_Paths.tracks_folderPath, _filename);
 
             bool _doesFileExist = true;
             if (!File.Exists(_pathToFile))

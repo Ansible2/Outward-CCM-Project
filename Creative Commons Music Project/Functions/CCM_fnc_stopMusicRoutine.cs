@@ -55,11 +55,11 @@ namespace creativeCommonsMusicProject
     {
         internal static void CCM_fnc_stopMusicRoutine(string _sceneName)
         {
-            if (CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName))
+            if (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
             {
-                GameObject _routineObject = CCM_dictionary_sceneRoutineObjects[_sceneName];
+                GameObject _routineObject = CCM_Dictionaries.sceneRoutineObjects[_sceneName];
 
-                CCM_dictionary_sceneRoutineObjects.Remove(_sceneName);
+                CCM_Dictionaries.sceneRoutineObjects.Remove(_sceneName);
                 Destroy(_routineObject);
             }
         }

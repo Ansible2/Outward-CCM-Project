@@ -41,18 +41,18 @@ namespace creativeCommonsMusicProject
                     CCM_musicVolume = _objectToCopy.GetComponent<AudioSource>().volume;
 
                     // copy settings to our objects for playing music
-                    CCM_musicHandler_1 = Instantiate(_objectToCopy);
-                    CCM_musicHandler_1.name = "CCM_musicHandler_1";
-                    DontDestroyOnLoad(CCM_musicHandler_1);
-                    CCM_musicAudiSource_1 = CCM_musicHandler_1.GetComponent<AudioSource>();
-                    CCM_musicAudiSource_1.volume = 0;
+                    CCM_MusicHandlers.musicHandler_1 = Instantiate(_objectToCopy);
+                    CCM_MusicHandlers.musicHandler_1.name = "CCM_musicHandler_1";
+                    DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_1);
+                    CCM_MusicHandlers.musicAudiSource_1 = CCM_MusicHandlers.musicHandler_1.GetComponent<AudioSource>();
+                    CCM_MusicHandlers.musicAudiSource_1.volume = 0;
 
 
-                    CCM_musicHandler_2 = Instantiate(_objectToCopy);
-                    CCM_musicHandler_2.name = "CCM_musicHandler_2";
-                    DontDestroyOnLoad(CCM_musicHandler_2);
-                    CCM_musicAudiSource_2 = CCM_musicHandler_2.GetComponent<AudioSource>();
-                    CCM_musicAudiSource_2.volume = 0;
+                    CCM_MusicHandlers.musicHandler_2 = Instantiate(_objectToCopy);
+                    CCM_MusicHandlers.musicHandler_2.name = "CCM_musicHandler_2";
+                    DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_2);
+                    CCM_MusicHandlers.musicAudiSource_2 = CCM_MusicHandlers.musicHandler_2.GetComponent<AudioSource>();
+                    CCM_MusicHandlers.musicAudiSource_2.volume = 0;
 
 
                     CCM_gameObjectPropsAssigned = true;

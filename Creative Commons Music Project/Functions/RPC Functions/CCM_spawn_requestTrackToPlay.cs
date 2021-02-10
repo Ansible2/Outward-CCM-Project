@@ -68,9 +68,9 @@ namespace creativeCommonsMusicProject
         internal static IEnumerator CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
             bool _trackTypeChanged = false;
-            if (CCM_core.CCM_dictionary_activeScenesTrackType.ContainsKey(_playersScene))
+            if (CCM_core.CCM_Dictionaries.activeScenesTrackType.ContainsKey(_playersScene))
             {
-                if (CCM_core.CCM_dictionary_activeScenesTrackType[_playersScene] != _trackType)
+                if (CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] != _trackType)
                 {
                     _trackTypeChanged = true;
                     CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: track type was changed for " + _playersScene);
@@ -78,17 +78,17 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_core.CCM_dictionary_activeScenesTrackType.Add(_playersScene, _trackType);
+                CCM_core.CCM_Dictionaries.activeScenesTrackType.Add(_playersScene, _trackType);
             }
 
 
 
             // this still needs to be able to return tracks that are already in active scenes for other players
-            bool _sceneHasCurrentMusic = CCM_core.CCM_dictionary_activeScenesCurrentMusic.ContainsKey(_playersScene);
+            bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_playersScene);
             bool _sceneMusicIsBeingChosen = CCM_list_scenesChoosingMusicFor.Contains(_playersScene);
             if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen && !_trackTypeChanged)
             {
-                string _sceneTrackFileName = CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene];
+                string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(
                     "CCM_fnc_playMusic",
                     PhotonNetwork.player.Get(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
@@ -123,18 +123,18 @@ namespace creativeCommonsMusicProject
 
                     if (_sceneHasCurrentMusic)
                     {
-                        CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene] = _randomTrackFilename;
+                        CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene] = _randomTrackFilename;
                     }
                     else
                     {
-                        CCM_core.CCM_dictionary_activeScenesCurrentMusic.Add(_playersScene, _randomTrackFilename);
+                        CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.Add(_playersScene, _randomTrackFilename);
                     }
 
                     CCM_list_scenesChoosingMusicFor.Remove(_playersScene);
                 }
                 else
                 {
-                    _randomTrackFilename = CCM_core.CCM_dictionary_activeScenesCurrentMusic[_playersScene];
+                    _randomTrackFilename = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
                 }
 
                 CCM_photonView.RPC(

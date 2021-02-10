@@ -29,16 +29,16 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_playMusic(string _filename, bool _canInterrupt = true)
         {
-            if (CCM_core.CCM_dictionary_audioClipFromString.ContainsKey(_filename))
+            if (CCM_core.CCM_Dictionaries.audioClipFromString.ContainsKey(_filename))
             {
-                bool _musicIsPlaying = CCM_core.CCM_nowPlayingAudioSource.isPlaying;
+                bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
                 if (_musicIsPlaying && !_canInterrupt)
                 {
                     CCM_core.CCM_fnc_logWithTime("Did not play file: " + _filename + " because music is already playing and could not interrupt.");
                 }
                 else if (_musicIsPlaying && _canInterrupt)
                 {
-                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_nowPlayingAudioSource);
+                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource);
                     _fn_playClip(_filename);
                 } 
                 else
@@ -55,7 +55,7 @@ namespace creativeCommonsMusicProject
 
         private static void _fn_playClip(string _filename)
         {
-            AudioClip _clip = CCM_core.CCM_dictionary_audioClipFromString[_filename];
+            AudioClip _clip = CCM_core.CCM_Dictionaries.audioClipFromString[_filename];
             GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
             AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
 
@@ -64,8 +64,8 @@ namespace creativeCommonsMusicProject
 
             _handlerAudioSource.Play();
             CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
-            CCM_core.CCM_nowPlayingMusicHandler = _musicHandler;
-            CCM_core.CCM_nowPlayingAudioSource = _handlerAudioSource;
+            CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
+            CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;
         }
     }
 }

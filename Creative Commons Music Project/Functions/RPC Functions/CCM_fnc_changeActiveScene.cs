@@ -28,21 +28,21 @@ namespace creativeCommonsMusicProject
         internal void CCM_fnc_changeActiveScene(string _sceneName, int _playerId)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene called for scene: " + _sceneName + " on player ID: " + _playerId);
-            bool _playerInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsKey(_playerId);
+            bool _playerInDictionary = CCM_core.CCM_Dictionaries.activePlayerScenes.ContainsKey(_playerId);
             if (_playerInDictionary)
             {
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " was in the dictionary, changing...");
-                CCM_core.CCM_dictionary_activePlayerScenes[_playerId] = _sceneName;
+                CCM_core.CCM_Dictionaries.activePlayerScenes[_playerId] = _sceneName;
             }
             else
             {
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " was not in the dictionary, adding...");
-                CCM_core.CCM_dictionary_activePlayerScenes.Add(_playerId, _sceneName);
+                CCM_core.CCM_Dictionaries.activePlayerScenes.Add(_playerId, _sceneName);
             }
 
 
 
-            bool _sceneStillInDictionary = CCM_core.CCM_dictionary_activePlayerScenes.ContainsValue(_sceneName);
+            bool _sceneStillInDictionary = CCM_core.CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName);
             if (!_sceneStillInDictionary)
             {
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: Scene: " + _sceneName + " is no longer active for any players");

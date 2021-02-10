@@ -59,17 +59,35 @@
   <!--Track Spacing-->
 	<track_spacing>
 
-		<trackSpacing_townDay>10</trackSpacing_townDay>
+		<trackSpacing_townDay>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_townDay>
 
-		<trackSpacing_townNight>10</trackSpacing_townNight>
+		<trackSpacing_townNight>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_townNight>
 
-		<trackSpacing_ambientDay>10</trackSpacing_ambientDay>
+		<trackSpacing_ambientDay>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_ambientDay>
 
-		<trackSpacing_ambientNight>10</trackSpacing_ambientNight>
+		<trackSpacing_ambientNight>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_ambientNight>
 
-		<trackSpacing_dungeon>10</trackSpacing_dungeon>
+		<trackSpacing_dungeon>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_dungeon>
 
-		<trackSpacing_combat>10</trackSpacing_combat>
+		<trackSpacing_combat>
+      <min>10</min>
+      <max>10</max>
+    </trackSpacing_combat>
 
 	</track_spacing>
 

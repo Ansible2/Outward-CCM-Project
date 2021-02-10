@@ -83,45 +83,26 @@ namespace creativeCommonsMusicProject
         }
 
 
-
-
-        // used to keep track of each player's' current scene. dictionary is global and synced between all players
-        // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
-        internal static Dictionary<int, string> CCM_dictionary_activePlayerScenes = new Dictionary<int, string>();
-
-        // used to keep track of each active scenes music track
-        // layout is scene/track
-        internal static Dictionary<string, string> CCM_dictionary_activeScenesCurrentMusic = new Dictionary<string, string>();
-
-        // Music Routine objects
-        internal static Dictionary<string, GameObject> CCM_dictionary_sceneRoutineObjects = new Dictionary<string, GameObject>();
-        
-        // keeps track of the currently playing music type for each scene that is active
-        internal static Dictionary<string, int> CCM_dictionary_activeScenesTrackType = new Dictionary<string, int>();
-
-        // This is used locally for each machine to take a given filename and get back the audioClip of the file
-        internal static Dictionary<string, AudioClip> CCM_dictionary_audioClipFromString = new Dictionary<string, AudioClip>();
-
-
         /* ------------------------------------------------------------------------
             String Constants
         ------------------------------------------------------------------------ */
-        // folder path constants
-        internal static readonly string CCM_mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
-        internal static readonly string CCM_tracksFolderPath = Path.Combine(CCM_mainFolderPath + @"\Tracks");
+        internal static class CCM_Paths
+        {
+            internal static readonly string mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
+            internal static readonly string tracks_folderPath = Path.Combine(mainFolderPath + @"\Tracks");
+            
+            internal static readonly string combat_folderPath = Path.Combine(mainFolderPath + @"\Combat Tracks");
+            internal static readonly string ambientNight_folderPath = Path.Combine(mainFolderPath + @"\Ambient Night Tracks");
+            internal static readonly string ambientDay_folderPath = Path.Combine(mainFolderPath + @"\Ambient Day Tracks");
+            internal static readonly string townDay_folderPath = Path.Combine(mainFolderPath + @"\Town Day Tracks");
+            internal static readonly string townNight_folderPath = Path.Combine(mainFolderPath + @"\Town Night Tracks");
+            internal static readonly string dungeon_folderPath = Path.Combine(mainFolderPath + @"\Dungeon Tracks");
 
-        /*
-        internal static readonly string CCM_combatFolderPath = Path.Combine(CCM_mainFolderPath + @"\Combat Tracks");
-        internal static readonly string CCM_ambientNightFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Night Tracks");
-        internal static readonly string CCM_ambientDayFolderPath = Path.Combine(CCM_mainFolderPath + @"\Ambient Day Tracks");
-        internal static readonly string CCM_townFolderPath = Path.Combine(CCM_mainFolderPath + @"\Town Tracks");
-        internal static readonly string CCM_dungeonFolderPath = Path.Combine(CCM_mainFolderPath + @"\Dungeon Tracks");
-        */
+            internal const string FILE_PREFIX = "file://";
+        }
+
         // used for naming scheme on music-routine objects
         internal static readonly string CCM_musicRoutinePostfixString = "-MusicRoutineObject";
-
-        // folder paths for user defined music
-        internal const string CCM_filePathStart = "file://";
 
 
         /* ------------------------------------------------------------------------
@@ -135,7 +116,6 @@ namespace creativeCommonsMusicProject
         // self explanitory
         internal static Scene CCM_currentScene;
 
-        
         internal enum CCM_trackTypes_enum
         {
             combat,
@@ -156,17 +136,23 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             Music Handlers
         ------------------------------------------------------------------------ */
-        // music game objects we will use to actually play music
-        internal static GameObject CCM_musicHandler_1;
-        internal static GameObject CCM_musicHandler_2;
-        internal static AudioSource CCM_musicAudiSource_1;
-        internal static AudioSource CCM_musicAudiSource_2;
+        internal static class CCM_MusicHandlers
+        {
+            // music game objects we will use to actually play music
+            internal static GameObject musicHandler_1;
+            internal static GameObject musicHandler_2;
+            internal static AudioSource musicAudiSource_1;
+            internal static AudioSource musicAudiSource_2;
+
+            // this keeps track of which music handler is actually currently intended to be played on
+            // for instance, when transitioning to a new track, this one
+            internal static GameObject nowPlayingMusicHandler;
+            internal static AudioSource nowPlayingAudioSource;
+        }
+        
         internal static float CCM_musicVolume;
 
-        // this keeps track of which music handler is actually currently intended to be played on
-        // for instance, when transitioning to a new track, this one
-        internal static GameObject CCM_nowPlayingMusicHandler;
-        internal static AudioSource CCM_nowPlayingAudioSource;
+        
 
 
 
@@ -187,7 +173,6 @@ namespace creativeCommonsMusicProject
 
             CCM_fnc_instantiateHarmony();
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
-
         }
 
 
@@ -226,53 +211,6 @@ namespace creativeCommonsMusicProject
 
 
 
-        /*
-        IEnumerator LoadMusic(string songPath)
-        {
-            if (System.IO.File.Exists(songPath))
-            {
-                using (var uwr = UnityWebRequestMultimedia.GetAudioClip("file://" + songPath, AudioType.AUDIOQUEUE))
-                {
-                    ((DownloadHandlerAudioClip)uwr.downloadHandler).streamAudio = true;
-
-                    yield return uwr.SendWebRequest();
-
-                    if (uwr.isNetworkError || uwr.isHttpError)
-                    {
-                        Debug.LogError(uwr.error);
-                        yield break;
-                    }
-
-                    DownloadHandlerAudioClip dlHandler = (DownloadHandlerAudioClip)uwr.downloadHandler;
-
-                    if (dlHandler.isDone)
-                    {
-                        AudioClip audioClip = dlHandler.audioClip;
-
-                        if (audioClip != null)
-                        {
-                            audioClip = DownloadHandlerAudioClip.GetContent(uwr);
-
-                            Debug.Log("Playing song using Audio Source!");
-
-                        }
-                        else
-                        {
-                            Debug.Log("Couldn't find a valid AudioClip :(");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("The download process is not completely finished.");
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("Unable to locate converted song file.");
-            }
-        }
-        */
     }
 
 

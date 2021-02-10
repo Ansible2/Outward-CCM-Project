@@ -64,7 +64,7 @@ namespace creativeCommonsMusicProject
             DontDestroyOnLoad(_musicRoutineObject);
 
             MonoBehaviour _musicRoutineInstance = _musicRoutineObject.GetOrAddComponent<MonoBehaviour>();
-            CCM_dictionary_sceneRoutineObjects.Add(_sceneName, _musicRoutineObject);
+            CCM_Dictionaries.sceneRoutineObjects.Add(_sceneName, _musicRoutineObject);
             
             
             _musicRoutineInstance.StartCoroutine(_fn_beginRoutine(_sceneName, _musicRoutineObject, _trackType));
@@ -75,7 +75,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_beginRoutine(string _sceneName, GameObject _musicRoutineObject, int _trackType)
         {
-            while (CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName))
+            while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
             {
                 yield return new WaitForSeconds(_fn_decideTimeBetweenTracks(_trackType));
 

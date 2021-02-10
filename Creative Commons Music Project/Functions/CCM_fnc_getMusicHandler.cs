@@ -28,15 +28,14 @@ namespace creativeCommonsMusicProject
     {
         internal static GameObject CCM_fnc_getMusicHandler()
         {
-            AudioSource _objectAudioSource = CCM_musicHandler_1.GetComponent<AudioSource>();
-            bool _isPlaying = _objectAudioSource.isPlaying;
+            bool _isPlaying = CCM_MusicHandlers.musicAudiSource_1.isPlaying;
             if (_isPlaying)
             {
-                return CCM_musicHandler_2;
+                return CCM_MusicHandlers.musicHandler_2;
             }
             else
             {
-                return CCM_musicHandler_1;
+                return CCM_MusicHandlers.musicHandler_1;
             }
         }
     }
