@@ -56,6 +56,8 @@ namespace creativeCommonsMusicProject
 
             // keeps track of the music routines running for each scene to schedule music 
             internal static List<string> scenesWithMusicRoutines = new List<string>();
+
+            internal static List<string> storedTracks = new List<string>();
         }
 
 
@@ -137,6 +139,8 @@ namespace creativeCommonsMusicProject
         internal static bool CCM_syncOnline;
 
         internal static float CCM_musicVolume;
+
+        internal static bool CCM_loadingAudio = false;
 
         /* ------------------------------------------------------------------------
             Music Handlers

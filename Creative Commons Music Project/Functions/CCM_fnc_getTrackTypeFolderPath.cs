@@ -57,5 +57,41 @@ namespace creativeCommonsMusicProject
                     }
             }
         }
+
+        internal static string CCM_fnc_getTrackTypeFolderPath(CCM_trackTypes_enum _trackType)
+        {
+            switch (_trackType)
+            {
+                case CCM_trackTypes_enum.ambientDay:
+                    {
+                        return CCM_Paths.ambientDay_folderPath;
+                    }
+                case CCM_trackTypes_enum.ambientNight:
+                    {
+                        return CCM_Paths.ambientNight_folderPath;
+                    }
+                case CCM_trackTypes_enum.combat:
+                    {
+                        return CCM_Paths.combat_folderPath;
+                    }
+                case CCM_trackTypes_enum.dungeon:
+                    {
+                        return CCM_Paths.dungeon_folderPath;
+                    }
+                case CCM_trackTypes_enum.townDay:
+                    {
+                        return CCM_Paths.townDay_folderPath;
+                    }
+                case CCM_trackTypes_enum.townNight:
+                    {
+                        return CCM_Paths.townNight_folderPath;
+                    }
+                default:
+                    {
+                        CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for Enum " + _trackType);
+                        return "";
+                    }
+            }
+        }
     }
 }
