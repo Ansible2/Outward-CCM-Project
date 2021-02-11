@@ -80,6 +80,8 @@ namespace creativeCommonsMusicProject
 
             // This is used locally for each machine to take a given filename and get back the audioClip of the file
             internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
+
+            internal static Dictionary<int, List<int>> tracKSpacingFromType = new Dictionary<int, List<int>>();
         }
 
 
@@ -132,6 +134,9 @@ namespace creativeCommonsMusicProject
 
         internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
 
+        internal static bool CCM_syncOnline;
+
+        internal static float CCM_musicVolume;
 
         /* ------------------------------------------------------------------------
             Music Handlers
@@ -150,13 +155,7 @@ namespace creativeCommonsMusicProject
             internal static AudioSource nowPlayingAudioSource;
         }
         
-        internal static float CCM_musicVolume;
-
         
-
-
-
-
         /* ------------------------------------------------------------------------
         
             awake function

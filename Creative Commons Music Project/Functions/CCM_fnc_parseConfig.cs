@@ -34,12 +34,13 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal const string CCM_configFileName = @"CCM Config.xml";
-        
-
+        const string CCM_configFileName = @"CCM Config.xml";
         // true when currently loading an audio file
         internal static bool CCM_loadingAudio = false;
 
+        /* ----------------------------------------------------------------------------
+            CCM_fnc_parseConfig
+        ---------------------------------------------------------------------------- */
         internal static void CCM_fnc_parseConfig()
         {
             string _pathToConfig = Path.Combine(CCM_Paths.mainFolderPath, CCM_configFileName);
@@ -48,13 +49,15 @@ namespace creativeCommonsMusicProject
             {
                 var _xmlConfigFile = XDocument.Load(_pathToConfig);
                 _fn_buildAudioClipLibrary(_xmlConfigFile);
-                _fn_grabTrackSettings(_xmlConfigFile);
+                _fn_storeTrackSettings(_xmlConfigFile);
+                _fn_getOnlineMode(_xmlConfigFile);
             }
             else
             {
                 CCM_logSource.Log(LogLevel.Fatal, "Config file could not be found at: " + _pathToConfig);
             }
         }
+
 
         /* ----------------------------------------------------------------------------
             _fn_buildAudioClipLibrary
@@ -106,24 +109,77 @@ namespace creativeCommonsMusicProject
             }
         }
 
+
         /* ----------------------------------------------------------------------------
            _fn_grabTrackSettings
         ---------------------------------------------------------------------------- */
-        private static void _fn_grabTrackSettings(XDocument _xmlConfigFile)
+        private static void _fn_storeTrackSettings(XDocument _xmlConfigFile)
         {
             var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing");
-            int _min, _max;
 
             foreach (var _x in _trackSpacings)
             {
-                string _name = _x.Value;
-                _min = (int)_x.Element("min");
-                _max = (int)_x.Element("max");
+                bool _doAdd = false;
+                string _name = _x.Value.ToLower();
+
+                int _trackType = -1;
                 
-                //int _val = (int)_x;
-                //int _value = int.Parse(_x.Value);
+                int _min = (int)_x.Element("min");
+                int _max = (int)_x.Element("max");
+
+                switch (_name)
+                {
+                    case ("trackspacing_townday"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.townDay;
+                            _doAdd = true;
+                            break;
+                        }
+                    case ("trackspacing_townnight"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.townNight;
+                            _doAdd = true;
+                            break;
+                        }
+                    case ("trackspacing_ambientday"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.ambientDay;
+                            _doAdd = true;
+                            break;
+                        }
+                    case ("trackspacing_ambientnight"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.ambientNight;
+                            _doAdd = true;
+                            break;
+                        }
+                    case ("trackspacing_dungeon"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.dungeon;
+                            _doAdd = true;
+                            break;
+                        }
+                    case ("trackspacing_combat"):
+                        {
+                            _trackType = (int)CCM_trackTypes_enum.combat;
+                            _doAdd = true;
+                            break;
+                        }
+                    default:
+                        {
+                            CCM_logSource.LogError("Encountered unkown config for track spacing: " + _name);
+                            break;
+                        }
+                }
+
+                if (_doAdd)
+                {
+                    List<int> _list = new List<int>() { _min, _max };
+                    CCM_Dictionaries.tracKSpacingFromType.Add(_trackType, _list);
+                }
             }
         }
+
 
         /* ----------------------------------------------------------------------------
            _fn_loadAndStoreAudioClip    (AudioClips are loaded at the start and stored due to a need to know their duration in order to queue songs for the future. 
@@ -168,6 +224,7 @@ namespace creativeCommonsMusicProject
             yield break;
         }
 
+
         /* ----------------------------------------------------------------------------
            _fn_doesFileExist
         ---------------------------------------------------------------------------- */
@@ -183,6 +240,7 @@ namespace creativeCommonsMusicProject
                         
             return _doesFileExist;
         }
+
 
         /* ----------------------------------------------------------------------------
            _fn_pushBackToTrackList
@@ -230,12 +288,41 @@ namespace creativeCommonsMusicProject
                     }
             }
         }
-        
-        
-        
-        
-        
-        
+
+
+        /* ----------------------------------------------------------------------------
+           _fn_getOnlineMode
+        ---------------------------------------------------------------------------- */
+        private static void _fn_getOnlineMode(XDocument _xmlConfigFile)
+        {
+            bool _isOnline = _xmlConfigFile.Root.Element("syncOnline").Value.ToUpper() == "ON";
+
+            if (_isOnline)
+            {
+                CCM_syncOnline = true;
+            }
+            else
+            {
+                CCM_syncOnline = false;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* This is how you build your own "types"
         class CCM_track
         {

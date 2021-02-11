@@ -22,6 +22,10 @@
 
 
 <SETTINGS_ROOT>
+  <!--Sync To Online-->
+  <syncOnline>ON</syncOnline> 
+  
+  
   <!--Track list-->
 	<tracks>
 
