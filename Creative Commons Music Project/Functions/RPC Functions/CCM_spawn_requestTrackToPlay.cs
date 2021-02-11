@@ -37,8 +37,6 @@ namespace creativeCommonsMusicProject
 
     partial class CCM_rpc
     {
-        internal static List<string> CCM_list_scenesChoosingMusicFor = new List<string>();
-
         /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay_RPC
         ---------------------------------------------------------------------------- */
@@ -85,7 +83,8 @@ namespace creativeCommonsMusicProject
 
             // this still needs to be able to return tracks that are already in active scenes for other players
             bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_playersScene);
-            bool _sceneMusicIsBeingChosen = CCM_list_scenesChoosingMusicFor.Contains(_playersScene);
+            bool _sceneMusicIsBeingChosen = CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene);
+            
             if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen && !_trackTypeChanged)
             {
                 string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
@@ -103,7 +102,7 @@ namespace creativeCommonsMusicProject
                 if (_sceneMusicIsBeingChosen)
                 {
                     _updateDictionaries = false;
-                    while (CCM_list_scenesChoosingMusicFor.Contains(_playersScene))
+                    while (CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene))
                     {
                         CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: waiting for _playersScene to have track selected from other call");
                         // sleep 0.3 second
@@ -112,7 +111,7 @@ namespace creativeCommonsMusicProject
                 }
                 else
                 {
-                    CCM_list_scenesChoosingMusicFor.Add(_playersScene);
+                    CCM_core.CCM_Lists.scenesChoosingMusicFor.Add(_playersScene);
                 }
 
                 string _randomTrackFilename;
@@ -130,7 +129,7 @@ namespace creativeCommonsMusicProject
                         CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.Add(_playersScene, _randomTrackFilename);
                     }
 
-                    CCM_list_scenesChoosingMusicFor.Remove(_playersScene);
+                    CCM_core.CCM_Lists.scenesChoosingMusicFor.Remove(_playersScene);
                 }
                 else
                 {

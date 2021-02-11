@@ -58,6 +58,8 @@ namespace creativeCommonsMusicProject
             internal static List<string> scenesWithMusicRoutines = new List<string>();
 
             internal static List<string> storedTracks = new List<string>();
+
+            internal static List<string> scenesChoosingMusicFor = new List<string>();
         }
 
 

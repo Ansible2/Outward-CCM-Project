@@ -82,6 +82,10 @@ namespace creativeCommonsMusicProject
                 // however, on scene start, it will remote from here and keep selecting random tracks and remoting to everyone already in the scene
                 // then it will sleep and loop back around so that if the routine is stopped, it won't get a follow on track
 
+
+                // ACTUALLY this has to be able to serve players in the request track individually as there is no guarantee that they can be put in 
+                /// the playerId scene tracking array on the server if loading in right when music changes over
+
                 yield return new WaitForSeconds(_fn_decideTimeBetweenTracks(_trackType));
 
                 // get new track
