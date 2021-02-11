@@ -90,7 +90,7 @@ namespace creativeCommonsMusicProject
                         // collects all configed track types for the track
                         var _trackTypes = _x.Element("track_types").Descendants("track_type").ToList();
 
-                        if (_trackTypes.Count() != 0)
+                        if (_trackTypes.Count() > 0)
                         {
                             foreach (var _y in _trackTypes)
                             {
@@ -121,86 +121,25 @@ namespace creativeCommonsMusicProject
         {
             CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
 
+            List<string> _fileNames;
             foreach (var _trackType in _trackTypes)
             {
                 string _folderPath = CCM_fnc_getTrackTypeFolderPath(_trackType);
-                string _filename = "";
+                _fileNames = _fn_getFileNamesAtPath(_folderPath);
 
-                if (Directory.Exists(_folderPath))
+                if (_fileNames.Count() == 0)
                 {
-                    // this will get all files of .ogg, .mp3, and .wav. However, this includes their paths
-                    string[] _files = Directory.GetFiles(_folderPath, "*.ogg");
-                    List<string> _tempList = _files.ToList();
-                    
-                    _files = Directory.GetFiles(_folderPath, "*.mp3");
-                    _tempList.AddRange(_files);
-                    _files = Directory.GetFiles(_folderPath, "*.wav");
-                    _tempList.AddRange(_files);
-
-
-                    if (_tempList.Count() == 0)
-                    {
-                        CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: File path " + _folderPath + " returned no files!");
-                    }
-                    else
-                    {
-                        // get only the file names for returns
-                        foreach (string _filePath in _tempList)
-                        {
-                            _filename = Path.GetFileName(_filePath).ToLower();
-                            
-                            if (!CCM_Lists.storedTracks.Contains(_filename)) 
-                            {
-                                _fn_pushBackToTrackList(_trackType, _filename);
-                                CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPath));
-                                CCM_Lists.storedTracks.Add(_filename);
-                            }
-                            else
-                            {
-                                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
-                            }
-                        }
-                    }
-                    _tempList = null;
+                    CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPath + " returned no files!");
                 }
                 else
                 {
-                    CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPath + " does not exist.");
-                }
-            }
-
-
-
-            // Do any tracks that were not configed but are in the "tracks" folder
-            string _folderPathToSearch = CCM_Paths.tracks_folderPath;            
-            if (Directory.Exists(_folderPathToSearch))
-            {
-                // this will get all files of .ogg, .mp3, and .wav. However, this includes their paths
-                string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-                List<string> _tempList = _files.ToList();
-
-                _files = Directory.GetFiles(_folderPathToSearch, "*.mp3");
-                _tempList.AddRange(_files);
-                _files = Directory.GetFiles(_folderPathToSearch, "*.wav");
-                _tempList.AddRange(_files);
-
-
-                if (_tempList.Count() == 0)
-                {
-                    CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: File path " + _folderPathToSearch + " returned no files!");
-                }
-                else
-                {
-                    string _filename = "";
                     // get only the file names for returns
-                    foreach (string _filePath in _tempList)
-                    {
-                        _filename = Path.GetFileName(_filePath).ToLower();
-
-                        if (!CCM_Lists.storedTracks.Contains(_filename))
+                    foreach (string _filename in _fileNames)
+                    {                          
+                        if (!CCM_Lists.storedTracks.Contains(_filename)) 
                         {
-                            _fn_pushBackToTrackList("all", _filename);
-                            CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPathToSearch));
+                            _fn_pushBackToTrackList(_trackType, _filename);
+                            CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPath));
                             CCM_Lists.storedTracks.Add(_filename);
                         }
                         else
@@ -209,12 +148,38 @@ namespace creativeCommonsMusicProject
                         }
                     }
                 }
-                _tempList = null;
+            }
+
+
+
+            // Do any tracks that were not configed but are in the "tracks" folder
+            string _folderPathToSearch = CCM_Paths.tracks_folderPath;            
+            _fileNames = _fn_getFileNamesAtPath(_folderPathToSearch);
+
+
+            if (_fileNames.Count() == 0)
+            {
+                CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPathToSearch + " returned no files!");
             }
             else
             {
-                CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPathToSearch + " does not exist.");
+                // get only the file names for returns
+                foreach (string _filename in _fileNames)
+                {
+                    if (!CCM_Lists.storedTracks.Contains(_filename))
+                    {
+                        _fn_pushBackToTrackList("all", _filename);
+                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPathToSearch));
+                        CCM_Lists.storedTracks.Add(_filename);
+                    }
+                    else
+                    {
+                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
+                    }
+                }
             }
+
+            _fileNames = null;
         }
 
 
@@ -468,7 +433,46 @@ namespace creativeCommonsMusicProject
         }
 
 
+        /* ----------------------------------------------------------------------------
+           _fn_getFilenamesAtPath
+        ---------------------------------------------------------------------------- */
+        private static List<string> _fn_getFileNamesAtPath(string _folderPathToSearch)
+        {
+            List<string> _returnList = new List<string>();
 
+            if (!Directory.Exists(_folderPathToSearch))
+            {
+                CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: Folder path " + _folderPathToSearch + " does not exist.");
+            }
+            else
+            {
+                // this will get all files of .ogg, .mp3, and .wav. However, this includes their paths
+                string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
+                List<string> _tempList = _files.ToList();
+
+                _files = Directory.GetFiles(_folderPathToSearch, "*.mp3");
+                _tempList.AddRange(_files);
+                _files = Directory.GetFiles(_folderPathToSearch, "*.wav");
+                _tempList.AddRange(_files);
+
+                if (_tempList.Count() < 1)
+                {
+                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: File path " + _folderPathToSearch + " returned no files.");
+                }
+                else
+                {
+                    // get only the file names for returns
+                    string _tempFileName;
+                    foreach (string _filePath in _tempList)
+                    {
+                        _tempFileName = Path.GetFileName(_filePath).ToLower();
+                        _returnList.Add(_tempFileName);
+                    }
+                }
+            }
+
+            return _returnList;
+        }
 
 
 
