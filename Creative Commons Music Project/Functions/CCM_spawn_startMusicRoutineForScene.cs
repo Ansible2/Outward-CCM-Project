@@ -77,6 +77,11 @@ namespace creativeCommonsMusicProject
         {
             while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
             {
+                // move all random track selection here
+                // players will request music and if the scene already has musuic it will remote from the request track function
+                // however, on scene start, it will remote from here and keep selecting random tracks and remoting to everyone already in the scene
+                // then it will sleep and loop back around so that if the routine is stopped, it won't get a follow on track
+
                 yield return new WaitForSeconds(_fn_decideTimeBetweenTracks(_trackType));
 
                 // get new track
@@ -91,11 +96,9 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static int _fn_decideTimeBetweenTracks(int _trackType)
         {
-            int _sleepTime = 0;
-
-            // use a switch for different spacing depending on type
-            // can also use CCM_getRandom for a random factor
-            
+            // get min/max values
+            var _sleepList = CCM_Dictionaries.tracKSpacingFromType[_trackType];
+            var _sleepTime = CCM_getRandom.Next(_sleepList[0], _sleepList[1]);
             
             return _sleepTime;
         }

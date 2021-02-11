@@ -99,7 +99,7 @@ namespace creativeCommonsMusicProject
             {
 
                 bool _updateDictionaries = true;
-                // if scene is already getting music selected for it
+                // if scene is already getting music selected for it, then wait
                 if (_sceneMusicIsBeingChosen)
                 {
                     _updateDictionaries = false;
@@ -142,6 +142,8 @@ namespace creativeCommonsMusicProject
                     PhotonNetwork.player.Get(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
                     new object[] { _randomTrackFilename , true}
                 );
+
+                CCM_core.CCM_spawn_startMusicRoutineForScene(_playersScene, _trackType);
             }
         }
     }

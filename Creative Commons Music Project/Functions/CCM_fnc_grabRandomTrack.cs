@@ -34,7 +34,7 @@ namespace creativeCommonsMusicProject
 
             if (_trackList.Count() < 1)
             {
-                CCM_fnc_logWithTime("_trackList is empty!");
+                CCM_fnc_logWithTime("CCM_fnc_grabRandomTrack: _trackList is empty!");
             }
             else
             {
@@ -43,8 +43,7 @@ namespace creativeCommonsMusicProject
                 _trackList.RemoveAt(_randomIndex);
             }
 
-            CCM_fnc_logWithTime("Selected track file:");
-            CCM_fnc_logWithTime(_trackFilename);
+            CCM_fnc_logWithTime("CCM_fnc_grabRandomTrack: Selected track file: " + _trackFilename);
 
             return _trackFilename;
         }
