@@ -70,6 +70,7 @@ namespace creativeCommonsMusicProject
             _musicRoutineInstance.StartCoroutine(_fn_beginRoutine(_sceneName, _musicRoutineObject, _trackType));
         }
 
+
         /* ----------------------------------------------------------------------------
             _fn_beginRoutine
         ---------------------------------------------------------------------------- */
@@ -77,6 +78,11 @@ namespace creativeCommonsMusicProject
         {
             while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
             {
+                // This should send an RPC to all players
+                // That RPC function will check if the passed scene is the player's current scene
+                // Then if true, a player will request a track from the server
+
+
                 // move all random track selection here
                 // players will request music and if the scene already has musuic it will remote from the request track function
                 // however, on scene start, it will remote from here and keep selecting random tracks and remoting to everyone already in the scene
@@ -94,6 +100,7 @@ namespace creativeCommonsMusicProject
                 // RPC load And play onto everyone
             }
         }
+
 
         /* ----------------------------------------------------------------------------
             _fn_decideTimeBetweenTracks

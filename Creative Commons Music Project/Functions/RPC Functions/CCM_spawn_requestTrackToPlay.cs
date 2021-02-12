@@ -70,6 +70,7 @@ namespace creativeCommonsMusicProject
             {
                 if (CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] != _trackType)
                 {
+                    // NEED TO START A NEW MUSIC ROUTINE
                     _trackTypeChanged = true;
                     CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: track type was changed for " + _playersScene);
                 }
@@ -85,6 +86,7 @@ namespace creativeCommonsMusicProject
             bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_playersScene);
             bool _sceneMusicIsBeingChosen = CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene);
             
+            // if nothing has changed or is going to change, just give them the current track
             if (_sceneHasCurrentMusic && !_sceneMusicIsBeingChosen && !_trackTypeChanged)
             {
                 string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
