@@ -25,23 +25,7 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using UnityEngine;
 using System.Collections;
-
-
-
-
-
-
-
-/*
-    create a gameobject to attach this routine to.
-    Add these gameObjects to a list so that each is known to the server.
-    Change the name of the gameobject to be the scene name + someting like "routine"
-    When you need to reference a certain scenes routine, just look it up with that string.
-    To stop a routine, destroy the gameObject associated to the scene.
-*/
-
-
-
+using System.Collections.Generic;
 
 
 namespace creativeCommonsMusicProject
@@ -56,7 +40,7 @@ namespace creativeCommonsMusicProject
             //bool _routineExistsForScene = CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName);
             if (_deletePrevious)
             {
-                CCM_fnc_stopMusicRoutine(_sceneName);
+                _fn_stopMusicRoutine(_sceneName);
             }
 
             // create object
@@ -71,34 +55,55 @@ namespace creativeCommonsMusicProject
         }
 
 
+        internal static void _fn_stopMusicRoutine(string _sceneName)
+        {
+            if (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
+            {
+                GameObject _routineObject = CCM_Dictionaries.sceneRoutineObjects[_sceneName];
+
+                CCM_Dictionaries.sceneRoutineObjects.Remove(_sceneName);
+                Destroy(_routineObject);
+            }
+        }
+
+
         /* ----------------------------------------------------------------------------
             _fn_beginRoutine
         ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_beginRoutine(string _sceneName, GameObject _musicRoutineObject, int _trackType)
         {
-            while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
+            // create a function that will select a track for a scene
+            // that will set the bool to tell RPC'd functions that it is happening
+            // then if someone request a track while that bool is set to true (and it isn't a change to the music routine), 
+            /// just exit because they will receive the RPC'd event for playmusic on that scene.
+            /// if the bool is false, THEN RPC a play music on that player per a request
+            while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
             {
-                // This should send an RPC to all players
-                // That RPC function will check if the passed scene is the player's current scene
-                // Then if true, a player will request a track from the server
+                string _sceneTrackFileName = _fn_decideNewTrackForScene(_trackType, _sceneName);
+                CCM_rpc.CCM_photonView.RPC(
+                    "CCM_event_playMusic_RPC",
+                    PhotonTargets.All,
+                    new object[] { _sceneTrackFileName, _sceneName, true }
+                );
 
+                int _trackLength = (int)CCM_Dictionaries.audioClipFromString[_sceneTrackFileName].length;
+                int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
 
-                // move all random track selection here
-                // players will request music and if the scene already has musuic it will remote from the request track function
-                // however, on scene start, it will remote from here and keep selecting random tracks and remoting to everyone already in the scene
-                // then it will sleep and loop back around so that if the routine is stopped, it won't get a follow on track
-
-
-                // ACTUALLY this has to be able to serve players in the request track individually as there is no guarantee that they can be put in 
-                /// the playerId scene tracking array on the server if loading in right when music changes over
-
-                yield return new WaitForSeconds(_fn_decideTimeBetweenTracks(_trackType));
-
-                // get new track
-                // set track in dictionary CCM_dictionary_activeScenesCurrentMusic
-                // get everyone in the scence
-                // RPC load And play onto everyone
+                yield return new WaitForSeconds(_sleepTime);
             }
+
+            // if music game object is still alive
+            if (_musicRoutineObject != null)
+            {
+                _fn_stopMusicRoutine(_sceneName);
+            }
+
+            if (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && !CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
+            {
+                CCM_Dictionaries.sceneRoutineObjects.Remove(_sceneName);
+            }
+
+            
         }
 
 
@@ -108,26 +113,37 @@ namespace creativeCommonsMusicProject
         private static int _fn_decideTimeBetweenTracks(int _trackType)
         {
             // get min/max values
-            var _sleepList = CCM_Dictionaries.tracKSpacingFromType[_trackType];
+            var _sleepList = CCM_Dictionaries.trackSpacingFromType[_trackType];
             var _sleepTime = CCM_getRandom.Next(_sleepList[0], _sleepList[1]);
             
             return _sleepTime;
         }
+
+        private static string _fn_decideNewTrackForScene(int _trackType, string _sceneName)
+        {
+            // list the scene as being in the process of choosing a new track to prevent players from requesting a play event from the server in CCM_fnc_requestTrackToPlay
+            CCM_Lists.scenesChoosingMusicFor.Add(_sceneName);
+            
+            // get a random track
+            List<string> _possibleTracks = CCM_core.CCM_fnc_getAllAvailableReplacementTracks(_trackType);
+            string _newTrackName = CCM_core.CCM_fnc_grabRandomTrack(_possibleTracks);
+
+            if (CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_sceneName))
+            {
+                CCM_Dictionaries.activeScenesCurrentMusic[_sceneName] = _newTrackName;
+            }
+            else
+            {
+                CCM_Dictionaries.activeScenesCurrentMusic.Add(_sceneName, _newTrackName);
+            }
+            // THIS MAY NEED TO GO AFTER THE RPC TO ALL PLAYERS
+
+            // list the scene as no longer changing music
+            CCM_Lists.scenesChoosingMusicFor.Remove(_sceneName);
+
+            return _newTrackName;
+        }
+
+
     }
 }
-
-/*
-    Current issue is between this and request track.
-
-    Actually, here's what should happen.
-
-    1. No matter what, a Vanilla PlayMusic call will ping the server for a load & play for the player's current scene
-        1a. The client DOES NOT need to be waiting for a global to be defined on the other end.
-        1b. Load & Play will be an RPC from the server
-    
-    2. The server needs to check if the request warrants a new music routine
-        2a. A new music routine could be required for not having the same track type or one just not existing for that scene
-        2b. If a new music routine is required. The server will select a starting track and pass that 
-            track's duration to CCM_spawn_startMusicRoutineForScene so it can know how long to the first sleep will be
-        2c. As is already the case, the request will be waiting on the server until a track is defined and then RPC a load&play to the requester
-*/

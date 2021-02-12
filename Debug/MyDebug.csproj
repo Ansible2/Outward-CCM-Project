@@ -87,6 +87,7 @@
     <Compile Include="old\CCM_fnc_startCombatMusicIntercept.cs" />
     <Compile Include="old\CCM_fnc_stopMusicFromLooping.cs" />
     <Compile Include="old\CCM_fnc_stopMusicFromPlaying.cs" />
+    <Compile Include="old\CCM_fnc_stopMusicRoutine.cs" />
     <Compile Include="old\CCM_fnc_waitForLoadingDone.cs" />
     <Compile Include="old\CCM_spawn_loadAndPlayAudioClip.cs" />
     <Compile Include="old\CodeFile1.cs" />

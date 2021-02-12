@@ -85,7 +85,7 @@ namespace creativeCommonsMusicProject
             // This is used locally for each machine to take a given filename and get back the audioClip of the file
             internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
 
-            internal static Dictionary<int, List<int>> tracKSpacingFromType = new Dictionary<int, List<int>>();
+            internal static Dictionary<int, List<int>> trackSpacingFromType = new Dictionary<int, List<int>>();
         }
 
 
@@ -155,6 +155,12 @@ namespace creativeCommonsMusicProject
             internal static GameObject musicHandler_2;
             internal static AudioSource musicAudiSource_1;
             internal static AudioSource musicAudiSource_2;
+
+            internal static bool musicAudiSource_1_isFading = false;
+            internal static bool musicAudiSource_2_isFading = false;
+
+            internal static bool musicAudiSource_1_stopFading = false;
+            internal static bool musicAudiSource_2_stopFading = false;
 
             // this keeps track of which music handler is actually currently intended to be played on
             // for instance, when transitioning to a new track, this one

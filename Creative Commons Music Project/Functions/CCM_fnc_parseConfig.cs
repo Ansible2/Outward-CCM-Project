@@ -248,7 +248,7 @@ namespace creativeCommonsMusicProject
                 if (_doAdd)
                 {
                     List<int> _list = new List<int>() { _min, _max };
-                    CCM_Dictionaries.tracKSpacingFromType.Add(_trackType, _list);
+                    CCM_Dictionaries.trackSpacingFromType.Add(_trackType, _list);
                 }
             }
         }

@@ -26,8 +26,7 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_rpc
     {
-        [PunRPC]
-        internal void CCM_fnc_playMusic(string _filename, bool _canInterrupt = true)
+        internal static void CCM_fnc_playMusic(string _filename, bool _canInterrupt = true)
         {
             if (CCM_core.CCM_Dictionaries.audioClipFromString.ContainsKey(_filename))
             {
@@ -49,6 +48,20 @@ namespace creativeCommonsMusicProject
             else
             {
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: Could not find an entry in CCM_dictionary_audioClipFromString for file: " + _filename);
+            }
+
+        }
+
+        [PunRPC]
+        internal void CCM_event_playMusic_RPC(string _filename, string _sceneFor, bool _canInterrupt = true)
+        {
+            if (CCM_core.CCM_currentScene.name == _sceneFor && _canInterrupt)
+            {
+                CCM_fnc_playMusic(_filename, _canInterrupt);
+            }
+            else
+            {
+                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic: Will not play music file: " + _filename + ". _canInterrupt is: " + _canInterrupt + " and scene for is: " + _sceneFor + " while current scene is: " + CCM_core.CCM_currentScene.name);
             }
 
         }
