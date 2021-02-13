@@ -67,16 +67,28 @@ namespace creativeCommonsMusicProject
             // so we don't get duplicates, store already gotten files
             //List<string> _alreadyStoredTracks = new List<string>();
 
-            var _list = _xmlConfigFile.Root.Descendants("tracks");
+            var _list = _xmlConfigFile.Root.Descendants("tracks").Elements();
+            //_xmlConfigFile.Root.Nodes
 
             if (_list.Count() == 0)
             {
                 CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: No tracks were located in config file: " + CCM_configFileName);
             }
 
+            // debug
+            /*
             foreach (var _x in _list)
             {
+                CCM_logSource.LogMessage(_x.ToString());
                 var _filename = _x.Element("filename").Value.ToLower();
+                CCM_fnc_logWithTime(_filename.Trim());
+            }
+            */
+        
+            foreach (var _x in _list)
+            {
+                var _filename = _x.Element("filename").Value.ToLower().Trim();
+                CCM_fnc_logWithTime(_filename);
                 // make sure provided filename is actually in the tracks folder
                 if (_fn_doesFileExist(_filename, CCM_Paths.tracks_folderPath))
                 {
@@ -111,6 +123,7 @@ namespace creativeCommonsMusicProject
                     CCM_logSource.LogError("Did not find track file: " + _filename + " within tracks folder!");
                 }
             }
+        
         }
 
 
