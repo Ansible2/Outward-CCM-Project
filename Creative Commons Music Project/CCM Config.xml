@@ -31,7 +31,7 @@
 
     <!--sb_sassini-->
 		<track>
-			<filename> sb_sassini.ogg </filename>
+			<filename> sb_cassini.ogg </filename>
 			<track_types>
         <track_type> TownDay </track_type>
         <track_type> TownNight </track_type>
@@ -44,7 +44,7 @@
 
     <!--sb_sassini-->
     <track>
-      <filename> sb_sassini.ogg </filename>
+      <filename> sb_cassini.ogg </filename>
       <track_types>
         <track_type> TownDay </track_type>
         <track_type> TownNight </track_type>

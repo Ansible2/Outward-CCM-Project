@@ -176,12 +176,12 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
-            CCM_fnc_parseConfig();
-
             DontDestroyOnLoad(this.gameObject);
             this.gameObject.name = "CCM Core GameObject";
             gameObject.AddComponent<CCM_rpc>();
             CCM_Instance = this;
+
+            CCM_fnc_parseConfig();
 
             CCM_fnc_instantiateHarmony();
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;

@@ -88,20 +88,20 @@ namespace creativeCommonsMusicProject
             foreach (var _x in _list)
             {
                 var _filename = _x.Element("filename").Value.ToLower().Trim();
-                CCM_fnc_logWithTime(_filename);
+                //CCM_fnc_logWithTime(_filename);
                 // make sure provided filename is actually in the tracks folder
                 if (_fn_doesFileExist(_filename, CCM_Paths.tracks_folderPath))
                 {
                     // check for duplicates
                     if (CCM_Lists.storedTracks.Contains(_filename))
                     {
-                        CCM_logSource.LogError("Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
+                        CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
                     }
                     else
                     {
                         // collects all configed track types for the track
                         var _trackTypes = _x.Element("track_types").Descendants("track_type").ToList();
-
+                        
                         if (_trackTypes.Count() > 0)
                         {
                             foreach (var _y in _trackTypes)
@@ -114,13 +114,13 @@ namespace creativeCommonsMusicProject
                         }
                         else
                         {
-                            CCM_logSource.LogError("Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
+                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
                         }
                     }
                 }
                 else
                 {
-                    CCM_logSource.LogError("Did not find track file: " + _filename + " within tracks folder!");
+                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Did not find track file: " + _filename + " within tracks folder!");
                 }
             }
         
@@ -201,12 +201,16 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void _fn_grabTrackSpacingSettings(XDocument _xmlConfigFile)
         {
-            var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing");
+            var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing").Elements();
+
+            CCM_fnc_logWithTime(_trackSpacings);
 
             foreach (var _x in _trackSpacings)
             {
                 bool _doAdd = false;
-                string _name = _x.Value.ToLower();
+
+                string _name = _x.Name.ToString().ToLower();
+                CCM_fnc_logWithTime(_name);
 
                 int _trackType = -1;
                 
@@ -253,13 +257,14 @@ namespace creativeCommonsMusicProject
                         }
                     default:
                         {
-                            CCM_logSource.LogError("Encountered unkown config for track spacing: " + _name);
+                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Encountered unkown config for track spacing: " + _name);
                             break;
                         }
                 }
 
                 if (_doAdd)
                 {
+                    CCM_fnc_logWithTime("Added min " + _min + " and max " + _max + " to " + _name);
                     List<int> _list = new List<int>() { _min, _max };
                     CCM_Dictionaries.trackSpacingFromType.Add(_trackType, _list);
                 }
@@ -288,7 +293,7 @@ namespace creativeCommonsMusicProject
 
                 while (!www.isDone)
                 {
-                    yield return new WaitForSeconds(0.05f);
+                    yield return new WaitForSeconds(0.01f);
                 }
                 CCM_loadingAudio = false;
 
@@ -318,12 +323,14 @@ namespace creativeCommonsMusicProject
         {
             var _pathToFile = Path.Combine(_folderPath, _filename);
 
-            bool _doesFileExist = true;
-            if (!File.Exists(_pathToFile))
+            bool _doesFileExist = false;
+            if (File.Exists(_pathToFile))
             {
-                _doesFileExist = false;
+                _doesFileExist = true;
             }
-                        
+
+            CCM_fnc_logWithTime("_fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
+
             return _doesFileExist;
         }
 
@@ -333,7 +340,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void _fn_pushBackToTrackList(string _trackType, string _filename)
         {
-            _trackType = _trackType.ToLower();
+            _trackType = _trackType.ToLower().Trim();
 
             switch (_trackType)
             {
