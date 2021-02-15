@@ -28,9 +28,15 @@ namespace creativeCommonsMusicProject
     {
         internal static void CCM_fnc_playMusic(string _filename, bool _canInterrupt = true)
         {
+            CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: was called for file " + _filename);
             if (CCM_core.CCM_Dictionaries.audioClipFromString.ContainsKey(_filename))
             {
-                bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
+                bool _musicIsPlaying = false;
+                if (CCM_core.CCM_MusicHandlers.nowPlayingAudioSource != null)
+                {
+                    _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
+                } 
+
                 if (_musicIsPlaying && !_canInterrupt)
                 {
                     CCM_core.CCM_fnc_logWithTime("Did not play file: " + _filename + " because music is already playing and could not interrupt.");
@@ -68,14 +74,20 @@ namespace creativeCommonsMusicProject
 
         private static void _fn_playClip(string _filename)
         {
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Called for song: " + _filename);
             AudioClip _clip = CCM_core.CCM_Dictionaries.audioClipFromString[_filename];
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Clip for " + _filename + "is: " + _clip.name);
+
             GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler for " + _filename + "is: " + _musicHandler.name);
             AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler audiosource for " + _filename + "is: " + _handlerAudioSource);
 
             _handlerAudioSource.clip = _clip;
             _handlerAudioSource.clip.name = _filename;
 
             _handlerAudioSource.Play();
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Handler told to play: " + _filename);
             CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
             CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
             CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;

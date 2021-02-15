@@ -114,11 +114,6 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             Misc
         ------------------------------------------------------------------------ */
-        // this bool keeps track of CCM_musicHandler_1 & CCM_musicHandler_2
-        // they need to be assigned the properties of a BGM (Background Music) game object
-        // So when they can be instantiated with the same properites it will be set to true
-        internal static bool CCM_gameObjectPropsAssigned = false;
-
         // self explanitory
         internal static Scene CCM_currentScene;
 
@@ -162,6 +157,9 @@ namespace creativeCommonsMusicProject
             internal static bool musicAudiSource_1_stopFading = false;
             internal static bool musicAudiSource_2_stopFading = false;
 
+            //
+            internal static bool handlersInstantiated = false;
+
             // this keeps track of which music handler is actually currently intended to be played on
             // for instance, when transitioning to a new track, this one
             internal static GameObject nowPlayingMusicHandler;
@@ -176,6 +174,8 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal void Awake()
         {
+            CCM_fnc_instantiateHarmony();
+
             DontDestroyOnLoad(this.gameObject);
             this.gameObject.name = "CCM Core GameObject";
             gameObject.AddComponent<CCM_rpc>();
@@ -183,7 +183,6 @@ namespace creativeCommonsMusicProject
 
             CCM_fnc_parseConfig();
 
-            CCM_fnc_instantiateHarmony();
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
         }
 

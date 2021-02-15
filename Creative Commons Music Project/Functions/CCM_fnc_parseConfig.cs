@@ -210,7 +210,6 @@ namespace creativeCommonsMusicProject
                 bool _doAdd = false;
 
                 string _name = _x.Name.ToString().ToLower();
-                CCM_fnc_logWithTime(_name);
 
                 int _trackType = -1;
                 
@@ -264,7 +263,7 @@ namespace creativeCommonsMusicProject
 
                 if (_doAdd)
                 {
-                    CCM_fnc_logWithTime("Added min " + _min + " and max " + _max + " to " + _name);
+                    CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Added min " + _min + " and max " + _max + " to " + _name);
                     List<int> _list = new List<int>() { _min, _max };
                     CCM_Dictionaries.trackSpacingFromType.Add(_trackType, _list);
                 }

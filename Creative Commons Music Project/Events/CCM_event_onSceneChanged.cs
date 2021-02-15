@@ -20,8 +20,11 @@ Examples:
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
+using UnityEngine;
 using BepInEx.Logging;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace creativeCommonsMusicProject

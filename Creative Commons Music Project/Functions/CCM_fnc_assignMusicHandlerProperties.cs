@@ -29,7 +29,7 @@ namespace creativeCommonsMusicProject
     {
         internal static void CCM_fnc_assignMusicHandlerProperties(GameObject _objectToCopy)
         {
-            if (!CCM_gameObjectPropsAssigned)
+            if (!CCM_MusicHandlers.handlersInstantiated)
             {
                 // if main music object is not found select an object
                 if (_objectToCopy == null)
@@ -46,6 +46,7 @@ namespace creativeCommonsMusicProject
                     DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_1);
                     CCM_MusicHandlers.musicAudiSource_1 = CCM_MusicHandlers.musicHandler_1.GetComponent<AudioSource>();
                     CCM_MusicHandlers.musicAudiSource_1.volume = 0;
+                    CCM_MusicHandlers.musicAudiSource_1.loop = false;
 
 
                     CCM_MusicHandlers.musicHandler_2 = Instantiate(_objectToCopy);
@@ -53,9 +54,10 @@ namespace creativeCommonsMusicProject
                     DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_2);
                     CCM_MusicHandlers.musicAudiSource_2 = CCM_MusicHandlers.musicHandler_2.GetComponent<AudioSource>();
                     CCM_MusicHandlers.musicAudiSource_2.volume = 0;
+                    CCM_MusicHandlers.musicAudiSource_2.loop = false;
 
 
-                    CCM_gameObjectPropsAssigned = true;
+                    CCM_MusicHandlers.handlersInstantiated = true;
 
                     CCM_logSource.Log(LogLevel.Message, "CCM_fnc_assignMusicHandlerProperties: Assigned CCM music handler objects the properties of " + _objectToCopy);
                 }

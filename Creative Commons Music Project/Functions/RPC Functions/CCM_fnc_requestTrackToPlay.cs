@@ -53,7 +53,6 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_spawn_requestTrackToPlay
         ---------------------------------------------------------------------------- */
-        
         internal void CCM_spawn_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
             //CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene));
@@ -66,6 +65,7 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
+            CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: was called...");
             bool _startNewRoutine = false;
             bool _rpcDirectToPlayer = false;
 

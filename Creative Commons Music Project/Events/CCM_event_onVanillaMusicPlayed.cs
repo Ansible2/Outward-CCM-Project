@@ -51,13 +51,19 @@ namespace creativeCommonsMusicProject
 
                     _fn_requestTrackFromMaster(_trackType);
                 }
+
+                if (!CCM_MusicHandlers.handlersInstantiated)
+                {
+                   
+                    CCM_fnc_assignMusicHandlerProperties(__result.gameObject);
+                }
             }
         }
 
 
         private static void _fn_requestTrackFromMaster(int _trackType)
         {
-            CCM_fnc_logWithTime("_fn_requestTrackFromMaster: was called...");
+            CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrackFromMaster: was called...");
 
             CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
             /*

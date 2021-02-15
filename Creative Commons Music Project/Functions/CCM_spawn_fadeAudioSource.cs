@@ -49,6 +49,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
         {
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_fadeAudioSource: Fading " + _audioSource + " to " + _targetVolume);
             float currentTime = 0;
             float _startingVolume = _audioSource.volume;
             // wait until audiosource is done with fade
