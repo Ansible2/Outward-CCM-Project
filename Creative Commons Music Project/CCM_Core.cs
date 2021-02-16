@@ -148,14 +148,14 @@ namespace creativeCommonsMusicProject
             // music game objects we will use to actually play music
             internal static GameObject musicHandler_1;
             internal static GameObject musicHandler_2;
-            internal static AudioSource musicAudiSource_1;
-            internal static AudioSource musicAudiSource_2;
+            internal static AudioSource musicAudioSource_1;
+            internal static AudioSource musicAudioSource_2;
 
-            internal static bool musicAudiSource_1_isFading = false;
-            internal static bool musicAudiSource_2_isFading = false;
+            internal static bool musicAudioSource_1_isFading = false;
+            internal static bool musicAudioSource_2_isFading = false;
 
-            internal static bool musicAudiSource_1_stopFading = false;
-            internal static bool musicAudiSource_2_stopFading = false;
+            internal static bool musicAudioSource_1_stopFading = false;
+            internal static bool musicAudioSource_2_stopFading = false;
 
             //
             internal static bool handlersInstantiated = false;

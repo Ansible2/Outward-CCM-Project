@@ -28,7 +28,7 @@ namespace creativeCommonsMusicProject
     {
         internal static GameObject CCM_fnc_getMusicHandler()
         {
-            bool _isPlaying = CCM_MusicHandlers.musicAudiSource_1.isPlaying;
+            bool _isPlaying = CCM_MusicHandlers.musicAudioSource_1.isPlaying;
             if (_isPlaying)
             {
                 return CCM_MusicHandlers.musicHandler_2;

@@ -43,7 +43,8 @@ namespace creativeCommonsMusicProject
                 }
                 else if (_musicIsPlaying && _canInterrupt)
                 {
-                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource);
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
+                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);
                     _fn_playClip(_filename);
                 } 
                 else
@@ -61,6 +62,8 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_event_playMusic_RPC(string _filename, string _sceneFor, bool _canInterrupt = true)
         {
+            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic: was called...");
+
             if (CCM_core.CCM_currentScene.name == _sceneFor && _canInterrupt)
             {
                 CCM_fnc_playMusic(_filename, _canInterrupt);
@@ -76,12 +79,12 @@ namespace creativeCommonsMusicProject
         {
             CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Called for song: " + _filename);
             AudioClip _clip = CCM_core.CCM_Dictionaries.audioClipFromString[_filename];
-            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Clip for " + _filename + "is: " + _clip.name);
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Clip for " + _filename + " is named: " + _clip.name);
 
             GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
-            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler for " + _filename + "is: " + _musicHandler.name);
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
             AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
-            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler audiosource for " + _filename + "is: " + _handlerAudioSource);
+            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_playClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
 
             _handlerAudioSource.clip = _clip;
             _handlerAudioSource.clip.name = _filename;

@@ -82,13 +82,15 @@ namespace creativeCommonsMusicProject
             while (/*CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && */CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
             {
                 string _sceneTrackFileName = _fn_decideNewTrackForScene(_trackType, _sceneName);
-                CCM_fnc_logWithTime("Attempting RPC of _sceneTrackFileName: " + _sceneTrackFileName + " _sceneName: " + _sceneName);
-            /*    CCM_rpc.CCM_photonView.RPC(
+                
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Attempting RPC of _sceneTrackFileName: " + _sceneTrackFileName + " _sceneName: " + _sceneName);
+                
+                CCM_rpc.CCM_photonView.RPC(
                     "CCM_event_playMusic_RPC",
                     PhotonTargets.All,
                     new object[] { _sceneTrackFileName, _sceneName, true }
-                );*/
-                CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
+                );
+                //CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
 
                 int _trackLength = (int)CCM_Dictionaries.audioClipFromString[_sceneTrackFileName].length;
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;

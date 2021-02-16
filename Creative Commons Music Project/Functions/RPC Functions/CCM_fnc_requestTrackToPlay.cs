@@ -72,6 +72,7 @@ namespace creativeCommonsMusicProject
             // Check if track type changed
             if (CCM_core.CCM_Dictionaries.activeScenesTrackType.ContainsKey(_playersScene))
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Scene: " + _playersScene + " was found in active scenes dictionary");
                 if (CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] != _trackType)
                 {
                     // start a new routine for track type changes
@@ -81,6 +82,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary");
                 // if scene was not active we need to start a new routine
                 CCM_core.CCM_Dictionaries.activeScenesTrackType.Add(_playersScene, _trackType);
                 _startNewRoutine = true;
@@ -95,6 +97,7 @@ namespace creativeCommonsMusicProject
             }
             else if (_sceneHasCurrentMusic && !_startNewRoutine && !_sceneMusicIsBeingChosen)
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Player ID " + _playerId + " met standards for RPC direct");
                 _rpcDirectToPlayer = true;
             }
 
@@ -104,10 +107,14 @@ namespace creativeCommonsMusicProject
             {
                 string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(
-                    "CCM_event_playMusic",
-                    PhotonNetwork.player.Get(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
+                    "CCM_event_playMusic_RPC",
+                    PhotonPlayer.Find(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
                     new object[] { _sceneTrackFileName, _playersScene, true }
                 );
+            } 
+            else
+            {
+                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Player ID " + _playerId + " did not meet standards for RPC direct");
             }
                 
         }

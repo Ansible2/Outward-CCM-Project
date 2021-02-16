@@ -38,16 +38,16 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_spawn_fadeAudioSource
         ---------------------------------------------------------------------------- */
-        internal static void CCM_spawn_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
+        internal static void CCM_spawn_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
-            CCM_Instance.StartCoroutine(CCM_fnc_fadeAudioSource(_audioSoucre, _duration, _targetVolume, _stopAfter));
+            CCM_Instance.StartCoroutine(CCM_fnc_fadeAudioSource(_audioSoucre, _duration, _targetVolume, _stopAfter, _stopNowPlaying));
         }
 
 
         /* ----------------------------------------------------------------------------
             CCM_fnc_fadeAudioSource
         ---------------------------------------------------------------------------- */
-        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false)
+        internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
             CCM_core.CCM_logSource.LogMessage("CCM_fnc_fadeAudioSource: Fading " + _audioSource + " to " + _targetVolume);
             float currentTime = 0;
@@ -77,6 +77,12 @@ namespace creativeCommonsMusicProject
             CCM_fnc_setFadeStop(_audioSource, false);
             CCM_fnc_setFadeIsFading(_audioSource, false);
 
+            if (_stopNowPlaying)
+            {
+                CCM_MusicHandlers.nowPlayingAudioSource = null; // could get removed from memory?
+                CCM_MusicHandlers.nowPlayingMusicHandler = null;
+            }
+
             yield break;
         }
 
@@ -86,13 +92,13 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static bool _fn_shouldFadeStop(AudioSource _audioSource)
         {
-            if (_audioSource == CCM_MusicHandlers.musicAudiSource_1)
+            if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
             {
-                return CCM_MusicHandlers.musicAudiSource_1_stopFading;
+                return CCM_MusicHandlers.musicAudioSource_1_stopFading;
             }
             else
             {
-                return CCM_MusicHandlers.musicAudiSource_2_stopFading;
+                return CCM_MusicHandlers.musicAudioSource_2_stopFading;
             }
         }
 
@@ -102,13 +108,13 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void CCM_fnc_setFadeStop(AudioSource _audioSource, bool _value)
         {
-            if (_audioSource == CCM_MusicHandlers.musicAudiSource_1)
+            if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
             {
-                CCM_MusicHandlers.musicAudiSource_1_stopFading = _value;
+                CCM_MusicHandlers.musicAudioSource_1_stopFading = _value;
             }
             else
             {
-                CCM_MusicHandlers.musicAudiSource_2_stopFading = _value;
+                CCM_MusicHandlers.musicAudioSource_2_stopFading = _value;
             }
         }
 
@@ -118,13 +124,13 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static bool _fn_isAudioSourceFading(AudioSource _audioSource)
         {
-            if (_audioSource == CCM_MusicHandlers.musicAudiSource_1)
+            if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
             {
-                return CCM_MusicHandlers.musicAudiSource_1_isFading;
+                return CCM_MusicHandlers.musicAudioSource_1_isFading;
             }
             else
             {
-                return CCM_MusicHandlers.musicAudiSource_2_isFading;
+                return CCM_MusicHandlers.musicAudioSource_2_isFading;
             }
         }
 
@@ -134,13 +140,13 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void CCM_fnc_setFadeIsFading(AudioSource _audioSource, bool _value)
         {
-            if (_audioSource == CCM_MusicHandlers.musicAudiSource_1)
+            if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
             {
-                CCM_MusicHandlers.musicAudiSource_1_isFading = _value;
+                CCM_MusicHandlers.musicAudioSource_1_isFading = _value;
             }
             else
             {
-                CCM_MusicHandlers.musicAudiSource_2_isFading = _value;
+                CCM_MusicHandlers.musicAudioSource_2_isFading = _value;
             }
         }
     }
