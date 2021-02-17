@@ -32,17 +32,27 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        internal class MusicRoutine : MonoBehaviour
+        {
+            internal void Awake()
+            {
+                CCM_fnc_logWithTime("MusicRoutine: Created Music Routine");
+            }
+        }
         /* ----------------------------------------------------------------------------
             CCM_spawn_startMusicRoutineForScene
         ---------------------------------------------------------------------------- */
         internal static void CCM_spawn_startMusicRoutineForScene(string _sceneName, int _trackType, bool _deletePrevious = true)
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: was called for scene " + _sceneName);
-            //bool _routineExistsForScene = CCM_dictionary_sceneRoutineObjects.ContainsKey(_sceneName);
+            bool _routineExistsForScene = CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName);
             if (_deletePrevious)
             {
                 _fn_stopMusicRoutine(_sceneName);
             }
+
+            var _routine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, _trackType));
+            CCM_Dictionaries.sceneRoutineObjects.Add(_sceneName, _routine);
 
             // create object
             //GameObject _musicRoutineObject = new GameObject(_sceneName + CCM_musicRoutinePostfixString);
@@ -50,9 +60,12 @@ namespace creativeCommonsMusicProject
 
             //MonoBehaviour _musicRoutineInstance = _musicRoutineObject.GetOrAddComponent<MonoBehaviour>();
             //CCM_Dictionaries.sceneRoutineObjects.Add(_sceneName, _musicRoutineObject);
-            
-            
-            CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, /*_musicRoutineObject,*/ _trackType));
+            //MusicRoutine _musicRoutineObject = new MusicRoutine();
+            //CCM_Dictionaries.sceneRoutineObjects.Add(_sceneName, _musicRoutineObject);
+            //DontDestroyOnLoad(_musicRoutineObject);
+
+
+            //CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, /*_musicRoutineObject,*/ _trackType));
         }
 
 
@@ -60,10 +73,11 @@ namespace creativeCommonsMusicProject
         {
             if (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName))
             {
-                GameObject _routineObject = CCM_Dictionaries.sceneRoutineObjects[_sceneName];
+                var _routine = CCM_Dictionaries.sceneRoutineObjects[_sceneName];
 
                 CCM_Dictionaries.sceneRoutineObjects.Remove(_sceneName);
-                Destroy(_routineObject);
+                CCM_Instance.StopCoroutine(_routine);
+                //_routine = null;
             }
         }
 
@@ -71,15 +85,18 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_beginRoutine
         ---------------------------------------------------------------------------- */
-        private static IEnumerator _fn_beginRoutine(string _sceneName, /*GameObject _musicRoutineObject,*/ int _trackType)
+        private static IEnumerator _fn_beginRoutine(string _sceneName, int _trackType)
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: was called for scene " + _sceneName);
+
+            yield return new WaitUntil(() => CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName));
+            var _routine = CCM_Dictionaries.sceneRoutineObjects[_sceneName];
             // create a function that will select a track for a scene
             // that will set the bool to tell RPC'd functions that it is happening
             // then if someone request a track while that bool is set to true (and it isn't a change to the music routine), 
             /// just exit because they will receive the RPC'd event for playmusic on that scene.
             /// if the bool is false, THEN RPC a play music on that player per a request
-            while (/*CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && */CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
+            while (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
             {
                 string _sceneTrackFileName = _fn_decideNewTrackForScene(_trackType, _sceneName);
                 
@@ -97,13 +114,14 @@ namespace creativeCommonsMusicProject
 
                 yield return new WaitForSeconds(_sleepTime);
             }
-            /*
+            
             // if music game object is still alive
-            if (_musicRoutineObject != null)
+            if (_routine != null)
             {
+                CCM_core.CCM_fnc_logWithTime("Found that routine for scene: " + _sceneName + " was not null, stopping...");
                 _fn_stopMusicRoutine(_sceneName);
             }
-            */
+            
 
             if (CCM_Dictionaries.sceneRoutineObjects.ContainsKey(_sceneName) && !CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
             {
