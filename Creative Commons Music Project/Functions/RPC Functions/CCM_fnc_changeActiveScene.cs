@@ -52,7 +52,7 @@ namespace creativeCommonsMusicProject
         {
             CCM_photonView.RPC(
                 "CCM_fnc_changeActiveScene",
-                PhotonTargets.AllBufferedViaServer,
+                PhotonTargets.MasterClient,
                 new object[] { _sceneName, _playerId }
             );
         }

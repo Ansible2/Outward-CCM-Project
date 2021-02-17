@@ -77,7 +77,7 @@ namespace creativeCommonsMusicProject
             internal static Dictionary<string, string> activeScenesCurrentMusic = new Dictionary<string, string>();
 
             // Music Routine objects
-            internal static Dictionary<string, Coroutine> sceneRoutineObjects = new Dictionary<string, Coroutine>();
+            internal static Dictionary<string, Coroutine> sceneRoutines = new Dictionary<string, Coroutine>();
 
             // keeps track of the currently playing music type for each scene that is active
             internal static Dictionary<string, int> activeScenesTrackType = new Dictionary<string, int>();
