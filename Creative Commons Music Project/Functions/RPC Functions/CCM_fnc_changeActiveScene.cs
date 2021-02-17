@@ -59,11 +59,3 @@ namespace creativeCommonsMusicProject
 
     }
 }
-
-/*
-    CCM_getPhotonViewGameObject.AddComponent<PhotonView>();
-    DontDestroyOnLoad(CCM_getPhotonViewGameObject);
-    CCM_photonView = CCM_getPhotonViewGameObject.GetOrAddComponent<PhotonView>();
-    CCM_photonView = PhotonView.Get(PhotonNetwork.player);
-
-*/
