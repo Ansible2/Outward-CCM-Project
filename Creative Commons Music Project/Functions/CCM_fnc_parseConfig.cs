@@ -48,6 +48,9 @@ namespace creativeCommonsMusicProject
             {
                 var _xmlConfigFile = XDocument.Load(_pathToConfig);
                 _fn_buildAudioClipLibrary(_xmlConfigFile);
+
+                _fn_getAudioClipsFromFolders();
+
                 _fn_grabTrackSpacingSettings(_xmlConfigFile);
                 _fn_getOnlineMode(_xmlConfigFile);
             }
@@ -123,7 +126,8 @@ namespace creativeCommonsMusicProject
                     CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Did not find track file: " + _filename + " within tracks folder!");
                 }
             }
-        
+
+            
         }
 
 

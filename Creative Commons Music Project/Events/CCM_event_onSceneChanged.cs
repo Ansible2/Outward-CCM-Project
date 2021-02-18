@@ -30,16 +30,22 @@ namespace creativeCommonsMusicProject
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
-
-            if (CCM_fnc_isSceneReal(_goingToScene))
+            
+            // sometimes this event can be called twice in a row, in order to avoid a double call of follow on functions, this is here
+            if (CCM_currentScene != _goingToScene)
             {
-                CCM_currentScene = _goingToScene;
-                CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
-            } else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
-            {
-                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Found that going to main menu scene and music is playing. Will fade out...");
-                CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
+                if (CCM_fnc_isSceneReal(_goingToScene))
+                {
+                    CCM_currentScene = _goingToScene;
+                    CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
+                }
+                else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
+                {
+                    CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Found that going to main menu scene and music is playing. Will fade out...");
+                    CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
+                }
             }
+            
         }
     }
 }

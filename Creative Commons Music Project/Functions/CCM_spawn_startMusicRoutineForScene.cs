@@ -123,13 +123,15 @@ namespace creativeCommonsMusicProject
 
                 int _trackLength = (int)CCM_Dictionaries.audioClipFromString[_sceneTrackFileName].length;
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: sleep time will be: " + _sleepTime);
                 int _sleptTime = 0;
 
                 while (_sleptTime < _sleepTime)
                 {
                     if (CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
                     {
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSecondsRealtime(1);
+                        CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Waiting for scene: " + _sceneName);
                         _sleptTime = _sleptTime + 1;
                     }
                     else
