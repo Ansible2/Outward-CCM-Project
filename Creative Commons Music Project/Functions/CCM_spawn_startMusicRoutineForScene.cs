@@ -114,16 +114,25 @@ namespace creativeCommonsMusicProject
                 
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Attempting RPC of _sceneTrackFileName: " + _sceneTrackFileName + " _sceneName: " + _sceneName);
                 
-                CCM_rpc.CCM_photonView.RPC(
-                    "CCM_event_playMusic_RPC",
-                    PhotonTargets.All,
-                    new object[] { _sceneTrackFileName, _sceneName, true }
-                );
+                if (CCM_syncOnline)
+                {
+                    CCM_rpc.CCM_photonView.RPC(
+                        "CCM_event_playMusic_RPC",
+                        PhotonTargets.All,
+                        new object[] { _sceneTrackFileName, _sceneName, true }
+                    );
+                } 
+                else
+                {
+                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
+                }
+                
                 //CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
 
                 int _trackLength = (int)CCM_Dictionaries.audioClipFromString[_sceneTrackFileName].length;
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: sleep time will be: " + _sleepTime);
+                CCM_fnc_logWithTime("_tracklength int: " + _trackLength);
                 int _sleptTime = 0;
 
                 while (_sleptTime < _sleepTime)

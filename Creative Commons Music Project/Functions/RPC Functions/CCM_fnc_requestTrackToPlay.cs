@@ -42,11 +42,18 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _trackType, int _playerId, string _playersScene)
         {
-            CCM_photonView.RPC(
-                "CCM_fnc_requestTrackToPlay",
-                PhotonTargets.MasterClient,
-                new object[] { _trackType, _playerId , _playersScene }
-            );
+            if (CCM_core.CCM_syncOnline)
+            {
+                CCM_photonView.RPC(
+                    "CCM_fnc_requestTrackToPlay",
+                    PhotonTargets.MasterClient,
+                    new object[] { _trackType, _playerId, _playersScene }
+                );
+            }
+            else
+            {
+                CCM_rpcComponent.CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene);
+            }  
         }
 
 

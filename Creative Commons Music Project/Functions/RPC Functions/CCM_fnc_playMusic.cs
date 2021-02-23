@@ -62,17 +62,22 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_event_playMusic_RPC(string _filename, string _sceneFor, bool _canInterrupt = true)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic: was called...");
-
-            if (CCM_core.CCM_currentScene.name == _sceneFor && _canInterrupt)
+            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: was called...");
+            if (CCM_core.CCM_syncOnline)
             {
-                CCM_fnc_playMusic(_filename, _canInterrupt);
-            }
+                if (CCM_core.CCM_currentScene.name == _sceneFor && _canInterrupt)
+                {
+                    CCM_fnc_playMusic(_filename, _canInterrupt);
+                }
+                else
+                {
+                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Will not play music file: " + _filename + ". _canInterrupt is: " + _canInterrupt + " and scene for is: " + _sceneFor + " while current scene is: " + CCM_core.CCM_currentScene.name);
+                }
+            } 
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic: Will not play music file: " + _filename + ". _canInterrupt is: " + _canInterrupt + " and scene for is: " + _sceneFor + " while current scene is: " + CCM_core.CCM_currentScene.name);
+                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Won't execute as sync online is off in config.");
             }
-
         }
 
         private static void _fn_playClip(string _filename)

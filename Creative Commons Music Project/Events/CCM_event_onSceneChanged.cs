@@ -37,7 +37,15 @@ namespace creativeCommonsMusicProject
                 if (CCM_fnc_isSceneReal(_goingToScene))
                 {
                     CCM_currentScene = _goingToScene;
-                    CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
+                    if (CCM_syncOnline)
+                    {
+                        CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
+                    }
+                    else
+                    {
+                        CCM_rpc.CCM_rpcComponent.CCM_fnc_changeActiveScene(_goingToScene.name, PhotonNetwork.player.ID);
+                    }
+                    
                 }
                 else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
                 {
