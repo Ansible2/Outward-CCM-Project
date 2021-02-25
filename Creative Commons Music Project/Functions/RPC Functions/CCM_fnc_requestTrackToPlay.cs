@@ -44,6 +44,7 @@ namespace creativeCommonsMusicProject
         {
             if (CCM_core.CCM_syncOnline)
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Sync Online is true. RPCing CCM_fnc_requestTrackToPlay.");
                 CCM_photonView.RPC(
                     "CCM_fnc_requestTrackToPlay",
                     PhotonTargets.MasterClient,
@@ -52,6 +53,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Sync Online is false. Directly execing CCM_fnc_requestTrackToPlay.");
                 CCM_rpcComponent.CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene);
             }  
         }

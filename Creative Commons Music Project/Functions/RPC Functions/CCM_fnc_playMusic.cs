@@ -65,6 +65,7 @@ namespace creativeCommonsMusicProject
             CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: was called...");
             if (CCM_core.CCM_syncOnline)
             {
+                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Sync Online is on, checking if scene needs music played...");
                 if (CCM_core.CCM_currentScene.name == _sceneFor && _canInterrupt)
                 {
                     CCM_fnc_playMusic(_filename, _canInterrupt);
@@ -76,7 +77,7 @@ namespace creativeCommonsMusicProject
             } 
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Won't execute as sync online is off in config.");
+                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
             }
         }
 

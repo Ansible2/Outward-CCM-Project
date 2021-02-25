@@ -39,10 +39,12 @@ namespace creativeCommonsMusicProject
                     CCM_currentScene = _goingToScene;
                     if (CCM_syncOnline)
                     {
+                        CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Sync Online is on, RPCing CCM_fnc_changeActiveScene_RPC");
                         CCM_rpc.CCM_fnc_changeActiveScene_RPC(_goingToScene.name, PhotonNetwork.player.ID);
                     }
                     else
                     {
+                        CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Sync Online is off, execing CCM_fnc_changeActiveScene");
                         CCM_rpc.CCM_rpcComponent.CCM_fnc_changeActiveScene(_goingToScene.name, PhotonNetwork.player.ID);
                     }
                     

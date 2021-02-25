@@ -82,6 +82,7 @@
     <Compile Include="old\CCM_fnc_findMainMusicObject.cs" />
     <Compile Include="old\CCM_fnc_findMusicAtPath.cs" />
     <Compile Include="old\CCM_fnc_findMusicObjectsInScene.cs" />
+    <Compile Include="old\CCM_fnc_getAllAvailableReplacementTracks.cs" />
     <Compile Include="old\CCM_fnc_getTrackTypeFolderPath.cs" />
     <Compile Include="old\CCM_fnc_getUsedTrackList.cs" />
     <Compile Include="old\CCM_fnc_startCombatMusicIntercept.cs" />

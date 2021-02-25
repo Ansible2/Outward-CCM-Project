@@ -116,6 +116,7 @@ namespace creativeCommonsMusicProject
                 
                 if (CCM_syncOnline)
                 {
+                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is true, RPCing CCM_event_playMusic_RPC");
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
@@ -124,6 +125,7 @@ namespace creativeCommonsMusicProject
                 } 
                 else
                 {
+                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is false, directly going to CCM_fnc_playMusic");
                     CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
                 }
                 
@@ -192,8 +194,7 @@ namespace creativeCommonsMusicProject
             CCM_Lists.scenesChoosingMusicFor.Add(_sceneName);
             
             // get a random track
-            List<string> _possibleTracks = CCM_fnc_getAllAvailableReplacementTracks(_trackType);
-            string _newTrackName = CCM_fnc_grabRandomTrack(_possibleTracks);
+            string _newTrackName = CCM_fnc_grabRandomTrack(_trackType);
 
             if (CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_sceneName))
             {
@@ -210,7 +211,5 @@ namespace creativeCommonsMusicProject
 
             return _newTrackName;
         }
-
-
     }
 }
