@@ -136,9 +136,61 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void _fn_getAudioClipsFromFolders()
         {
-            CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
-
             List<string> _fileNames;
+
+            // get day tracks
+            _fileNames = _fn_getFileNamesAtPath(CCM_Paths.day_folderPath);
+            if (_fileNames.Count() == 0)
+            {
+                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + CCM_Paths.day_folderPath + " returned no files!");
+            }
+            else
+            {
+                // get only the file names for returns
+                foreach (string _filename in _fileNames)
+                {
+                    if (!CCM_Lists.storedTracks.Contains(_filename))
+                    {
+                        _fn_pushBackToTrackList(CCM_trackTypes_enum.ambientDay, _filename);
+                        _fn_pushBackToTrackList(CCM_trackTypes_enum.townDay, _filename);
+                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, CCM_Paths.day_folderPath));
+                        CCM_Lists.storedTracks.Add(_filename);
+                    }
+                    else
+                    {
+                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
+                    }
+                }
+            }
+
+
+            // get night tracks
+            _fileNames = _fn_getFileNamesAtPath(CCM_Paths.night_folderPath);
+            if (_fileNames.Count() == 0)
+            {
+                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + CCM_Paths.night_folderPath + " returned no files!");
+            }
+            else
+            {
+                // get only the file names for returns
+                foreach (string _filename in _fileNames)
+                {
+                    if (!CCM_Lists.storedTracks.Contains(_filename))
+                    {
+                        _fn_pushBackToTrackList(CCM_trackTypes_enum.ambientNight, _filename);
+                        _fn_pushBackToTrackList(CCM_trackTypes_enum.townNight, _filename);
+                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, CCM_Paths.night_folderPath));
+                        CCM_Lists.storedTracks.Add(_filename);
+                    }
+                    else
+                    {
+                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
+                    }
+                }
+            }
+
+
+            CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
             foreach (var _trackType in _trackTypes)
             {
                 string _folderPath = CCM_fnc_getTrackTypeFolderPath(_trackType);
@@ -211,7 +263,7 @@ namespace creativeCommonsMusicProject
 
             foreach (var _x in _trackSpacings)
             {
-                bool _doAdd = false;
+                bool _doAdd = true;
 
                 string _name = _x.Name.ToString().ToLower();
 
@@ -225,13 +277,11 @@ namespace creativeCommonsMusicProject
                     case ("trackspacing_townday"):
                         {
                             _trackType = (int)CCM_trackTypes_enum.townDay;
-                            _doAdd = true;
                             break;
                         }
                     case ("trackspacing_townnight"):
                         {
                             _trackType = (int)CCM_trackTypes_enum.townNight;
-                            _doAdd = true;
                             break;
                         }
                     case ("trackspacing_ambientday"):
@@ -243,23 +293,21 @@ namespace creativeCommonsMusicProject
                     case ("trackspacing_ambientnight"):
                         {
                             _trackType = (int)CCM_trackTypes_enum.ambientNight;
-                            _doAdd = true;
                             break;
                         }
                     case ("trackspacing_dungeon"):
                         {
                             _trackType = (int)CCM_trackTypes_enum.dungeon;
-                            _doAdd = true;
                             break;
                         }
                     case ("trackspacing_combat"):
                         {
                             _trackType = (int)CCM_trackTypes_enum.combat;
-                            _doAdd = true;
                             break;
                         }
                     default:
                         {
+                            _doAdd = false;
                             CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Encountered unkown config for track spacing: " + _name);
                             break;
                         }

@@ -97,11 +97,15 @@ namespace creativeCommonsMusicProject
             internal static readonly string mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
             internal static readonly string tracks_folderPath = Path.Combine(mainFolderPath + @"\Tracks");
             
-            internal static readonly string combat_folderPath = Path.Combine(mainFolderPath + @"\Combat Tracks");
             internal static readonly string ambientNight_folderPath = Path.Combine(mainFolderPath + @"\Ambient Night Tracks");
+            internal static readonly string townNight_folderPath = Path.Combine(mainFolderPath + @"\Town Night Tracks");
+            internal static readonly string night_folderPath = Path.Combine(mainFolderPath + @"\Night Tracks");
+
             internal static readonly string ambientDay_folderPath = Path.Combine(mainFolderPath + @"\Ambient Day Tracks");
             internal static readonly string townDay_folderPath = Path.Combine(mainFolderPath + @"\Town Day Tracks");
-            internal static readonly string townNight_folderPath = Path.Combine(mainFolderPath + @"\Town Night Tracks");
+            internal static readonly string day_folderPath = Path.Combine(mainFolderPath + @"\Day Tracks");
+
+            internal static readonly string combat_folderPath = Path.Combine(mainFolderPath + @"\Combat Tracks");
             internal static readonly string dungeon_folderPath = Path.Combine(mainFolderPath + @"\Dungeon Tracks");
 
             internal const string FILE_PREFIX = "file://";

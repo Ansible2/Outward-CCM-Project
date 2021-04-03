@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 
-
-
-
-
 <!--All Track Types: ["TownDay","TownNight","AmbientDay","AmbientNight","Dungeon","Combat"]-->
 <!--
   <track>
-    <filename> sb_sassini.ogg </filename>
+    <filename> myFilename.ogg </filename>
     <track_types>
       <track_type> TownDay </track_type>
       <track_type> TownNight </track_type>
@@ -28,32 +24,17 @@
   
   <!--Track list-->
 	<tracks>
-
-    <!--sb_sassini-->
+    
+    <!--Example track that plays in towns during the day and outside adventuring during the day-->
+    <!--  
 		<track>
-			<filename> sb_cassini.ogg </filename>
+			<filename> myFilename.mp3 </filename>
 			<track_types>
         <track_type> TownDay </track_type>
-        <track_type> TownNight </track_type>
         <track_type> AmbientDay </track_type>
-        <track_type> AmbientNight </track_type>
-        <track_type> Dungeon </track_type>
-        <track_type> Combat </track_type>
       </track_types>
 		</track>
-
-    <!--sb_sassini-->
-    <track>
-      <filename> sb_cassini.ogg </filename>
-      <track_types>
-        <track_type> TownDay </track_type>
-        <track_type> TownNight </track_type>
-        <track_type> AmbientDay </track_type>
-        <track_type> AmbientNight </track_type>
-        <track_type> Dungeon </track_type>
-        <track_type> Combat </track_type>
-      </track_types>
-    </track>
+    -->
 
 	</tracks>
 
