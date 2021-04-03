@@ -136,61 +136,11 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static void _fn_getAudioClipsFromFolders()
         {
+            // create an array of CCM_trackTypes_enum so we can use foreach for loop through
+            CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
+
             List<string> _fileNames;
 
-            // get day tracks
-            _fileNames = _fn_getFileNamesAtPath(CCM_Paths.day_folderPath);
-            if (_fileNames.Count() == 0)
-            {
-                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + CCM_Paths.day_folderPath + " returned no files!");
-            }
-            else
-            {
-                // get only the file names for returns
-                foreach (string _filename in _fileNames)
-                {
-                    if (!CCM_Lists.storedTracks.Contains(_filename))
-                    {
-                        _fn_pushBackToTrackList(CCM_trackTypes_enum.ambientDay, _filename);
-                        _fn_pushBackToTrackList(CCM_trackTypes_enum.townDay, _filename);
-                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, CCM_Paths.day_folderPath));
-                        CCM_Lists.storedTracks.Add(_filename);
-                    }
-                    else
-                    {
-                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
-                    }
-                }
-            }
-
-
-            // get night tracks
-            _fileNames = _fn_getFileNamesAtPath(CCM_Paths.night_folderPath);
-            if (_fileNames.Count() == 0)
-            {
-                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + CCM_Paths.night_folderPath + " returned no files!");
-            }
-            else
-            {
-                // get only the file names for returns
-                foreach (string _filename in _fileNames)
-                {
-                    if (!CCM_Lists.storedTracks.Contains(_filename))
-                    {
-                        _fn_pushBackToTrackList(CCM_trackTypes_enum.ambientNight, _filename);
-                        _fn_pushBackToTrackList(CCM_trackTypes_enum.townNight, _filename);
-                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, CCM_Paths.night_folderPath));
-                        CCM_Lists.storedTracks.Add(_filename);
-                    }
-                    else
-                    {
-                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
-                    }
-                }
-            }
-
-
-            CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
             foreach (var _trackType in _trackTypes)
             {
                 string _folderPath = CCM_fnc_getTrackTypeFolderPath(_trackType);
@@ -221,11 +171,11 @@ namespace creativeCommonsMusicProject
 
 
 
-            // Do any tracks that were not configed but are in the "tracks" folder
+            // Do any remaining tracks that were not configed in the XML file but are in the "tracks" folder
+            // Any tracks in this category are considered to be a track that can play anywhere
             string _folderPathToSearch = CCM_Paths.tracks_folderPath;            
             _fileNames = _fn_getFileNamesAtPath(_folderPathToSearch);
-
-
+            
             if (_fileNames.Count() == 0)
             {
                 CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPathToSearch + " returned no files!");
@@ -389,6 +339,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_pushBackToTrackList
         ---------------------------------------------------------------------------- */
+        // string _trackType overload is used for XML configed tracks
         private static void _fn_pushBackToTrackList(string _trackType, string _filename)
         {
             _trackType = _trackType.ToLower().Trim();
@@ -442,7 +393,9 @@ namespace creativeCommonsMusicProject
                     }
             }
         }
-        // enum overload
+
+
+        // enum overload is used for sorting clips based on folders used (_fn_getAudioClipsFromFolders)
         private static void _fn_pushBackToTrackList(CCM_trackTypes_enum _trackType, string _filename)
         {
             switch (_trackType)
@@ -475,6 +428,30 @@ namespace creativeCommonsMusicProject
                 case CCM_trackTypes_enum.combat:
                     {
                         CCM_Lists.unused_combatTracks.Add(_filename);
+                        break;
+                    }
+                case CCM_trackTypes_enum.ambient:
+                    {
+                        CCM_Lists.unused_ambientDayTracks.Add(_filename);
+                        CCM_Lists.unused_ambientNightTracks.Add(_filename);
+                        break;
+                    }
+                case CCM_trackTypes_enum.town:
+                    {
+                        CCM_Lists.unused_townNightTracks.Add(_filename);
+                        CCM_Lists.unused_townDayTracks.Add(_filename);
+                        break;
+                    }
+                case CCM_trackTypes_enum.day:
+                    {
+                        CCM_Lists.unused_ambientDayTracks.Add(_filename);
+                        CCM_Lists.unused_townDayTracks.Add(_filename);
+                        break;
+                    }
+                case CCM_trackTypes_enum.night:
+                    {
+                        CCM_Lists.unused_ambientNightTracks.Add(_filename);
+                        CCM_Lists.unused_townNightTracks.Add(_filename);
                         break;
                     }
                 default:

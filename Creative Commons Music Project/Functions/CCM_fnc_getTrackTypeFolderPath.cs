@@ -50,6 +50,22 @@ namespace creativeCommonsMusicProject
                     {
                         return CCM_Paths.townNight_folderPath;
                     }
+                case (int)CCM_trackTypes_enum.night:
+                    {
+                        return CCM_Paths.night_folderPath;
+                    }
+                case (int)CCM_trackTypes_enum.day:
+                    {
+                        return CCM_Paths.day_folderPath;
+                    }
+                case (int)CCM_trackTypes_enum.ambient:
+                    {
+                        return CCM_Paths.ambient_folderPath;
+                    }
+                case (int)CCM_trackTypes_enum.town:
+                    {
+                        return CCM_Paths.town_folderPath;
+                    }
                 default:
                     {
                         CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for int " + _trackType);
@@ -85,6 +101,22 @@ namespace creativeCommonsMusicProject
                 case CCM_trackTypes_enum.townNight:
                     {
                         return CCM_Paths.townNight_folderPath;
+                    }
+                case CCM_trackTypes_enum.night:
+                    {
+                        return CCM_Paths.night_folderPath;
+                    }
+                case CCM_trackTypes_enum.day:
+                    {
+                        return CCM_Paths.day_folderPath;
+                    }
+                case CCM_trackTypes_enum.ambient:
+                    {
+                        return CCM_Paths.ambient_folderPath;
+                    }
+                case CCM_trackTypes_enum.town:
+                    {
+                        return CCM_Paths.town_folderPath;
                     }
                 default:
                     {

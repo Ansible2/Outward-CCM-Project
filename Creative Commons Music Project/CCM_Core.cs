@@ -99,14 +99,18 @@ namespace creativeCommonsMusicProject
             
             internal static readonly string ambientNight_folderPath = Path.Combine(mainFolderPath + @"\Ambient Night Tracks");
             internal static readonly string townNight_folderPath = Path.Combine(mainFolderPath + @"\Town Night Tracks");
-            internal static readonly string night_folderPath = Path.Combine(mainFolderPath + @"\Night Tracks");
 
             internal static readonly string ambientDay_folderPath = Path.Combine(mainFolderPath + @"\Ambient Day Tracks");
             internal static readonly string townDay_folderPath = Path.Combine(mainFolderPath + @"\Town Day Tracks");
-            internal static readonly string day_folderPath = Path.Combine(mainFolderPath + @"\Day Tracks");
 
             internal static readonly string combat_folderPath = Path.Combine(mainFolderPath + @"\Combat Tracks");
             internal static readonly string dungeon_folderPath = Path.Combine(mainFolderPath + @"\Dungeon Tracks");
+
+            // used for merely sorting in CCM_fnc_parseConfig into multiple subs categories above
+            internal static readonly string night_folderPath = Path.Combine(mainFolderPath + @"\Night Tracks");
+            internal static readonly string day_folderPath = Path.Combine(mainFolderPath + @"\Day Tracks");
+            internal static readonly string ambient_folderPath = Path.Combine(mainFolderPath + @"\Ambient Tracks");
+            internal static readonly string town_folderPath = Path.Combine(mainFolderPath + @"\Town Tracks");
 
             internal const string FILE_PREFIX = "file://";
         }
@@ -128,7 +132,11 @@ namespace creativeCommonsMusicProject
             ambientDay,
             townNight,
             townDay,
-            dungeon
+            dungeon,
+            town,
+            ambient,
+            day,
+            night
         };
         // for keeping track of the CCM_trackTypes_enum
         internal static int CCM_currentTrackType = -1;

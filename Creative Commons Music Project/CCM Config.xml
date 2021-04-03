@@ -25,18 +25,28 @@
   <!--Track list-->
 	<tracks>
     
-    <!--Example track that plays in towns during the day and outside adventuring during the day-->
-    <!--  
+    <!--Vindsvept - Moment's Respite--> 
 		<track>
-			<filename> myFilename.mp3 </filename>
+			<filename> Vindsvept - Moment's Respite.mp3 </filename>
 			<track_types>
         <track_type> TownDay </track_type>
         <track_type> AmbientDay </track_type>
+        <track_type> AmbientNight </track_type>
+        <track_type> TownNight </track_type>
       </track_types>
 		</track>
-    -->
 
-	</tracks>
+    <!--Vindsvept - The Journey Home-->
+    <track>
+      <filename> Vindsvept - The Journey Home.mp3 </filename>
+      <track_types>
+        <track_type> TownDay </track_type>
+        <track_type> AmbientNight </track_type>
+      </track_types>
+    </track>
+    
+
+  </tracks>
 
 
 
