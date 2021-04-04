@@ -44,7 +44,26 @@
         <track_type> AmbientNight </track_type>
       </track_types>
     </track>
-    
+
+    <!--Vindsvept - Unsung Heroes-->
+    <track>
+      <filename> Vindsvept - Unsung Heroes.mp3 </filename>
+      <track_types>
+        <track_type> TownDay </track_type>
+        <track_type> AmbientNight </track_type>
+      </track_types>
+    </track>
+
+    <!--Vindsvept - Sombre-->
+    <track>
+      <filename> Vindsvept - Sombre.mp3 </filename>
+      <track_types>
+        <track_type> TownDay </track_type>
+        <track_type> TownNight </track_type>
+        <track_type> AmbientDay </track_type>
+        <track_type> AmbientNight </track_type>
+      </track_types>
+    </track>
 
   </tracks>
 
@@ -55,33 +74,33 @@
 	<track_spacing>
 
 		<trackSpacing_townDay>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_townDay>
 
 		<trackSpacing_townNight>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_townNight>
 
 		<trackSpacing_ambientDay>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_ambientDay>
 
 		<trackSpacing_ambientNight>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_ambientNight>
 
 		<trackSpacing_dungeon>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_dungeon>
 
 		<trackSpacing_combat>
-      <min>10</min>
-      <max>10</max>
+      <min>1</min>
+      <max>1</max>
     </trackSpacing_combat>
 
 	</track_spacing>
