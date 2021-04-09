@@ -142,7 +142,7 @@ namespace creativeCommonsMusicProject
                     if (CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
                     {
                         yield return new WaitForSecondsRealtime(1);
-                        CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Waiting for scene: " + _sceneName);
+                        //CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Waiting for scene: " + _sceneName);
                         _sleptTime = _sleptTime + 1;
                     }
                     else

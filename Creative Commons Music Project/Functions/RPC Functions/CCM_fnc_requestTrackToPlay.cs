@@ -74,24 +74,25 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: was called...");
+            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: was called...");
             bool _startNewRoutine = false;
             bool _rpcDirectToPlayer = false;
 
             // Check if track type changed
             if (CCM_core.CCM_Dictionaries.activeScenesTrackType.ContainsKey(_playersScene))
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Scene: " + _playersScene + " was found in active scenes dictionary");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was found in active scenes dictionary");
                 if (CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] != _trackType)
                 {
                     // start a new routine for track type changes
+                    CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] = _trackType;
                     _startNewRoutine = true;
-                    CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: track type was changed for " + _playersScene);
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: track type was changed for " + _playersScene);
                 }
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary");
                 // if scene was not active we need to start a new routine
                 CCM_core.CCM_Dictionaries.activeScenesTrackType.Add(_playersScene, _trackType);
                 _startNewRoutine = true;
@@ -106,7 +107,7 @@ namespace creativeCommonsMusicProject
             }
             else if (_sceneHasCurrentMusic && !_startNewRoutine && !_sceneMusicIsBeingChosen)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Player ID " + _playerId + " met standards for RPC direct");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Player ID " + _playerId + " met standards for RPC direct");
                 _rpcDirectToPlayer = true;
             }
 
@@ -123,7 +124,7 @@ namespace creativeCommonsMusicProject
             } 
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_spawn_requestTrackToPlay: Player ID " + _playerId + " did not meet standards for RPC direct");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Player ID " + _playerId + " did not meet standards for RPC direct");
             }
                 
         }

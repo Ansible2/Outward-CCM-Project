@@ -2,7 +2,7 @@
 Function: CCM_fnc_findMusicAtPath
 
 Description:
-	Finds all .ogg, .mp3, and .wav audio files at a given path.
+	Finds all .ogg audio files at a given path.
 
 Parameters:
 	0: _folderPathToSearch <STRING> - The path to search inside
@@ -38,16 +38,11 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                // this will get all files of .ogg, .mp3, and .wav. However, this includes their FULL paths
+                // this will get all files of .ogg. However, this includes their FULL paths
                 string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-                List<string> _tempList = _files.ToList();
-                _files = Directory.GetFiles(_folderPathToSearch, "*.mp3");
-                _tempList.AddRange(_files);
-                _files = Directory.GetFiles(_folderPathToSearch, "*.wav");
-                _tempList.AddRange(_files);
+                List<string> _filesList = _files.ToList();
 
-
-                if (_tempList.Count() < 1)
+                if (_filesList.Count() < 1)
                 {
                     CCM_fnc_logWithTime("CCM_fnc_findMusicAtPath: File path " + _folderPathToSearch + " returned no files...");
                 }
@@ -55,7 +50,7 @@ namespace creativeCommonsMusicProject
                 {
                     // get only the file names for returns
                     string _tempFileName;
-                    foreach (string _filePath in _tempList)
+                    foreach (string _filePath in _filesList)
                     {
                         _tempFileName = Path.GetFileName(_filePath);
                         _returnList.Add(_tempFileName);

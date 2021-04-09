@@ -286,7 +286,7 @@ namespace creativeCommonsMusicProject
             {
                 while (CCM_loadingAudio)
                 {
-                    yield return new WaitForSeconds(0.05f);
+                    yield return new WaitForSeconds(0.01f);
                 }
 
                 CCM_loadingAudio = true;
@@ -330,7 +330,7 @@ namespace creativeCommonsMusicProject
                 _doesFileExist = true;
             }
 
-            CCM_fnc_logWithTime("_fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
+            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
 
             return _doesFileExist;
         }
@@ -494,16 +494,11 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                // this will get all files of .ogg, .mp3, and .wav. However, this includes their paths
+                // this will get all files of .ogg. However, this includes their paths
                 string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-                List<string> _tempList = _files.ToList();
+                List<string> _filesList = _files.ToList();
 
-                _files = Directory.GetFiles(_folderPathToSearch, "*.mp3");
-                _tempList.AddRange(_files);
-                _files = Directory.GetFiles(_folderPathToSearch, "*.wav");
-                _tempList.AddRange(_files);
-
-                if (_tempList.Count() < 1)
+                if (_filesList.Count() < 1)
                 {
                     CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: File path " + _folderPathToSearch + " returned no files.");
                 }
@@ -511,7 +506,7 @@ namespace creativeCommonsMusicProject
                 {
                     // get only the file names for returns
                     string _tempFileName;
-                    foreach (string _filePath in _tempList)
+                    foreach (string _filePath in _filesList)
                     {
                         _tempFileName = Path.GetFileName(_filePath).ToLower();
                         _returnList.Add(_tempFileName);

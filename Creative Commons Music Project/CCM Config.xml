@@ -27,7 +27,7 @@
     
     <!--Vindsvept - Moment's Respite--> 
 		<track>
-			<filename> Vindsvept - Moment's Respite.mp3 </filename>
+			<filename> Vindsvept - Moment's Respite.ogg </filename>
 			<track_types>
         <track_type> TownDay </track_type>
         <track_type> AmbientDay </track_type>
@@ -38,7 +38,7 @@
 
     <!--Vindsvept - The Journey Home-->
     <track>
-      <filename> Vindsvept - The Journey Home.mp3 </filename>
+      <filename> Vindsvept - The Journey Home.ogg </filename>
       <track_types>
         <track_type> TownDay </track_type>
         <track_type> AmbientNight </track_type>
@@ -47,7 +47,7 @@
 
     <!--Vindsvept - Unsung Heroes-->
     <track>
-      <filename> Vindsvept - Unsung Heroes.mp3 </filename>
+      <filename> Vindsvept - Unsung Heroes.ogg </filename>
       <track_types>
         <track_type> TownDay </track_type>
         <track_type> AmbientNight </track_type>
@@ -56,7 +56,7 @@
 
     <!--Vindsvept - Sombre-->
     <track>
-      <filename> Vindsvept - Sombre.mp3 </filename>
+      <filename> Vindsvept - Sombre.ogg </filename>
       <track_types>
         <track_type> TownDay </track_type>
         <track_type> TownNight </track_type>
