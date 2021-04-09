@@ -34,6 +34,15 @@ namespace creativeCommonsMusicProject
             // sometimes this event can be called twice in a row, in order to avoid a double call of follow on functions, this is here
             if (CCM_currentScene != _goingToScene)
             {
+                // if a player is joining a new multiplayer room, this will end all routines from their other session
+                if (!PhotonNetwork.isMasterClient && CCM_syncOnline)
+                {
+                    foreach (var _x in CCM_Dictionaries.sceneRoutines)
+                    {
+                        _fn_stopMusicRoutine(_x.Key);
+                    }
+                }
+
                 if (CCM_fnc_isSceneReal(_goingToScene))
                 {
                     CCM_currentScene = _goingToScene;
@@ -47,7 +56,6 @@ namespace creativeCommonsMusicProject
                         CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Sync Online is off, execing CCM_fnc_changeActiveScene");
                         CCM_rpc.CCM_rpcComponent.CCM_fnc_changeActiveScene(_goingToScene.name, PhotonNetwork.player.ID);
                     }
-                    
                 }
                 else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
                 {
