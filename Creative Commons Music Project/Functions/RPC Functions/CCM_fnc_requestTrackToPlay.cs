@@ -2,34 +2,24 @@
 Function: CCM_fnc_requestTrackToPlay
 
 Description:
-	
+	Asks the masterClient for what track should be played for a given scene and type.
 
 Parameters:
-	0:  <> - 
+	0: _trackType <CCM_core.CCM_trackTypes_enum> - The type of track requested.
+    1: _playerId <INT> - The player's PhotonNetwork ID.
+    2: _playerScene <STRING> - The scene the Player's requesting music for.
 
 Returns:
-	<> - 
+	NOTHING
 
 Examples:
     (begin example)
-		
+		CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
     (end)
 
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
-using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using BepInEx;
-using BepInEx.Logging;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
 
 
 namespace creativeCommonsMusicProject
@@ -40,7 +30,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay_RPC
         ---------------------------------------------------------------------------- */
-        internal static void CCM_fnc_requestTrackToPlay_RPC(int _trackType, int _playerId, string _playersScene)
+        internal static void CCM_fnc_requestTrackToPlay_RPC(CCM_core.CCM_trackTypes_enum _trackType, int _playerId, string _playersScene)
         {
             if (CCM_core.CCM_syncOnline)
             {
@@ -60,19 +50,10 @@ namespace creativeCommonsMusicProject
 
 
         /* ----------------------------------------------------------------------------
-            CCM_spawn_requestTrackToPlay
-        ---------------------------------------------------------------------------- */
-        internal void CCM_spawn_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
-        {
-            //CCM_core.CCM_Instance.StartCoroutine(CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene));
-        }
-
-
-        /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay
         ---------------------------------------------------------------------------- */
         [PunRPC]
-        internal void CCM_fnc_requestTrackToPlay(int _trackType, int _playerId, string _playersScene)
+        internal void CCM_fnc_requestTrackToPlay(CCM_core.CCM_trackTypes_enum _trackType, int _playerId, string _playersScene)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: was called...");
             bool _startNewRoutine = false;
@@ -103,7 +84,7 @@ namespace creativeCommonsMusicProject
             }
 
             // this still needs to be able to return tracks that are already in active scenes for other players
-            bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_playersScene);
+            bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack.ContainsKey(_playersScene);
             bool _sceneMusicIsBeingChosen = CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene);
             if (_startNewRoutine)
             {
@@ -119,7 +100,7 @@ namespace creativeCommonsMusicProject
 
             if (_rpcDirectToPlayer)
             {
-                string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
+                string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack[_playersScene].Filename;
                 CCM_photonView.RPC(
                     "CCM_event_playMusic_RPC",
                     PhotonPlayer.Find(_playerId),

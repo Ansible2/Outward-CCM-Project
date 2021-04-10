@@ -10,7 +10,7 @@ Parameters:
     1: _used <BOOL> - Get the parnter used track list
 
 Returns:
-	<LIST of STRINGs> - Returns a reference to the list of the given type
+	<LIST of CCM_track> - Returns a reference to the list of the given type
 
 Examples:
     (begin example)
@@ -27,9 +27,9 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static List<string> CCM_fnc_getTrackList(int _trackType = -1, bool _used = false)
+        internal static List<CCM_track> CCM_fnc_getTrackList(int _trackType = -1, bool _used = false)
         {
-            List<string> _listOfTracks;
+            List<CCM_track> _listOfTracks;
 
             switch (_trackType)
             {
@@ -107,7 +107,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        _listOfTracks = new List<string>();
+                        _listOfTracks = new List<CCM_track>();
                         break;
                     }
             }

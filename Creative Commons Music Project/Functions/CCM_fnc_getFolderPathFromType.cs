@@ -1,28 +1,31 @@
 ﻿/* ----------------------------------------------------------------------------
-Function: CCM_fnc_getTrackTypeFolderPath
+Function: CCM_fnc_getFolderPathFromType
 
 Description:
-	Returns the full folder path of a given track type.
+	Takes a CCM_trackTypes_enum and converts it to the corresponding folder path.
 
 Parameters:
-	0: _trackType <INT> - The track type in relation to the enum CCM_trackTypes_enum
+	0: _audioSoucre <CCM_trackTypes_enum or INT> - The type to get a folder path for
 
 Returns:
-	<STRING> - The absolute folder path
+	STRING - The folder path
 
 Examples:
     (begin example)
-		var _combatFolderPath = CCM_fnc_getTrackTypeFolderPath(2);
+		// get day tracks folder path
+		var _path = CCM_fnc_getFolderPathFromType(CCM_trackTypes_enum.day);
     (end)
 
 Author(s):
 	Ansible2
 ---------------------------------------------------------------------------- */
+
+
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static string CCM_fnc_getTrackTypeFolderPath(int _trackType)
+        internal static string CCM_fnc_getFolderPathFromType(int _trackType)
         {
             switch (_trackType)
             {
@@ -72,13 +75,13 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for int " + _trackType);
+                        CCM_fnc_logWithTime("CCM_fnc_getFolderPathFromType: Returned empty string for folder path for int " + _trackType);
                         return "";
                     }
             }
         }
 
-        internal static string CCM_fnc_getTrackTypeFolderPath(CCM_trackTypes_enum _trackType)
+        internal static string CCM_fnc_getFolderPathFromType(CCM_trackTypes_enum _trackType)
         {
             switch (_trackType)
             {
@@ -128,7 +131,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for Enum " + _trackType);
+                        CCM_fnc_logWithTime("CCM_fnc_getFolderPathFromType: Returned empty string for folder path for Enum " + _trackType);
                         return "";
                     }
             }

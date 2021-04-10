@@ -35,6 +35,7 @@
     <Compile Include="Events\CCM_event_onSceneChanged.cs" />
     <Compile Include="Events\CCM_event_onVanillaMusicPlayed.cs" />
     <Compile Include="Functions\CCM_fnc_findMusicAtPath.cs" />
+    <Compile Include="Functions\CCM_fnc_getFolderPathFromType.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackTypeFolderPath.cs" />
     <Compile Include="Functions\CCM_fnc_parseConfig.cs" />
     <Compile Include="Functions\CCM_fnc_getAudioTypeFromString.cs" />

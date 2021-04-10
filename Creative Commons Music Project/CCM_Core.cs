@@ -39,20 +39,20 @@ namespace creativeCommonsMusicProject
         {
             // lists for keeping track of already played music to avoid playing it again frequently if possible
             // these will contain file names for the music
-            internal static List<string> used_combatTracks = new List<string>();
-            internal static List<string> used_ambientNightTracks = new List<string>();
-            internal static List<string> used_ambientDayTracks = new List<string>();
-            internal static List<string> used_townDayTracks = new List<string>();
-            internal static List<string> used_townNightTracks = new List<string>();
-            internal static List<string> used_dungeonTracks = new List<string>();
+            internal static List<CCM_track> used_combatTracks = new List<CCM_track>();
+            internal static List<CCM_track> used_ambientNightTracks = new List<CCM_track>();
+            internal static List<CCM_track> used_ambientDayTracks = new List<CCM_track>();
+            internal static List<CCM_track> used_townDayTracks = new List<CCM_track>();
+            internal static List<CCM_track> used_townNightTracks = new List<CCM_track>();
+            internal static List<CCM_track> used_dungeonTracks = new List<CCM_track>();
 
             // these will contain unused file names of music
-            internal static List<string> unused_combatTracks = new List<string>();
-            internal static List<string> unused_ambientNightTracks = new List<string>();
-            internal static List<string> unused_ambientDayTracks = new List<string>();
-            internal static List<string> unused_townDayTracks = new List<string>();
-            internal static List<string> unused_townNightTracks = new List<string>();
-            internal static List<string> unused_dungeonTracks = new List<string>();
+            internal static List<CCM_track> unused_combatTracks = new List<CCM_track>();
+            internal static List<CCM_track> unused_ambientNightTracks = new List<CCM_track>();
+            internal static List<CCM_track> unused_ambientDayTracks = new List<CCM_track>();
+            internal static List<CCM_track> unused_townDayTracks = new List<CCM_track>();
+            internal static List<CCM_track> unused_townNightTracks = new List<CCM_track>();
+            internal static List<CCM_track> unused_dungeonTracks = new List<CCM_track>();
 
             internal static List<string> scenesChoosingMusicFor = new List<string>();
         }
@@ -65,24 +65,52 @@ namespace creativeCommonsMusicProject
         {
             // used to keep track of each player's' current scene. dictionary is global and synced between all players
             // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
+            // int is playerID, string is scene name
             internal static Dictionary<int, string> activePlayerScenes = new Dictionary<int, string>();
 
             // used to keep track of each active scenes music track
             // layout is scene/track
-            internal static Dictionary<string, string> activeScenesCurrentMusic = new Dictionary<string, string>();
+            internal static Dictionary<string, CCM_track> activeScenesCurrentTrack = new Dictionary<string, CCM_track>();
 
             // Music Routine objects
             internal static Dictionary<string, Coroutine> sceneRoutines = new Dictionary<string, Coroutine>();
 
             // keeps track of the currently playing music type for each scene that is active
-            internal static Dictionary<string, int> activeScenesTrackType = new Dictionary<string, int>();
+            internal static Dictionary<string, CCM_trackTypes_enum> activeScenesTrackType = new Dictionary<string, CCM_trackTypes_enum>();
 
             // This is used locally for each machine to take a given filename and get back the audioClip of the file
             //internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
 
-            internal static Dictionary<int, List<int>> trackSpacingFromType = new Dictionary<int, List<int>>();
+            internal static Dictionary<CCM_trackTypes_enum, List<int>> trackSpacingFromType = new Dictionary<CCM_trackTypes_enum, List<int>>();
 
             internal static Dictionary<string, int> trackLengthFromString = new Dictionary<string, int>();
+        }
+
+
+        internal class CCM_track
+        {
+            internal string Filename { get; }
+            internal int Length { get; set; }
+            internal CCM_trackTypes_enum FolderType { get; }
+
+            internal CCM_track(string filename, CCM_trackTypes_enum folderType)
+            {
+                Filename = filename;
+                FolderType = folderType;
+                Length = 0;
+            }
+            internal CCM_track(string filename, CCM_trackTypes_enum folderType, int length)
+            {
+                Filename = filename;
+                FolderType = folderType;
+                Length = length;
+            }
+            internal CCM_track() 
+            {
+                Filename = "";
+                FolderType = CCM_trackTypes_enum.EMPTY;
+                Length = -1;
+            }
         }
 
 
@@ -124,19 +152,23 @@ namespace creativeCommonsMusicProject
 
         internal enum CCM_trackTypes_enum
         {
-            combat,
-            ambientNight,
             ambientDay,
-            townNight,
-            townDay,
-            dungeon,
-            town,
+            ambientNight,
             ambient,
+            combat,
+            configed,
             day,
-            night
+            dungeon,
+            night,
+            townDay,
+            townNight,
+            town,
+            EMPTY
         };
+
+
         // for keeping track of the CCM_trackTypes_enum
-        internal static int CCM_currentTrackType = -1;
+        internal static CCM_trackTypes_enum CCM_currentTrackType = CCM_trackTypes_enum.EMPTY;
 
         internal static System.Random CCM_getRandom = new System.Random();
 

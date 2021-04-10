@@ -25,7 +25,6 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 
 namespace creativeCommonsMusicProject
@@ -35,7 +34,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_spawn_startMusicRoutineForScene
         ---------------------------------------------------------------------------- */
-        internal static void CCM_spawn_startMusicRoutineForScene(string _sceneName, int _trackType, bool _deletePrevious = true)
+        internal static void CCM_spawn_startMusicRoutineForScene(string _sceneName, CCM_trackTypes_enum _trackType, bool _deletePrevious = true)
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: was called for scene " + _sceneName);
             bool _routineExistsForScene = CCM_Dictionaries.sceneRoutines.ContainsKey(_sceneName);
@@ -47,18 +46,6 @@ namespace creativeCommonsMusicProject
             var _routine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, _trackType));
             CCM_Dictionaries.sceneRoutines.Add(_sceneName, _routine);
 
-            // create object
-            //GameObject _musicRoutineObject = new GameObject(_sceneName + CCM_musicRoutinePostfixString);
-            //DontDestroyOnLoad(_musicRoutineObject);
-
-            //MonoBehaviour _musicRoutineInstance = _musicRoutineObject.GetOrAddComponent<MonoBehaviour>();
-            //CCM_Dictionaries.sceneRoutines.Add(_sceneName, _musicRoutineObject);
-            //MusicRoutine _musicRoutineObject = new MusicRoutine();
-            //CCM_Dictionaries.sceneRoutines.Add(_sceneName, _musicRoutineObject);
-            //DontDestroyOnLoad(_musicRoutineObject);
-
-
-            //CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, /*_musicRoutineObject,*/ _trackType));
         }
 
 
@@ -88,7 +75,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_beginRoutine
         ---------------------------------------------------------------------------- */
-        private static IEnumerator _fn_beginRoutine(string _sceneName, int _trackType)
+        private static IEnumerator _fn_beginRoutine(string _sceneName, CCM_trackTypes_enum _trackType)
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: was called for scene " + _sceneName);
 
@@ -103,9 +90,11 @@ namespace creativeCommonsMusicProject
             bool _sceneActive = true;
             while (_sceneActive)
             {
-                string _sceneTrackFileName = _fn_decideNewTrackForScene(_trackType, _sceneName);
-                
-                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Attempting RPC of _sceneTrackFileName: " + _sceneTrackFileName + " _sceneName: " + _sceneName);
+                var _track = _fn_decideNewTrackForScene(_trackType, _sceneName);
+                string _sceneTrackFilename = _track.Filename;
+
+
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Attempting RPC of _sceneTrackFilename: " + _sceneTrackFilename + " _sceneName: " + _sceneName);
                 
                 if (CCM_syncOnline)
                 {
@@ -113,17 +102,17 @@ namespace creativeCommonsMusicProject
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
-                        new object[] { _sceneTrackFileName, _sceneName, true }
+                        new object[] { _sceneTrackFilename, _sceneName, true }
                     );
                 } 
                 else
                 {
                     CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is false, directly going to CCM_fnc_playMusic");
-                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
+                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, true);
                 }
-                
 
-                int _trackLength = CCM_Dictionaries.trackLengthFromString[_sceneTrackFileName];
+
+                int _trackLength = _track.Length;
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: sleep time will be: " + _sleepTime);
                 CCM_fnc_logWithTime("_tracklength int: " + _trackLength);
@@ -171,7 +160,7 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_decideTimeBetweenTracks
         ---------------------------------------------------------------------------- */
-        private static int _fn_decideTimeBetweenTracks(int _trackType)
+        private static int _fn_decideTimeBetweenTracks(CCM_trackTypes_enum _trackType)
         {
             // get min/max values
             var _sleepList = CCM_Dictionaries.trackSpacingFromType[_trackType];
@@ -184,28 +173,28 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_decideNewTrackForScene
         ---------------------------------------------------------------------------- */
-        private static string _fn_decideNewTrackForScene(int _trackType, string _sceneName)
+        private static CCM_track _fn_decideNewTrackForScene(CCM_trackTypes_enum _trackType, string _sceneName)
         {
             // list the scene as being in the process of choosing a new track to prevent players from requesting a play event from the server in CCM_fnc_requestTrackToPlay
             CCM_Lists.scenesChoosingMusicFor.Add(_sceneName);
             
             // get a random track
-            string _newTrackName = CCM_fnc_grabRandomTrack(_trackType);
+            var _newTrack = CCM_fnc_grabRandomTrack(_trackType);
 
-            if (CCM_Dictionaries.activeScenesCurrentMusic.ContainsKey(_sceneName))
+            if (CCM_Dictionaries.activeScenesCurrentTrack.ContainsKey(_sceneName))
             {
-                CCM_Dictionaries.activeScenesCurrentMusic[_sceneName] = _newTrackName;
+                CCM_Dictionaries.activeScenesCurrentTrack[_sceneName] = _newTrack;
             }
             else
             {
-                CCM_Dictionaries.activeScenesCurrentMusic.Add(_sceneName, _newTrackName);
+                CCM_Dictionaries.activeScenesCurrentTrack.Add(_sceneName, _newTrack);
             }
             // THIS MAY NEED TO GO AFTER THE RPC TO ALL PLAYERS
 
             // list the scene as no longer changing music
             CCM_Lists.scenesChoosingMusicFor.Remove(_sceneName);
 
-            return _newTrackName;
+            return _newTrack;
         }
     }
 }
