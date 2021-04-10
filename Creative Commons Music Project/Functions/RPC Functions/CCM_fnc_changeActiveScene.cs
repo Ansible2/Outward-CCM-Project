@@ -33,9 +33,19 @@ namespace creativeCommonsMusicProject
             string _previousScene = "";
             if (_playerInDictionary)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " was in the dictionary, changing...");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " was in the dictionary.");
                 _previousScene = CCM_core.CCM_Dictionaries.activePlayerScenes[_playerId];
-                CCM_core.CCM_Dictionaries.activePlayerScenes[_playerId] = _goingToSceneName;
+
+                if (_goingToSceneName != _previousScene)
+                {
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " will have active scene changed as previous scene is different.");
+                    CCM_core.CCM_Dictionaries.activePlayerScenes[_playerId] = _goingToSceneName;
+                }
+                else
+                {
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: player ID: " + _playerId + " does not need active scene updated as the scene is the same as previous.");
+                }
+
             }
             else
             {

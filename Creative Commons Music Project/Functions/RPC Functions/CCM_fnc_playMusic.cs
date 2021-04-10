@@ -95,26 +95,27 @@ namespace creativeCommonsMusicProject
             var _pathToFile = Path.Combine(CCM_core.CCM_Paths.FILE_PREFIX, _folderPath, _filename);
             AudioType _audioType = CCM_core.CCM_fnc_getAudioTypeFromString(_filename);
 
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
+            using (UnityWebRequest _request = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
             {
-                www.SendWebRequest();
+                ((DownloadHandlerAudioClip)_request.downloadHandler).streamAudio = true;
+                _request.SendWebRequest();
 
-                while (!www.isDone)
+                while (!_request.isDone)
                 {
-                    yield return new WaitForSeconds(0.01f);
+                    yield return new WaitForSeconds(0.1f);
                 }
 
 
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
 
-                if (www.error != null)
+                if (_request.error != null)
                 {
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + www.error);
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
 
 
-                AudioClip _clip = DownloadHandlerAudioClip.GetContent(www);
+                AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
 
                 GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
                 CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);

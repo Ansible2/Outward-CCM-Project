@@ -319,25 +319,25 @@ namespace creativeCommonsMusicProject
             
             AudioType _audioType = CCM_fnc_getAudioTypeFromString(_filename);
             
-            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
+            using (UnityWebRequest _request = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
             {
-                www.SendWebRequest();
+                ((DownloadHandlerAudioClip)_request.downloadHandler).streamAudio = true;
+                _request.SendWebRequest();
 
-                while (!www.isDone)
+                while (!_request.isDone)
                 {
                     yield return new WaitForSeconds(0.01f);
                 }
-                
 
                 CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request is done for " + _filename);
 
-                if (www.error != null)
+                if (_request.error != null)
                 {
-                    CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request encountered the following error: " + www.error);
+                    CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
 
-                var _clip = DownloadHandlerAudioClip.GetContent(www);
+                var _clip = DownloadHandlerAudioClip.GetContent(_request);
                 _track.Length = (int)_clip.length;
                 CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
 
