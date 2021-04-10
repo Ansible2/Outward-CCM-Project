@@ -312,7 +312,6 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_getTrackLength(CCM_track _track)
         {
-
             var _folderPath = CCM_fnc_getTrackTypeFolderPath(_track.FolderType);
             
             string _filename = _track.Filename;
@@ -340,6 +339,7 @@ namespace creativeCommonsMusicProject
 
                 var _clip = DownloadHandlerAudioClip.GetContent(www);
                 _track.Length = (int)_clip.length;
+                CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
 
                 _clip.UnloadAudioData();
 

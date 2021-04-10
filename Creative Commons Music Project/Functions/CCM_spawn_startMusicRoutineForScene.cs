@@ -40,7 +40,7 @@ namespace creativeCommonsMusicProject
             bool _routineExistsForScene = CCM_Dictionaries.sceneRoutines.ContainsKey(_sceneName);
             if (_deletePrevious)
             {
-                _fn_stopMusicRoutine(_sceneName);
+                CCM_fnc_stopMusicRoutine(_sceneName);
             }
 
             var _routine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_sceneName, _trackType));
@@ -50,15 +50,15 @@ namespace creativeCommonsMusicProject
 
 
         /* ----------------------------------------------------------------------------
-            _fn_stopMusicRoutine
+            CCM_fnc_stopMusicRoutine
         ---------------------------------------------------------------------------- */
-        internal static void _fn_stopMusicRoutine(string _sceneName)
+        internal static void CCM_fnc_stopMusicRoutine(string _sceneName)
         {
-            CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_stopMusicRoutine: was called for scene " + _sceneName);
+            CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: CCM_fnc_stopMusicRoutine: was called for scene " + _sceneName);
 
             if (CCM_Dictionaries.sceneRoutines.ContainsKey(_sceneName))
             {
-                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_stopMusicRoutine: Found scene: " + _sceneName + " was already in sceneRoutines dictionary. Stopping it now.");
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: CCM_fnc_stopMusicRoutine: Found scene: " + _sceneName + " was already in sceneRoutines dictionary. Stopping it now.");
                 var _routine = CCM_Dictionaries.sceneRoutines[_sceneName];
 
                 CCM_Dictionaries.sceneRoutines.Remove(_sceneName);
@@ -67,7 +67,7 @@ namespace creativeCommonsMusicProject
             } 
             else
             {
-                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_stopMusicRoutine: Found scene: " + _sceneName + " was NOT in sceneRoutines dictionary. No need to stop.");
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: CCM_fnc_stopMusicRoutine: Found scene: " + _sceneName + " was NOT in sceneRoutines dictionary. No need to stop.");
             }
         }
 
@@ -102,13 +102,13 @@ namespace creativeCommonsMusicProject
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
-                        new object[] { _sceneTrackFilename, _sceneName, true }
+                        new object[] { _sceneTrackFilename, _track.FolderType,_sceneName, true }
                     );
                 } 
                 else
                 {
                     CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is false, directly going to CCM_fnc_playMusic");
-                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, true);
+                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, _track.FolderType, true);
                 }
 
 
@@ -141,7 +141,7 @@ namespace creativeCommonsMusicProject
             if (_routine != null)
             {
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Found that routine for scene: " + _sceneName + " was not null, stopping...");
-                _fn_stopMusicRoutine(_sceneName);
+                CCM_fnc_stopMusicRoutine(_sceneName);
             } 
             else
             {

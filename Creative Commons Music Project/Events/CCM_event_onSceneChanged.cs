@@ -39,7 +39,7 @@ namespace creativeCommonsMusicProject
                 {
                     foreach (var _x in CCM_Dictionaries.sceneRoutines)
                     {
-                        _fn_stopMusicRoutine(_x.Key);
+                        CCM_fnc_stopMusicRoutine(_x.Key);
                     }
                 }
 

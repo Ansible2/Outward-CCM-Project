@@ -76,6 +76,8 @@ namespace creativeCommonsMusicProject
             if (_stopAfter)
             {
                 _audioSource.Stop();
+                //_audioSource.clip.UnloadAudioData();
+                Destroy(_audioSource.clip);
                 CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Stopped audioSource: " + _audioSource);
             }
           

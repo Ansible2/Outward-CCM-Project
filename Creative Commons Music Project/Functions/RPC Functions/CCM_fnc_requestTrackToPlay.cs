@@ -100,11 +100,12 @@ namespace creativeCommonsMusicProject
 
             if (_rpcDirectToPlayer)
             {
-                string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack[_playersScene].Filename;
+                CCM_core.CCM_track _track = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack[_playersScene];
+                string _sceneTrackFileName = _track.Filename;
                 CCM_photonView.RPC(
                     "CCM_event_playMusic_RPC",
                     PhotonPlayer.Find(_playerId),
-                    new object[] { _sceneTrackFileName, _playersScene, true }
+                    new object[] { _sceneTrackFileName, _track.FolderType, _playersScene, true }
                 );
             } 
             else
