@@ -342,6 +342,7 @@ namespace creativeCommonsMusicProject
                 CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
 
                 _clip.UnloadAudioData();
+                Destroy(_clip);
 
                 CCM_loadingAudio = false;
             }

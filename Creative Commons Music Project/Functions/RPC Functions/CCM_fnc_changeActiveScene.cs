@@ -51,6 +51,8 @@ namespace creativeCommonsMusicProject
                 {
                     CCM_core.CCM_fnc_logWithTime("CCM_fnc_changeActiveScene: Found players prior scene: " + _previousScene + " is NO LONGER active. Stopping routine...");
                     CCM_core.CCM_fnc_stopMusicRoutine(_previousScene);
+                    CCM_core.CCM_Dictionaries.activeScenesTrackType.Remove(_previousScene);
+                    CCM_core.CCM_Dictionaries.activeScenesCurrentTrack.Remove(_previousScene);
                 }
             }
             else
