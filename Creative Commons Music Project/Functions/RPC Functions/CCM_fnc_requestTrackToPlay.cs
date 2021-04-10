@@ -87,12 +87,16 @@ namespace creativeCommonsMusicProject
                     // start a new routine for track type changes
                     CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] = _trackType;
                     _startNewRoutine = true;
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: track type was changed for " + _playersScene);
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: track type was changed for " + _playersScene + "... starting new routine.");
+                }
+                else
+                {
+                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " does not need a new routine started.");
                 }
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary");
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary... Starting new Routine.");
                 // if scene was not active we need to start a new routine
                 CCM_core.CCM_Dictionaries.activeScenesTrackType.Add(_playersScene, _trackType);
                 _startNewRoutine = true;
@@ -118,7 +122,7 @@ namespace creativeCommonsMusicProject
                 string _sceneTrackFileName = CCM_core.CCM_Dictionaries.activeScenesCurrentMusic[_playersScene];
                 CCM_photonView.RPC(
                     "CCM_event_playMusic_RPC",
-                    PhotonPlayer.Find(_playerId), // Questionable if this will not just get the local player ID (RPC does take PhotonPlayer as an arguement)
+                    PhotonPlayer.Find(_playerId),
                     new object[] { _sceneTrackFileName, _playersScene, true }
                 );
             } 

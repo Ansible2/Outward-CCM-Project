@@ -37,6 +37,9 @@ namespace creativeCommonsMusicProject
     {
         const string CCM_configFileName = @"CCM Config.xml";
 
+        static Dictionary<string, string> _filesToLoad = new Dictionary<string, string>();
+
+
         /* ----------------------------------------------------------------------------
             CCM_fnc_parseConfig
         ---------------------------------------------------------------------------- */
@@ -47,9 +50,11 @@ namespace creativeCommonsMusicProject
             if (File.Exists(_pathToConfig))
             {
                 var _xmlConfigFile = XDocument.Load(_pathToConfig);
-                _fn_buildAudioClipLibrary(_xmlConfigFile);
+                _fn_getFilesFromConfig(_xmlConfigFile);
+                _fn_getFilesFromFolders();
 
-                _fn_getAudioClipsFromFolders();
+                CCM_Instance.StartCoroutine(_fn_buildAudioClipLibrary());
+
 
                 _fn_grabTrackSpacingSettings(_xmlConfigFile);
                 _fn_getOnlineMode(_xmlConfigFile);
@@ -64,39 +69,58 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_buildAudioClipLibrary
         ---------------------------------------------------------------------------- */
-        ///<summary>Does stuff</summary>
-        private static void _fn_buildAudioClipLibrary(XDocument _xmlConfigFile)
+        private static IEnumerator _fn_buildAudioClipLibrary()
         {
-            // so we don't get duplicates, store already gotten files
-            //List<string> _alreadyStoredTracks = new List<string>();
+            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Started audio load");
+            
+            string _file = "";
+            string _folder = "";
+            foreach (var _x in _filesToLoad)
+            {
+                while (CCM_loadingAudio)
+                {
+                    yield return new WaitForSecondsRealtime(0.1f);
+                }
+
+                CCM_fnc_logWithTime("Starting a new load...");
+
+                CCM_loadingAudio = true;
+                
+                _file = _x.Key;
+                _folder = _x.Value;
+
+                CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_file, _folder));
+            }
+
+            _filesToLoad = null;
+
+            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Completed audio load");
+        }
+
+
+        /* ----------------------------------------------------------------------------
+            _fn_getFilesFromConfig
+        ---------------------------------------------------------------------------- */
+        ///<summary>Does stuff</summary>
+        private static void _fn_getFilesFromConfig(XDocument _xmlConfigFile)
+        {
 
             var _list = _xmlConfigFile.Root.Descendants("tracks").Elements();
-            //_xmlConfigFile.Root.Nodes
 
             if (_list.Count() == 0)
             {
                 CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: No tracks were located in config file: " + CCM_configFileName);
             }
-
-            // debug
-            /*
-            foreach (var _x in _list)
-            {
-                CCM_logSource.LogMessage(_x.ToString());
-                var _filename = _x.Element("filename").Value.ToLower();
-                CCM_fnc_logWithTime(_filename.Trim());
-            }
-            */
         
             foreach (var _x in _list)
             {
                 var _filename = _x.Element("filename").Value.ToLower().Trim();
-                //CCM_fnc_logWithTime(_filename);
+
                 // make sure provided filename is actually in the tracks folder
                 if (_fn_doesFileExist(_filename, CCM_Paths.tracks_folderPath))
                 {
                     // check for duplicates
-                    if (CCM_Lists.storedTracks.Contains(_filename))
+                    if (_filesToLoad.ContainsKey(_filename))
                     {
                         CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
                     }
@@ -112,8 +136,7 @@ namespace creativeCommonsMusicProject
                                 _fn_pushBackToTrackList(_y.Value, _filename);
                             }
 
-                            CCM_Lists.storedTracks.Add(_filename);
-                            CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, CCM_Paths.tracks_folderPath));
+                            _filesToLoad.Add(_filename, CCM_Paths.tracks_folderPath);
                         }
                         else
                         {
@@ -127,14 +150,13 @@ namespace creativeCommonsMusicProject
                 }
             }
 
-            
         }
 
 
         /* ----------------------------------------------------------------------------
-           _fn_getAudioClipsFromFolders
+           _fn_getFilesFromFolders
         ---------------------------------------------------------------------------- */
-        private static void _fn_getAudioClipsFromFolders()
+        private static void _fn_getFilesFromFolders()
         {
             // create an array of CCM_trackTypes_enum so we can use foreach for loop through
             CCM_trackTypes_enum[] _trackTypes = (CCM_trackTypes_enum[])Enum.GetValues(typeof(CCM_trackTypes_enum));
@@ -155,11 +177,10 @@ namespace creativeCommonsMusicProject
                     // get only the file names for returns
                     foreach (string _filename in _fileNames)
                     {                          
-                        if (!CCM_Lists.storedTracks.Contains(_filename)) 
+                        if (!_filesToLoad.ContainsKey(_filename)) 
                         {
                             _fn_pushBackToTrackList(_trackType, _filename);
-                            CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPath));
-                            CCM_Lists.storedTracks.Add(_filename);
+                            _filesToLoad.Add(_filename, _folderPath);
                         }
                         else
                         {
@@ -185,11 +206,10 @@ namespace creativeCommonsMusicProject
                 // get only the file names for returns
                 foreach (string _filename in _fileNames)
                 {
-                    if (!CCM_Lists.storedTracks.Contains(_filename))
+                    if (!_filesToLoad.ContainsKey(_filename))
                     {
                         _fn_pushBackToTrackList("all", _filename);
-                        CCM_Instance.StartCoroutine(_fn_loadAndStoreAudioClip(_filename, _folderPathToSearch));
-                        CCM_Lists.storedTracks.Add(_filename);
+                        _filesToLoad.Add(_filename, _folderPathToSearch);
                     }
                     else
                     {
@@ -284,19 +304,13 @@ namespace creativeCommonsMusicProject
 
             using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(_pathToFile, _audioType))
             {
-                while (CCM_loadingAudio)
-                {
-                    yield return new WaitForSeconds(0.01f);
-                }
-
-                CCM_loadingAudio = true;
                 www.SendWebRequest();
 
                 while (!www.isDone)
                 {
                     yield return new WaitForSeconds(0.01f);
                 }
-                CCM_loadingAudio = false;
+                
 
                 CCM_fnc_logWithTime("_fn_loadAndStoreAudioClip: Web request is done for " + _filename);
 
@@ -307,10 +321,15 @@ namespace creativeCommonsMusicProject
                 }
 
                 var _clip = DownloadHandlerAudioClip.GetContent(www);
-                DontDestroyOnLoad(_clip);
+                //DontDestroyOnLoad(_clip);
                 _clip.name = _filename;
+                
+                //CCM_Dictionaries.audioClipFromString.Add(_filename, _clip);
+                CCM_Dictionaries.trackLengthFromString.Add(_filename, (int)_clip.length);
 
-                CCM_Dictionaries.audioClipFromString.Add(_filename, _clip);
+                _clip.UnloadAudioData();
+
+                CCM_loadingAudio = false;
             }
             
             yield break;

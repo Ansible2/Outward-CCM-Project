@@ -54,11 +54,6 @@ namespace creativeCommonsMusicProject
             internal static List<string> unused_townNightTracks = new List<string>();
             internal static List<string> unused_dungeonTracks = new List<string>();
 
-            // keeps track of the music routines running for each scene to schedule music 
-            internal static List<string> scenesWithMusicRoutines = new List<string>();
-
-            internal static List<string> storedTracks = new List<string>();
-
             internal static List<string> scenesChoosingMusicFor = new List<string>();
         }
 
@@ -83,9 +78,11 @@ namespace creativeCommonsMusicProject
             internal static Dictionary<string, int> activeScenesTrackType = new Dictionary<string, int>();
 
             // This is used locally for each machine to take a given filename and get back the audioClip of the file
-            internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
+            //internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
 
             internal static Dictionary<int, List<int>> trackSpacingFromType = new Dictionary<int, List<int>>();
+
+            internal static Dictionary<string, int> trackLengthFromString = new Dictionary<string, int>();
         }
 
 

@@ -49,17 +49,22 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
-            CCM_core.CCM_logSource.LogMessage("CCM_fnc_fadeAudioSource: Fading " + _audioSource + " to " + _targetVolume);
+            CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Fading " + _audioSource + " to " + _targetVolume);
             float currentTime = 0;
             float _startingVolume = _audioSource.volume;
             // wait until audiosource is done with fade
             while (_fn_isAudioSourceFading(_audioSource))
             {
+                CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
                 yield return new WaitForSeconds(0.1f);
             }
 
-            CCM_fnc_setFadeStop(_audioSource, false);
             CCM_fnc_setFadeIsFading(_audioSource, true);
+            CCM_fnc_setFadeStop(_audioSource, false);
+            
+
+            CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Now fading audioSource: " + _audioSource);         
+
 
             while (currentTime < _duration || _fn_shouldFadeStop(_audioSource))
             {
@@ -71,17 +76,20 @@ namespace creativeCommonsMusicProject
             if (_stopAfter)
             {
                 _audioSource.Stop();
-                //_audioSource.clip.UnloadAudioData();
+                CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Stopped audioSource: " + _audioSource);
             }
-
-            CCM_fnc_setFadeStop(_audioSource, false);
-            CCM_fnc_setFadeIsFading(_audioSource, false);
+          
 
             if (_stopNowPlaying)
             {
                 CCM_MusicHandlers.nowPlayingAudioSource = null; // could get removed from memory?
                 CCM_MusicHandlers.nowPlayingMusicHandler = null;
+                CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Set now playing vars to null");
             }
+
+
+            CCM_fnc_setFadeIsFading(_audioSource, false);
+            CCM_fnc_setFadeStop(_audioSource, false);
 
             yield break;
         }

@@ -32,13 +32,6 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal class MusicRoutine : MonoBehaviour
-        {
-            internal void Awake()
-            {
-                CCM_fnc_logWithTime("MusicRoutine: Created Music Routine");
-            }
-        }
         /* ----------------------------------------------------------------------------
             CCM_spawn_startMusicRoutineForScene
         ---------------------------------------------------------------------------- */
@@ -116,7 +109,7 @@ namespace creativeCommonsMusicProject
                 
                 if (CCM_syncOnline)
                 {
-                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is true, RPCing CCM_event_playMusic_RPC");
+                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is true, RPCing CCM_event_playMusic_RPC to all players");
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
@@ -129,9 +122,8 @@ namespace creativeCommonsMusicProject
                     CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
                 }
                 
-                //CCM_rpc.CCM_fnc_playMusic(_sceneTrackFileName, true);
 
-                int _trackLength = (int)CCM_Dictionaries.audioClipFromString[_sceneTrackFileName].length;
+                int _trackLength = CCM_Dictionaries.trackLengthFromString[_sceneTrackFileName];
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: sleep time will be: " + _sleepTime);
                 CCM_fnc_logWithTime("_tracklength int: " + _trackLength);
@@ -188,6 +180,10 @@ namespace creativeCommonsMusicProject
             return _sleepTime;
         }
 
+
+        /* ----------------------------------------------------------------------------
+            _fn_decideNewTrackForScene
+        ---------------------------------------------------------------------------- */
         private static string _fn_decideNewTrackForScene(int _trackType, string _sceneName)
         {
             // list the scene as being in the process of choosing a new track to prevent players from requesting a play event from the server in CCM_fnc_requestTrackToPlay
