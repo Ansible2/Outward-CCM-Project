@@ -88,6 +88,7 @@ namespace creativeCommonsMusicProject
             /// if the bool is false, THEN RPC a play music on that player per a request
 
             bool _sceneActive = true;
+            bool _isStartOfRoutine = true;
             while (_sceneActive)
             {
                 var _track = _fn_decideNewTrackForScene(_trackType, _sceneName);
@@ -99,16 +100,20 @@ namespace creativeCommonsMusicProject
                 if (CCM_syncOnline)
                 {
                     CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is true, RPCing CCM_event_playMusic_RPC to all players");
+                    
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
-                        new object[] { _sceneTrackFilename, _track.FolderType,_sceneName, true }
+                        new object[] { _sceneTrackFilename, _track.FolderType, _sceneName, _isStartOfRoutine, _trackType}
                     );
+
+                    // the start of a routine can be considered direct play
+                    if (_isStartOfRoutine) { _isStartOfRoutine = false; }
                 } 
                 else
                 {
                     CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Sync Online is false, directly going to CCM_fnc_playMusic");
-                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, _track.FolderType, true);
+                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, _track.FolderType);
                 }
 
 

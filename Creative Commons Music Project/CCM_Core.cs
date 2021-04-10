@@ -176,6 +176,8 @@ namespace creativeCommonsMusicProject
 
         internal static bool CCM_syncOnline;
 
+        internal static CCM_trackTypes_enum CCM_directRequestType = CCM_trackTypes_enum.EMPTY;
+
         internal static float CCM_musicVolume;
 
         internal static bool CCM_loadingAudio = false;

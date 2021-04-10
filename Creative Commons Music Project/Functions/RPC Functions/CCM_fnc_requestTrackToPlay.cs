@@ -35,6 +35,9 @@ namespace creativeCommonsMusicProject
             if (CCM_core.CCM_syncOnline)
             {
                 CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Sync Online is true. RPCing CCM_fnc_requestTrackToPlay.");
+
+                CCM_core.CCM_directRequestType = _trackType;
+
                 CCM_photonView.RPC(
                     "CCM_fnc_requestTrackToPlay",
                     PhotonTargets.MasterClient,
@@ -105,7 +108,7 @@ namespace creativeCommonsMusicProject
                 CCM_photonView.RPC(
                     "CCM_event_playMusic_RPC",
                     PhotonPlayer.Find(_playerId),
-                    new object[] { _sceneTrackFileName, _track.FolderType, _playersScene, true }
+                    new object[] { _sceneTrackFileName, _track.FolderType, _playersScene, true, _trackType }
                 );
             } 
             else
