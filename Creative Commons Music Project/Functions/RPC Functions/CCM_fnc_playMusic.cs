@@ -29,6 +29,9 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_rpc
     {
+        /* ----------------------------------------------------------------------------
+            CCM_fnc_playMusic
+        ---------------------------------------------------------------------------- */
         internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: was called for file " + _filename);
@@ -40,124 +43,37 @@ namespace creativeCommonsMusicProject
                     _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
                 } 
 
+
                 if (_musicIsPlaying)
                 {
                     CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
-                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);
-                    CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType));
-                } 
-                else
-                {
-                    CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType));
+                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);              
                 }
+
+                CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType));
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: Could not find an entry in CCM_dictionary_audioClipFromString for file: " + _filename);
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: ERROR Could not find an entry in CCM_Dictionaries.trackLengthFromString for file: " + _filename);
             }
 
         }
 
 
-        // While _trackType uses the same enum, it is not the same as the _folderType
-        // _trackType is specifically the KIND of track that was requested(e.g. for a townDay or ambientNight)
+        /* ----------------------------------------------------------------------------
+            CCM_event_playMusic_RPC
+        ---------------------------------------------------------------------------- */
         [PunRPC]
-        internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType, string _sceneFor, bool _isDirect, CCM_core.CCM_trackTypes_enum _trackType)
+        internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: was called...");
+
             if (CCM_core.CCM_syncOnline)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Sync Online is on, checking if scene needs music played...");
-                if (CCM_core.CCM_currentScene.name == _sceneFor)
-                {
-                    var _timeSinceLastGoodEvent = Time.unscaledTime - CCM_core.CCM_timeOfLastMusicEvent;
-                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Time since last good event: " + _timeSinceLastGoodEvent);
-                    if (_timeSinceLastGoodEvent < 5)
-                    {
-                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered withing 5 seconds of the previous one...");
-                        bool _sameTrackLoaded = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.clip.name == _filename;
-                        bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
+                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
 
-                        if (_sameTrackLoaded && _musicIsPlaying)
-                        {
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is already playing, will not update.");
-                        }
-                        else
-                        {
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is NOT already playing, will update...");
-                            CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
-                            CCM_fnc_playMusic(_filename, _folderType);
-                        }
-                    }
-                    else
-                    {
-                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered more then 5 seconds after the last one...");
-                        CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
-                        CCM_fnc_playMusic(_filename, _folderType);
-                    }
+                CCM_fnc_playMusic(_filename, _folderType);
 
-                    /*
-                    // in instances like sleeping when the time of day transitions, clients can both request a track directly from the masterClient
-                    // and can also be given the track based upon a new routine starting in CCM_spawn_startMusicRoutine: _fn_beginRoutine
-                    // this is to keep the same track from attempting to play twice
-                    bool _directRequestWasSent = CCM_core.CCM_directRequestType != CCM_core.CCM_trackTypes_enum.EMPTY;
-                    if (_directRequestWasSent)
-                    {
-                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found a direct request was made by player for type: " + CCM_core.CCM_directRequestType);
-                        bool _directIsSameType = CCM_core.CCM_directRequestType == _trackType;
-                        if (_isDirect && _directIsSameType)
-                        {
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Event is direct and is same type, playing music...");
-                            CCM_core.CCM_directRequestType = CCM_core.CCM_trackTypes_enum.EMPTY;
-
-                            var _timeSinceLastGoodEvent = Time.unscaledTime - CCM_core.CCM_timeOfLastMusicEvent;
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Time since last good event: " + _timeSinceLastGoodEvent);
-                            if (_timeSinceLastGoodEvent < 5)
-                            {
-                                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered withing 5 seconds of the previous one...");
-                                bool _sameTrackLoaded = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.clip.name == _filename;
-                                bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
-                                
-                                if (_sameTrackLoaded && _musicIsPlaying)
-                                {
-                                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is already playing, will not update.");
-                                }
-                                else
-                                {
-                                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is NOT already playing, will update...");
-                                    CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
-                                    CCM_fnc_playMusic(_filename, _folderType);
-                                }
-                            }
-                            else
-                            {
-                                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered more then 5 seconds after the last one...");
-                                CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
-                                CCM_fnc_playMusic(_filename, _folderType);
-                            }
-                            
-
-                        }
-                        else
-                        {
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: _isDirect? " + _isDirect + " : _directIsSameType? " + _directIsSameType);
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: _directRequestType = " + CCM_core.CCM_directRequestType + " : _trackType = " + _trackType);
-                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Event is NOT direct or is NOT proper type, will not play music");
-                        }
-                        
-                    }
-                    else
-                    {
-                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found no direct request was made by player... _isDirect? " + _isDirect);
-                        CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
-                        CCM_fnc_playMusic(_filename, _folderType);
-                    }
-                    */
-                }
-                else
-                {
-                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Will not play music file: " + _filename + ". _isDirect is: " + _isDirect + " and scene for is: " + _sceneFor + " while current scene is: " + CCM_core.CCM_currentScene.name);
-                }
             } 
             else
             {
@@ -165,6 +81,10 @@ namespace creativeCommonsMusicProject
             }
         }
 
+
+        /* ----------------------------------------------------------------------------
+            _fn_createAndPlayClip
+        ---------------------------------------------------------------------------- */
         private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_loadingAudio = true;

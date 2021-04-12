@@ -1,17 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Collections;
+﻿
 using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using ExitGames;
 using HarmonyLib;
+/*
+using System;
+using System.Linq;
+using System.Collections;
+using ExitGames;
 using UnityEngine.Networking;
 using Photon;
 using Photon.Realtime;
+*/
 
 
 namespace creativeCommonsMusicProject
@@ -53,8 +56,6 @@ namespace creativeCommonsMusicProject
             internal static List<CCM_track> unused_townDayTracks = new List<CCM_track>();
             internal static List<CCM_track> unused_townNightTracks = new List<CCM_track>();
             internal static List<CCM_track> unused_dungeonTracks = new List<CCM_track>();
-
-            internal static List<string> scenesChoosingMusicFor = new List<string>();
         }
 
 
@@ -63,21 +64,6 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal static class CCM_Dictionaries
         {
-            // used to keep track of each player's' current scene. dictionary is global and synced between all players
-            // this is so that if a player is first in the scene, they will define what the track is to everyone else who enters the scene after
-            // int is playerID, string is scene name
-            internal static Dictionary<int, string> activePlayerScenes = new Dictionary<int, string>();
-
-            // used to keep track of each active scenes music track
-            // layout is scene/track
-            internal static Dictionary<string, CCM_track> activeScenesCurrentTrack = new Dictionary<string, CCM_track>();
-
-            // Music Routine objects
-            internal static Dictionary<string, Coroutine> sceneRoutines = new Dictionary<string, Coroutine>();
-
-            // keeps track of the currently playing music type for each scene that is active
-            internal static Dictionary<string, CCM_trackTypes_enum> activeScenesTrackType = new Dictionary<string, CCM_trackTypes_enum>();
-
             internal static Dictionary<CCM_trackTypes_enum, List<int>> trackSpacingFromType = new Dictionary<CCM_trackTypes_enum, List<int>>();
 
             internal static Dictionary<string, int> trackLengthFromString = new Dictionary<string, int>();
@@ -175,9 +161,6 @@ namespace creativeCommonsMusicProject
         internal static float CCM_musicVolume;
 
         internal static bool CCM_loadingAudio = false;
-
-        internal static float CCM_timeOfLastMusicEvent = 0;
-
 
 
         internal static Coroutine CCM_currentRoutine;

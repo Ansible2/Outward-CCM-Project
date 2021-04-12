@@ -23,17 +23,12 @@ Author(s):
 ---------------------------------------------------------------------------- */
 using UnityEngine;
 using HarmonyLib;
-using System.Collections;
-
 
 
 namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        // This is used to keep track of when the server sends back an RPC of what track to play
-        internal static string CCM_trackToPlay = "";
-
         [HarmonyPatch(typeof(GlobalAudioManager), "PlayMusic")]
         class CCM_playMusicPatch
         {
@@ -71,18 +66,18 @@ namespace creativeCommonsMusicProject
 
                 if (PhotonNetwork.isMasterClient)
                 {
-                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine IS Master Client");
+                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine IS Master Client. Starting routine for track type " + _trackType);
                     // start new routine
                     CCM_spawn_startMusicRoutine(_trackType);
                 }
                 else
                 {
-                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine is NOT Master Client");
+                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine is NOT Master Client. Will nothing will be done...");
                 }
             }
             else
             {
-                CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: CCM_syncOnline is OFF");
+                CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: CCM_syncOnline is OFF. Starting routine for track type " + _trackType);
                 // start new routine
                 CCM_spawn_startMusicRoutine(_trackType);
             }

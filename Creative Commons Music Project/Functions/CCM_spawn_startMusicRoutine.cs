@@ -7,7 +7,7 @@ Description:
     It will handle when music is supposed to played at random times.
 
 Parameters:
-    0: _trackType <int> - The corresponding track type as in the CCM_trackTypes_enum
+    0: _trackType <CCM_trackTypes_enum> - The corresponding track type as in the CCM_trackTypes_enum
 
 Returns:
 	NOTHING
@@ -69,13 +69,12 @@ namespace creativeCommonsMusicProject
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: was called for scene");
 
             bool _sceneActive = true;
-            bool _isStartOfRoutine = true;
             while (_sceneActive)
             {
                 var _track = _fn_decideNewTrackForScene(_trackType);
                 string _sceneTrackFilename = _track.Filename;
 
-                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: _sceneTrackFilename: " + _sceneTrackFilename);
+                CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: New track has been selected for current scene: " + _sceneTrackFilename);
                 
                 if (CCM_syncOnline)
                 {
@@ -84,16 +83,13 @@ namespace creativeCommonsMusicProject
                     CCM_rpc.CCM_photonView.RPC(
                         "CCM_event_playMusic_RPC",
                         PhotonTargets.All,
-                        new object[] { _sceneTrackFilename, _track.FolderType, _isStartOfRoutine, _trackType}
+                        new object[] { _sceneTrackFilename, _track.FolderType}
                     );
-
-                    // the start of a routine can be considered direct play
-                    if (_isStartOfRoutine) { _isStartOfRoutine = false; }
                 } 
                 else
                 {
-                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Sync Online is false, directly going to CCM_fnc_playMusic");
-                    CCM_rpc.CCM_fnc_playMusic(_track.FolderType);
+                    CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Sync Online is OFF, directly executing CCM_fnc_playMusic on local machine");
+                    CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, _track.FolderType);
                 }
 
 
@@ -101,26 +97,20 @@ namespace creativeCommonsMusicProject
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
                 CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: sleep time will be: " + _sleepTime);
                 CCM_fnc_logWithTime("_tracklength int: " + _trackLength);
+
+
                 int _sleptTime = 0;
 
                 while (_sleptTime < _sleepTime)
                 {
                     if (CCM_currentScene.name == _sceneName)
                     {
-                        /*
-                        // if music can't play in the background and the game becomes paused, music will continue to pile up
-                        if (GlobalAudioManager.MuteInBackground && Global.GamePaused)
-                        {
-                            yield return new WaitUntil(() => !Global.GamePaused);
-                        }
-                        */
                         yield return new WaitForSecondsRealtime(1);
-                        //CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Waiting for scene: " + _sceneName);
                         _sleptTime = _sleptTime + 1;
                     }
                     else
                     {
-                        CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Routine for scene: " + _sceneName + " is no longer considered active.");
+                        CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Routine for scene: " + _sceneName + " is no longer the CCM_currentScene. Exiting loop...");
                         _sleptTime = _sleepTime;
                         _sceneActive = false;
                         break;

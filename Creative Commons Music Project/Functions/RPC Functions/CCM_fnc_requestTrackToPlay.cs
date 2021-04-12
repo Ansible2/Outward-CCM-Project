@@ -30,24 +30,24 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay_RPC
         ---------------------------------------------------------------------------- */
-        internal static void CCM_fnc_requestTrackToPlay_RPC(CCM_core.CCM_trackTypes_enum _trackType, int _playerId, string _playersScene)
+        internal static void CCM_fnc_requestTrackToPlay_RPC(int _playerId)
         {
+            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Was called...");
+
             if (CCM_core.CCM_syncOnline)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Sync Online is true. RPCing CCM_fnc_requestTrackToPlay.");
-
-                CCM_core.CCM_directRequestType = _trackType;
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is ON. RPCing CCM_fnc_requestTrackToPlay to Master Client");
 
                 CCM_photonView.RPC(
                     "CCM_fnc_requestTrackToPlay",
                     PhotonTargets.MasterClient,
-                    new object[] { _trackType, _playerId, _playersScene }
+                    new object[] {_playerId}
                 );
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Sync Online is false. Directly execing CCM_fnc_requestTrackToPlay.");
-                CCM_rpcComponent.CCM_fnc_requestTrackToPlay(_trackType, _playerId, _playersScene);
+                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is OFF. Directly execing CCM_fnc_requestTrackToPlay.");
+                CCM_rpcComponent.CCM_fnc_requestTrackToPlay(_playerId);
             }  
         }
 
@@ -56,66 +56,16 @@ namespace creativeCommonsMusicProject
             CCM_fnc_requestTrackToPlay
         ---------------------------------------------------------------------------- */
         [PunRPC]
-        internal void CCM_fnc_requestTrackToPlay(CCM_core.CCM_trackTypes_enum _trackType, int _playerId, string _playersScene)
+        internal void CCM_fnc_requestTrackToPlay(int _playerId)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: was called...");
-            bool _startNewRoutine = false;
-            bool _rpcDirectToPlayer = false;
+            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Was called...");
 
-            // Check if track type changed
-            if (CCM_core.CCM_Dictionaries.activeScenesTrackType.ContainsKey(_playersScene))
-            {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was found in active scenes dictionary");
-                if (CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] != _trackType)
-                {
-                    // start a new routine for track type changes
-                    CCM_core.CCM_Dictionaries.activeScenesTrackType[_playersScene] = _trackType;
-                    _startNewRoutine = true;
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: track type was changed for " + _playersScene + "... starting new routine.");
-                }
-                else
-                {
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " does not need a new routine started.");
-                }
-            }
-            else
-            {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Scene: " + _playersScene + " was not found in active scenes dictionary... Starting new Routine.");
-                // if scene was not active we need to start a new routine
-                CCM_core.CCM_Dictionaries.activeScenesTrackType.Add(_playersScene, _trackType);
-                _startNewRoutine = true;
-            }
+            CCM_photonView.RPC(
+                "CCM_event_playMusic_RPC",
+                PhotonPlayer.Find(_playerId),
+                new object[] { CCM_core.CCM_currentTrack.Filename, CCM_core.CCM_currentTrack.FolderType}
+            );
 
-            // this still needs to be able to return tracks that are already in active scenes for other players
-            bool _sceneHasCurrentMusic = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack.ContainsKey(_playersScene);
-            bool _sceneMusicIsBeingChosen = CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene);
-            if (_startNewRoutine)
-            {
-                CCM_core.CCM_spawn_startMusicRoutine(_playersScene, _trackType);
-            }
-            else if (_sceneHasCurrentMusic && !_startNewRoutine && !_sceneMusicIsBeingChosen)
-            {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Player ID " + _playerId + " met standards for RPC direct");
-                _rpcDirectToPlayer = true;
-            }
-
-
-
-            if (_rpcDirectToPlayer)
-            {
-                CCM_core.CCM_track _track = CCM_core.CCM_Dictionaries.activeScenesCurrentTrack[_playersScene];
-                string _sceneTrackFileName = _track.Filename;
-                CCM_photonView.RPC(
-                    "CCM_event_playMusic_RPC",
-                    PhotonPlayer.Find(_playerId),
-                    new object[] { _sceneTrackFileName, _track.FolderType, _playersScene, true, _trackType }
-                );
-            } 
-            else
-            {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Player ID " + _playerId + " did not meet standards for RPC direct");
-            }
-                
         }
     }
 }

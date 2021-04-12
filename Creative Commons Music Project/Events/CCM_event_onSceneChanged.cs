@@ -30,19 +30,34 @@ namespace creativeCommonsMusicProject
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
-
-            // sometimes this event can be called twice in a row, in order to avoid a double call of follow on functions, this is here
-            bool _isMasterClient = PhotonNetwork.isMasterClient;
+           
             //bool _sceneIsRealAndIsCurrent = CCM_currentScene != _goingToScene && CCM_fnc_isSceneReal(_goingToScene);
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
                 CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is real");
                 CCM_currentScene = _goingToScene;
 
+                bool _isMasterClient = PhotonNetwork.isMasterClient;
                 bool _isNewScene = CCM_currentScene != _goingToScene;
                 bool _routineIsRunning = CCM_currentRoutine != null;
                 
+                if (!_isMasterClient)
+                {
+                    CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Player is NOT Master Client");
+                    
+                    if (CCM_syncOnline)
+                    {
+                        CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: CCM_syncOnline is ON");
 
+                        if (_routineIsRunning)
+                        {
+                            CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Client has a routine running. Stopping routine and requesting track directly from Master Client...");
+                            CCM_fnc_stopMusicRoutine();
+                            CCM_rpc.CCM_rpcComponent.CCM_fnc_requestTrackToPlay(PhotonNetwork.player.ID);
+                        }
+                    }
+
+                }
 
 
 
@@ -149,7 +164,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is not real.");
+                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is NOT real.");
             }
 
 
