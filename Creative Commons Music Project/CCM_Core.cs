@@ -184,6 +184,8 @@ namespace creativeCommonsMusicProject
 
         internal static float CCM_timeOfLastMusicEvent = 0;
 
+        internal static Coroutine CCM_currentRoutine;
+
 
         /* ------------------------------------------------------------------------
             Music Handlers
