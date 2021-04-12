@@ -98,7 +98,7 @@ namespace creativeCommonsMusicProject
 
                     /*
                     // in instances like sleeping when the time of day transitions, clients can both request a track directly from the masterClient
-                    // and can also be given the track based upon a new routine starting in CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine
+                    // and can also be given the track based upon a new routine starting in CCM_spawn_startMusicRoutine: _fn_beginRoutine
                     // this is to keep the same track from attempting to play twice
                     bool _directRequestWasSent = CCM_core.CCM_directRequestType != CCM_core.CCM_trackTypes_enum.EMPTY;
                     if (_directRequestWasSent)

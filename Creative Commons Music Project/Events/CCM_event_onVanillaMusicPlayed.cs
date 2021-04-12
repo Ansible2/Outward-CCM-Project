@@ -49,7 +49,7 @@ namespace creativeCommonsMusicProject
                     CCM_currentTrackType = _trackType;
                     CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
 
-                    _fn_requestTrackFromMaster(_trackType);
+                    _fn_requestTrack(_trackType);
                 }
 
                 if (!CCM_MusicHandlers.handlersInstantiated)
@@ -61,11 +61,31 @@ namespace creativeCommonsMusicProject
         }
 
 
-        private static void _fn_requestTrackFromMaster(CCM_trackTypes_enum _trackType)
+        private static void _fn_requestTrack(CCM_trackTypes_enum _trackType)
         {
-            CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrackFromMaster: was called...");
+            CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");
 
-            CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
+            if (CCM_syncOnline)
+            {
+                CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: CCM_syncOnline is ON");
+
+                if (PhotonNetwork.isMasterClient)
+                {
+                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine IS Master Client");
+                    // start new routine
+                    CCM_spawn_startMusicRoutine(_trackType);
+                }
+                else
+                {
+                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine is NOT Master Client");
+                }
+            }
+            else
+            {
+                CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: CCM_syncOnline is OFF");
+                // start new routine
+                CCM_spawn_startMusicRoutine(_trackType);
+            }
         }
     }
 }

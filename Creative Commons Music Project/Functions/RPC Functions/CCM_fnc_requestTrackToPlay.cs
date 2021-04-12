@@ -91,7 +91,7 @@ namespace creativeCommonsMusicProject
             bool _sceneMusicIsBeingChosen = CCM_core.CCM_Lists.scenesChoosingMusicFor.Contains(_playersScene);
             if (_startNewRoutine)
             {
-                CCM_core.CCM_spawn_startMusicRoutineForScene(_playersScene, _trackType);
+                CCM_core.CCM_spawn_startMusicRoutine(_playersScene, _trackType);
             }
             else if (_sceneHasCurrentMusic && !_startNewRoutine && !_sceneMusicIsBeingChosen)
             {

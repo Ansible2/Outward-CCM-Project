@@ -78,9 +78,6 @@ namespace creativeCommonsMusicProject
             // keeps track of the currently playing music type for each scene that is active
             internal static Dictionary<string, CCM_trackTypes_enum> activeScenesTrackType = new Dictionary<string, CCM_trackTypes_enum>();
 
-            // This is used locally for each machine to take a given filename and get back the audioClip of the file
-            //internal static Dictionary<string, AudioClip> audioClipFromString = new Dictionary<string, AudioClip>();
-
             internal static Dictionary<CCM_trackTypes_enum, List<int>> trackSpacingFromType = new Dictionary<CCM_trackTypes_enum, List<int>>();
 
             internal static Dictionary<string, int> trackLengthFromString = new Dictionary<string, int>();
@@ -140,9 +137,6 @@ namespace creativeCommonsMusicProject
             internal const string FILE_PREFIX = "file://";
         }
 
-        // used for naming scheme on music-routine objects
-        internal static readonly string CCM_musicRoutinePostfixString = "-MusicRoutineObject";
-
 
         /* ------------------------------------------------------------------------
             Misc
@@ -184,8 +178,13 @@ namespace creativeCommonsMusicProject
 
         internal static float CCM_timeOfLastMusicEvent = 0;
 
+
+
         internal static Coroutine CCM_currentRoutine;
 
+        internal static CCM_track CCM_currentTrack;
+
+        internal static bool CCM_choosingTrackForScene;
 
         /* ------------------------------------------------------------------------
             Music Handlers

@@ -33,7 +33,7 @@ namespace creativeCommonsMusicProject
 
             // sometimes this event can be called twice in a row, in order to avoid a double call of follow on functions, this is here
             bool _isMasterClient = PhotonNetwork.isMasterClient;
-            bool _sceneIsRealAndIsCurrent = CCM_currentScene != _goingToScene && CCM_fnc_isSceneReal(_goingToScene);
+            //bool _sceneIsRealAndIsCurrent = CCM_currentScene != _goingToScene && CCM_fnc_isSceneReal(_goingToScene);
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
                 CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is real");
@@ -44,6 +44,17 @@ namespace creativeCommonsMusicProject
                 
 
 
+
+
+
+
+
+
+
+
+
+
+            /*
                 // if a player is joining a new multiplayer room, this will end all routines from their other session
                 if (_isMasterClient)
                 {
@@ -52,7 +63,7 @@ namespace creativeCommonsMusicProject
                     if (_isNewScene)
                     {
                         CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: _goingToScene IS new scene");
-                        CCM_currentScene = _goingToScene;
+                        //CCM_currentScene = _goingToScene;
 
                         if (_routineIsRunning)
                         {
@@ -100,7 +111,7 @@ namespace creativeCommonsMusicProject
                         {
                             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: _goingToScene IS new scene");
 
-                            CCM_currentScene = _goingToScene;
+                            //CCM_currentScene = _goingToScene;
                             if (_routineIsRunning)
                             {
                                 CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: CCM_currentRoutine is NOT null. Stopping...");
@@ -128,9 +139,8 @@ namespace creativeCommonsMusicProject
                             }
                         }
                     }
-
                 }
-
+            */
             }
             else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
             {
@@ -150,11 +160,7 @@ namespace creativeCommonsMusicProject
 
 
 
-
-
-
-
-
+        /*
             CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
             
             // sometimes this event can be called twice in a row, in order to avoid a double call of follow on functions, this is here
@@ -189,7 +195,7 @@ namespace creativeCommonsMusicProject
                     CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
                 }
             }
-            
+         */   
         }
     }
 }
