@@ -127,6 +127,13 @@ namespace creativeCommonsMusicProject
                 {
                     if (CCM_Dictionaries.activePlayerScenes.ContainsValue(_sceneName))
                     {
+                        /*
+                        // if music can't play in the background and the game becomes paused, music will continue to pile up
+                        if (GlobalAudioManager.MuteInBackground && Global.GamePaused)
+                        {
+                            yield return new WaitUntil(() => !Global.GamePaused);
+                        }
+                        */
                         yield return new WaitForSecondsRealtime(1);
                         //CCM_fnc_logWithTime("CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine: Waiting for scene: " + _sceneName);
                         _sleptTime = _sleptTime + 1;

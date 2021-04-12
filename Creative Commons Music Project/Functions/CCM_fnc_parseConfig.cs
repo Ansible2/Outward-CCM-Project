@@ -326,7 +326,7 @@ namespace creativeCommonsMusicProject
 
                 while (!_request.isDone)
                 {
-                    yield return new WaitForSeconds(0.01f);
+                    yield return new WaitForSecondsRealtime(0.01f);
                 }
 
                 CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request is done for " + _filename);

@@ -70,6 +70,33 @@ namespace creativeCommonsMusicProject
                 CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Sync Online is on, checking if scene needs music played...");
                 if (CCM_core.CCM_currentScene.name == _sceneFor)
                 {
+                    var _timeSinceLastGoodEvent = Time.unscaledTime - CCM_core.CCM_timeOfLastMusicEvent;
+                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Time since last good event: " + _timeSinceLastGoodEvent);
+                    if (_timeSinceLastGoodEvent < 5)
+                    {
+                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered withing 5 seconds of the previous one...");
+                        bool _sameTrackLoaded = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.clip.name == _filename;
+                        bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
+
+                        if (_sameTrackLoaded && _musicIsPlaying)
+                        {
+                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is already playing, will not update.");
+                        }
+                        else
+                        {
+                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is NOT already playing, will update...");
+                            CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
+                            CCM_fnc_playMusic(_filename, _folderType);
+                        }
+                    }
+                    else
+                    {
+                        CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered more then 5 seconds after the last one...");
+                        CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
+                        CCM_fnc_playMusic(_filename, _folderType);
+                    }
+
+                    /*
                     // in instances like sleeping when the time of day transitions, clients can both request a track directly from the masterClient
                     // and can also be given the track based upon a new routine starting in CCM_spawn_startMusicRoutineForScene: _fn_beginRoutine
                     // this is to keep the same track from attempting to play twice
@@ -82,7 +109,34 @@ namespace creativeCommonsMusicProject
                         {
                             CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Event is direct and is same type, playing music...");
                             CCM_core.CCM_directRequestType = CCM_core.CCM_trackTypes_enum.EMPTY;
-                            CCM_fnc_playMusic(_filename, _folderType);
+
+                            var _timeSinceLastGoodEvent = Time.unscaledTime - CCM_core.CCM_timeOfLastMusicEvent;
+                            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Time since last good event: " + _timeSinceLastGoodEvent);
+                            if (_timeSinceLastGoodEvent < 5)
+                            {
+                                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered withing 5 seconds of the previous one...");
+                                bool _sameTrackLoaded = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.clip.name == _filename;
+                                bool _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
+                                
+                                if (_sameTrackLoaded && _musicIsPlaying)
+                                {
+                                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is already playing, will not update.");
+                                }
+                                else
+                                {
+                                    CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that the same music is NOT already playing, will update...");
+                                    CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
+                                    CCM_fnc_playMusic(_filename, _folderType);
+                                }
+                            }
+                            else
+                            {
+                                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found that event was successfully triggered more then 5 seconds after the last one...");
+                                CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
+                                CCM_fnc_playMusic(_filename, _folderType);
+                            }
+                            
+
                         }
                         else
                         {
@@ -95,8 +149,10 @@ namespace creativeCommonsMusicProject
                     else
                     {
                         CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Found no direct request was made by player... _isDirect? " + _isDirect);
+                        CCM_core.CCM_timeOfLastMusicEvent = Time.unscaledTime;
                         CCM_fnc_playMusic(_filename, _folderType);
                     }
+                    */
                 }
                 else
                 {
@@ -127,7 +183,7 @@ namespace creativeCommonsMusicProject
 
                 while (!_request.isDone)
                 {
-                    yield return new WaitForSeconds(0.1f);
+                    yield return new WaitForSecondsRealtime(0.1f);
                 }
 
 

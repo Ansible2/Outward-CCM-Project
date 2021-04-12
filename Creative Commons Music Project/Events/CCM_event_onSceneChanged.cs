@@ -37,6 +37,8 @@ namespace creativeCommonsMusicProject
                 // if a player is joining a new multiplayer room, this will end all routines from their other session
                 if (!PhotonNetwork.isMasterClient && CCM_syncOnline)
                 {
+                    CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Player is no longer master client. Stopping active routines...");
+                    
                     foreach (var _x in CCM_Dictionaries.sceneRoutines)
                     {
                         CCM_fnc_stopMusicRoutine(_x.Key);

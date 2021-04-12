@@ -56,7 +56,7 @@ namespace creativeCommonsMusicProject
             while (_fn_isAudioSourceFading(_audioSource))
             {
                 CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSecondsRealtime(0.5f);
             }
 
             CCM_fnc_setFadeIsFading(_audioSource, true);
@@ -68,7 +68,8 @@ namespace creativeCommonsMusicProject
 
             while (currentTime < _duration || _fn_shouldFadeStop(_audioSource))
             {
-                currentTime += Time.deltaTime;
+                //currentTime += Time.deltaTime;
+                currentTime += Time.unscaledDeltaTime;
                 _audioSource.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
                 yield return null;
             }

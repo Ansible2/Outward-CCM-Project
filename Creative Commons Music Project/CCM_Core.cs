@@ -182,6 +182,8 @@ namespace creativeCommonsMusicProject
 
         internal static bool CCM_loadingAudio = false;
 
+        internal static float CCM_timeOfLastMusicEvent = 0;
+
 
         /* ------------------------------------------------------------------------
             Music Handlers
