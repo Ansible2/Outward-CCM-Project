@@ -49,24 +49,38 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
-            CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Fading " + _audioSource + " to " + _targetVolume);
+            CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Was called to fade " + _audioSource + " to " + _targetVolume);
             float currentTime = 0;
             float _startingVolume = _audioSource.volume;
             // wait until audiosource is done with fade
-            while (_fn_isAudioSourceFading(_audioSource))
+            if (_fn_isAudioSourceFading(_audioSource))
             {
-                CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
-                yield return new WaitForSecondsRealtime(0.5f);
+                CCM_fnc_setFadeStop(_audioSource, true);
+
+                int _waitCycle = 0;
+                while (_fn_isAudioSourceFading(_audioSource))
+                {
+
+                    _waitCycle = _waitCycle + 1;
+                    if (_waitCycle % 100 == 0)
+                    {
+                        CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
+                    }
+                    yield return new WaitForSecondsRealtime(0.01f);
+                }
+            }
+            else
+            {
+                CCM_fnc_setFadeIsFading(_audioSource, true);
             }
 
-            CCM_fnc_setFadeIsFading(_audioSource, true);
             CCM_fnc_setFadeStop(_audioSource, false);
             
 
             CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Now fading audioSource: " + _audioSource);         
 
 
-            while (currentTime < _duration || _fn_shouldFadeStop(_audioSource))
+            while (currentTime < _duration && (_audioSource.volume != _targetVolume) && (!_fn_shouldFadeStop(_audioSource)))
             {
                 //currentTime += Time.deltaTime;
                 currentTime += Time.unscaledDeltaTime;
@@ -92,7 +106,9 @@ namespace creativeCommonsMusicProject
 
 
             CCM_fnc_setFadeIsFading(_audioSource, false);
-            CCM_fnc_setFadeStop(_audioSource, false);
+            //CCM_fnc_setFadeStop(_audioSource, false);
+
+            CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: AudioSource: " + _audioSource.name + " has finished its fade to " + _targetVolume);
 
             yield break;
         }

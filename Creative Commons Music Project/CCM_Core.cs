@@ -128,7 +128,8 @@ namespace creativeCommonsMusicProject
             Misc
         ------------------------------------------------------------------------ */
         // self explanitory
-        internal static Scene CCM_currentScene;
+        //internal static Scene CCM_currentScene;
+        internal static string CCM_currentSceneName;
 
         internal enum CCM_trackTypes_enum
         {
@@ -221,7 +222,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         internal static void CCM_fnc_logWithTime(object myMessage)
         {
-            CCM_core.CCM_logSource.Log(LogLevel.Message, Time.time + "--: " + myMessage);
+            CCM_core.CCM_logSource.Log(LogLevel.Message, System.DateTime.UtcNow + "--: " + myMessage);
         }
 
 

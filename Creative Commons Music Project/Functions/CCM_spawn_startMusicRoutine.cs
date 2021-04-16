@@ -33,7 +33,7 @@ namespace creativeCommonsMusicProject
         ---------------------------------------------------------------------------- */
         internal static void CCM_spawn_startMusicRoutine(CCM_trackTypes_enum _trackType)
         {
-            string _sceneName = CCM_currentScene.name;
+            string _sceneName = CCM_currentSceneName;
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: was called for scene " + _sceneName + " with track type: " + _trackType);
             
             CCM_fnc_stopMusicRoutine();
@@ -103,7 +103,7 @@ namespace creativeCommonsMusicProject
 
                 while (_sleptTime < _sleepTime)
                 {
-                    if (CCM_currentScene.name == _sceneName)
+                    if (CCM_currentSceneName == _sceneName)
                     {
                         yield return new WaitForSecondsRealtime(1);
                         _sleptTime = _sleptTime + 1;

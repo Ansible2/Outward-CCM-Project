@@ -35,10 +35,10 @@ namespace creativeCommonsMusicProject
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
                 CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is real");
-                CCM_currentScene = _goingToScene;
+                CCM_currentSceneName = _goingToScene.name.ToLower();
 
                 bool _isMasterClient = PhotonNetwork.isMasterClient;
-                bool _isNewScene = CCM_currentScene != _goingToScene;
+                //bool _isNewScene = CCM_currentSceneName != _goingToScene.name.ToLower();
                 bool _routineIsRunning = CCM_currentRoutine != null;
                 
                 if (!_isMasterClient)
