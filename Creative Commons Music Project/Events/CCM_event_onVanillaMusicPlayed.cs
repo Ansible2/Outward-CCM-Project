@@ -35,23 +35,28 @@ namespace creativeCommonsMusicProject
             [HarmonyPostfix]
             static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
             {
-                CCM_trackTypes_enum _trackType = CCM_fnc_getTrackType(__result.clip.name);
-
-                if (_trackType != CCM_trackTypes_enum.EMPTY)
+                // BGM_EventQuest is not categorized and therefore should be ignored
+                if (!__result.clip.name.ToLower().Contains("eventquest"))
                 {
-                    __result.mute = true;
+                    CCM_trackTypes_enum _trackType = CCM_fnc_getTrackType(__result.clip.name);
 
-                    CCM_currentTrackType = _trackType;
-                    CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
+                    if (_trackType != CCM_trackTypes_enum.EMPTY)
+                    {
+                        __result.mute = true;
 
-                    _fn_requestTrack(_trackType);
+                        CCM_currentTrackType = _trackType;
+                        CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
+
+                        _fn_requestTrack(_trackType);
+                    }
+
+                    if (!CCM_MusicHandlers.handlersInstantiated)
+                    {
+
+                        CCM_fnc_assignMusicHandlerProperties(__result.gameObject);
+                    }
                 }
-
-                if (!CCM_MusicHandlers.handlersInstantiated)
-                {
-                   
-                    CCM_fnc_assignMusicHandlerProperties(__result.gameObject);
-                }
+                
             }
         }
 
