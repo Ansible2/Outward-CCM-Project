@@ -34,8 +34,6 @@
   <ItemGroup>
     <Compile Include="Events\CCM_event_onSceneChanged.cs" />
     <Compile Include="Events\CCM_event_onVanillaMusicPlayed.cs" />
-    <Compile Include="Functions\CCM_fnc_findMusicAtPath.cs" />
-    <Compile Include="Functions\CCM_fnc_getFolderPathFromType.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackTypeFolderPath.cs" />
     <Compile Include="Functions\CCM_fnc_parseConfig.cs" />
     <Compile Include="Functions\CCM_fnc_getAudioTypeFromString.cs" />
@@ -43,12 +41,10 @@
     <Compile Include="Functions\RPC Functions\CCM_fnc_playMusic.cs" />
     <Compile Include="Functions\RPC Functions\CCM_fnc_requestTrackToPlay.cs" />
     <Compile Include="Functions\CCM_fnc_getMusicHandler.cs" />
-    <Compile Include="Functions\CCM_fnc_getTrackList.cs" />
     <Compile Include="Functions\CCM_fnc_isSceneReal.cs" />
     <Compile Include="Functions\CCM_fnc_assignMusicHandlerProperties.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackType.cs" />
     <Compile Include="Functions\CCM_fnc_grabRandomTrack.cs" />
-    <Compile Include="Functions\CCM_fnc_getAllAvailableReplacementTracks.cs" />
     <Compile Include="Functions\CCM_spawn_fadeAudioSource.cs" />
     <Compile Include="CCM_Core.cs" />
     <Compile Include="CCM_Rpc.cs" />

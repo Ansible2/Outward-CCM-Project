@@ -25,6 +25,11 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Uses the extension of a filename as a means of determining its AudioType.
+        /// </summary>
+        /// <param name="_fileName"></param>
+        /// <returns>AudioType</returns>
         internal static AudioType CCM_fnc_getAudioTypeFromString(string _fileName)
         {
             AudioType _audioType = AudioType.UNKNOWN;

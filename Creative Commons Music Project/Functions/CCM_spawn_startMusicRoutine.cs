@@ -31,6 +31,10 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_spawn_startMusicRoutine
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Starts a new music routine for a given CCM_trackTypes_enum
+        /// </summary>
+        /// <param name="_trackType"></param>
         internal static void CCM_spawn_startMusicRoutine(CCM_trackTypes_enum _trackType)
         {
             string _sceneName = CCM_currentSceneName;
@@ -44,6 +48,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_stopMusicRoutine
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Stops the current CCM music routine
+        /// </summary>
         internal static void CCM_fnc_stopMusicRoutine()
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: CCM_fnc_stopMusicRoutine: was called");
@@ -64,6 +71,12 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_beginRoutine
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Runs the music routine loop for a given track type and scene that will continuously queue music for a certain track type
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <param name="_sceneName"></param>
+        /// <returns>IEnumerator</returns>
         private static IEnumerator _fn_beginRoutine(CCM_trackTypes_enum _trackType, string _sceneName)
         {
             CCM_fnc_logWithTime("CCM_spawn_startMusicRoutine: _fn_beginRoutine: was called for scene");
@@ -125,6 +138,11 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_decideTimeBetweenTracks
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Determines the amount of dead time between music tracks given a CCM_trackTypes_enum as configed in the CCM Config.xml
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <returns>int</returns>
         private static int _fn_decideTimeBetweenTracks(CCM_trackTypes_enum _trackType)
         {
             // get min/max values
@@ -135,9 +153,15 @@ namespace creativeCommonsMusicProject
         }
 
 
+
         /* ----------------------------------------------------------------------------
             _fn_decideNewTrackForScene
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Gets a new track for a given CCM_trackTypes_enum
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <returns>CCM_track</returns>
         private static CCM_track _fn_decideNewTrackForScene(CCM_trackTypes_enum _trackType)
         {
             // list the scene as being in the process of choosing a new track to prevent players from requesting a play event from the server in CCM_fnc_requestTrackToPlay

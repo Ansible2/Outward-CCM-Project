@@ -27,6 +27,9 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        ///<summary>
+        /// Takes a template GameObject and (deep) copies its properties to both CCM music handler objects. It also assigns a few key global values.
+        ///</summary>
         internal static void CCM_fnc_assignMusicHandlerProperties(GameObject _objectToCopy)
         {
             if (!CCM_MusicHandlers.handlersInstantiated)

@@ -60,7 +60,9 @@ namespace creativeCommonsMusicProject
             }
         }
 
-
+        ///<summary>
+        /// Requests a new music routine for a given CCM_trackTypes_enum (intiates a new music routine) 
+        ///</summary>
         private static void _fn_requestTrack(CCM_trackTypes_enum _trackType)
         {
             CCM_fnc_logWithTime("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");

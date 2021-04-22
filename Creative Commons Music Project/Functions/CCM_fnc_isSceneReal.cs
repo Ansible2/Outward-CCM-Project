@@ -26,6 +26,11 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Checks if the provided scene is not the "lowmemory" (loading) or main menu scenes
+        /// </summary>
+        /// <param name="_scene"></param>
+        /// <returns>bool</returns>
         internal static bool CCM_fnc_isSceneReal(Scene _scene)
         {
             var _name = _scene.name.ToLower();

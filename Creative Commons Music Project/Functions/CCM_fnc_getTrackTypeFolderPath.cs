@@ -22,6 +22,11 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Returns the full folder path of a given track type.
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <returns>string</returns>
         internal static string CCM_fnc_getTrackTypeFolderPath(int _trackType)
         {
             switch (_trackType)
@@ -78,6 +83,11 @@ namespace creativeCommonsMusicProject
             }
         }
 
+        /// <summary>
+        /// Returns the full folder path of a given track type.
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <returns>string</returns>
         internal static string CCM_fnc_getTrackTypeFolderPath(CCM_trackTypes_enum _trackType)
         {
             switch (_trackType)

@@ -5,16 +5,14 @@ Description:
 	Asks the masterClient for what track should be played for a given scene and type.
 
 Parameters:
-	0: _trackType <CCM_core.CCM_trackTypes_enum> - The type of track requested.
-    1: _playerId <INT> - The player's PhotonNetwork ID.
-    2: _playerScene <STRING> - The scene the Player's requesting music for.
+	0: _playerId <INT> - The Photon ID of the player requesting the track
 
 Returns:
 	NOTHING
 
 Examples:
     (begin example)
-		CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(_trackType, PhotonNetwork.player.ID, CCM_currentScene.name);
+		CCM_rpc.CCM_fnc_requestTrackToPlay_RPC(PhotonNetwork.player.ID);
     (end)
 
 Author(s):
@@ -30,6 +28,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay_RPC
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Remotely calls CCM_fnc_requestTrackToPlay on the Photon Master Client
+        ///</summary>
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _playerId)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Was called...");
@@ -55,6 +56,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_requestTrackToPlay
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Remotely calls CCM_event_playMusic_RPC on a given Photon Player requesting music and gives them the CCM_core.CCM_currentTrack.Filename
+        ///</summary>
         [PunRPC]
         internal void CCM_fnc_requestTrackToPlay(int _playerId)
         {

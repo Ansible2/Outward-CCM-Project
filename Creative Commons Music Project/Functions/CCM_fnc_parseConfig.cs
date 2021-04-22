@@ -37,14 +37,15 @@ namespace creativeCommonsMusicProject
     {
         const string CCM_configFileName = @"CCM Config.xml";
 
-        //static Dictionary<string, CCM_trackTypes_enum> _filesToLoad = new Dictionary<string, CCM_trackTypes_enum>();
-
         static List<CCM_track> _filesToLoad = new List<CCM_track>();
         static List<string> _checkedFiles = new List<string>();
 
         /* ----------------------------------------------------------------------------
             CCM_fnc_parseConfig
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Initiates the configuration of CCM Config.xml Fills all the detail lists and dictionaries about the tracks
+        ///</summary>
         internal static void CCM_fnc_parseConfig()
         {
             string _pathToConfig = Path.Combine(CCM_Paths.mainFolderPath, CCM_configFileName);
@@ -55,7 +56,7 @@ namespace creativeCommonsMusicProject
                 _fn_getFilesFromConfig(_xmlConfigFile);
                 _fn_getFilesFromFolders();
 
-                CCM_Instance.StartCoroutine(_fn_buildAudioClipLibrary());
+                CCM_Instance.StartCoroutine(_fn_getAllFileTrackLengths());
 
 
                 _fn_grabTrackSpacingSettings(_xmlConfigFile);
@@ -69,11 +70,14 @@ namespace creativeCommonsMusicProject
 
 
         /* ----------------------------------------------------------------------------
-            _fn_buildAudioClipLibrary
+            _fn_getAllFileTrackLengths
         ---------------------------------------------------------------------------- */
-        private static IEnumerator _fn_buildAudioClipLibrary()
+        ///<summary>
+        /// Initiates the loading of all track files (temporarily) into memory in order to retrieve their track lengths
+        ///</summary>
+        private static IEnumerator _fn_getAllFileTrackLengths()
         {
-            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Started audio load");
+            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Started audio load");
             
             foreach (var _track in _filesToLoad)
             {
@@ -92,14 +96,16 @@ namespace creativeCommonsMusicProject
             _filesToLoad = null;
             _checkedFiles = null;
 
-            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Completed audio load");
+            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
         }
 
 
         /* ----------------------------------------------------------------------------
             _fn_getFilesFromConfig
         ---------------------------------------------------------------------------- */
-        ///<summary>Does stuff</summary>
+        ///<summary>
+        /// Reads tracks that are configured inside the CCM Config.xml and places them into their corresponding track lists. Similar to _fn_getFilesFromFolders
+        ///</summary>
         private static void _fn_getFilesFromConfig(XDocument _xmlConfigFile)
         {
 
@@ -107,7 +113,7 @@ namespace creativeCommonsMusicProject
 
             if (_list.Count() == 0)
             {
-                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: No tracks were located in config file: " + CCM_configFileName);
+                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getFilesFromConfig: No tracks were located in config file: " + CCM_configFileName);
             }
         
             foreach (var _x in _list)
@@ -120,7 +126,7 @@ namespace creativeCommonsMusicProject
                     // check for duplicates
                     if (_checkedFiles.Contains(_filename))
                     {
-                        CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
+                        CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
                     }
                     else
                     {
@@ -143,13 +149,13 @@ namespace creativeCommonsMusicProject
                         }
                         else
                         {
-                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
+                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
                         }
                     }
                 }
                 else
                 {
-                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_buildAudioClipLibrary: Did not find track file: " + _filename + " within tracks folder!");
+                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find track file: " + _filename + " within tracks folder!");
                 }
             }
 
@@ -159,6 +165,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_getFilesFromFolders
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Reads tracks that are NOT configured inside the CCM Config.xml but are simply in folders and places them into their corresponding track lists. Similar to _fn_getFilesFromConfig
+        ///</summary>
         private static void _fn_getFilesFromFolders()
         {
             // create an array of CCM_trackTypes_enum so we can use foreach for loop through
@@ -310,6 +319,9 @@ namespace creativeCommonsMusicProject
            _fn_getTrackLength    (AudioClips are loaded at the start and stored due to a need to know their duration in order to queue songs for the future. 
                                         I could've used another library for this, but it is the smoothest for development and playback though costly for memory)
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Gets the length of a given CCM_track (which is basically just the track file's details)
+        ///</summary>
         private static IEnumerator _fn_getTrackLength(CCM_track _track)
         {
             var _folderPath = CCM_fnc_getTrackTypeFolderPath(_track.FolderType);
@@ -354,6 +366,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_doesFileExist
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Checks if a given filename is present at a given path
+        ///</summary>
         private static bool _fn_doesFileExist(string _filename, string _folderPath)
         {
             var _pathToFile = Path.Combine(_folderPath, _filename);
@@ -373,6 +388,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_pushBackToTrackList
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Places a given CCM_track into the corresponding unused track lists based upon a given track type string
+        ///</summary>
         // string _trackType overload is used for XML configed tracks
         private static void _fn_pushBackToTrackList(string _trackType, CCM_track _track)
         {
@@ -428,7 +446,9 @@ namespace creativeCommonsMusicProject
             }
         }
 
-
+        ///<summary>
+        /// Places a given CCM_track into the corresponding unused track lists based upon a given CCM_trackTypes_enum
+        ///</summary>
         // enum overload is used for sorting clips based on folders used (_fn_getAudioClipsFromFolders)
         private static void _fn_pushBackToTrackLists(CCM_trackTypes_enum _trackType, CCM_track _track)
         {
@@ -500,6 +520,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_getOnlineMode
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Parses the CCM_syncOnline config entry in CCM Config.xml
+        ///</summary>
         private static void _fn_getOnlineMode(XDocument _xmlConfigFile)
         {
             bool _isOnline = _xmlConfigFile.Root.Element("syncOnline").Value.ToUpper() == "ON";
@@ -518,6 +541,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
            _fn_getFilenamesAtPath
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Gets all .ogg files at a given directory
+        ///</summary>
         private static List<string> _fn_getFileNamesAtPath(string _folderPathToSearch)
         {
             List<string> _returnList = new List<string>();

@@ -29,6 +29,11 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Randomly selects an entry from a list of the availale tack names based upon the track type
+        /// </summary>
+        /// <param name="_trackType"></param>
+        /// <returns>CCM_track</returns>
         internal static CCM_track CCM_fnc_grabRandomTrack(CCM_trackTypes_enum _trackType)
         {
             List<CCM_track> _listOfUsedTracks;

@@ -32,6 +32,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_playMusic
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Plays a given track file
+        ///</summary>
         internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: was called for file " + _filename);
@@ -63,6 +66,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_event_playMusic_RPC
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// The remote version of CCM_fnc_playMusic
+        ///</summary>
         [PunRPC]
         internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
@@ -85,6 +91,9 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_createAndPlayClip
         ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Creates an audioclip and plays it for a given filename and CCM_trackTypes_enum
+        ///</summary>
         private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_loadingAudio = true;

@@ -26,6 +26,10 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Returns a one of the two CCM music handle GameObjects depending on if #1 is playing or not.
+        /// </summary>
+        /// <returns>GameObject</returns>
         internal static GameObject CCM_fnc_getMusicHandler()
         {
             bool _isPlaying = CCM_MusicHandlers.musicAudioSource_1.isPlaying;

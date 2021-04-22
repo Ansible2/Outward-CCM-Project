@@ -6,7 +6,7 @@ Description:
     Depending on the name of the game object, certain tracks will be returned.
 
 Parameters:
-	0: _objectName <STRING> - The name of the object that the music will play on
+	0: _trackType <int> - The name of the object that the music will play on
 
 Returns:
 	<LIST of STRINGS> - A list of filenames as strings (with extensions) of tracks that could be played
@@ -27,9 +27,9 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
-        internal static List<string> CCM_fnc_getAllAvailableReplacementTracks(int _trackType = -1)
+        internal static List<CCM_track> CCM_fnc_getAllAvailableReplacementTracks(int _trackType = -1)
         {
-            List<string> _listOfTracks;
+            List<CCM_track> _listOfTracks;
 
             switch (_trackType)
             {
@@ -37,7 +37,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_combatTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_combatTracks = new List<string>(CCM_Lists.used_combatTracks);
+                            CCM_Lists.unused_combatTracks = new List<CCM_track>(CCM_Lists.used_combatTracks);
                             CCM_Lists.used_combatTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_combatTracks;
@@ -48,7 +48,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_ambientNightTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_ambientNightTracks = new List<string>(CCM_Lists.used_ambientNightTracks);
+                            CCM_Lists.unused_ambientNightTracks = new List<CCM_track>(CCM_Lists.used_ambientNightTracks);
                             CCM_Lists.used_ambientNightTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_ambientNightTracks;
@@ -59,7 +59,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_ambientDayTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_ambientDayTracks = new List<string>(CCM_Lists.used_ambientDayTracks);
+                            CCM_Lists.unused_ambientDayTracks = new List<CCM_track>(CCM_Lists.used_ambientDayTracks);
                             CCM_Lists.used_ambientDayTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_ambientDayTracks;
@@ -70,7 +70,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_townDayTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_townDayTracks = new List<string>(CCM_Lists.used_townDayTracks);
+                            CCM_Lists.unused_townDayTracks = new List<CCM_track>(CCM_Lists.used_townDayTracks);
                             CCM_Lists.used_townDayTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_townDayTracks;
@@ -81,7 +81,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_townNightTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_townNightTracks = new List<string>(CCM_Lists.used_townNightTracks);
+                            CCM_Lists.unused_townNightTracks = new List<CCM_track>(CCM_Lists.used_townNightTracks);
                             CCM_Lists.used_townNightTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_townNightTracks;
@@ -92,7 +92,7 @@ namespace creativeCommonsMusicProject
                     {
                         if (CCM_Lists.unused_dungeonTracks.Count() < 1)
                         {
-                            CCM_Lists.unused_dungeonTracks = new List<string>(CCM_Lists.used_dungeonTracks);
+                            CCM_Lists.unused_dungeonTracks = new List<CCM_track>(CCM_Lists.used_dungeonTracks);
                             CCM_Lists.used_dungeonTracks.Clear();
                         }
                         _listOfTracks = CCM_Lists.unused_dungeonTracks;
@@ -101,8 +101,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        _listOfTracks = new List<string>();
-                        _listOfTracks.Add("");
+                        _listOfTracks = new List<CCM_track>();
                         break;
                     }
             }

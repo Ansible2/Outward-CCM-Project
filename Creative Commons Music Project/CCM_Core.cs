@@ -6,15 +6,6 @@ using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using HarmonyLib;
-/*
-using System;
-using System.Linq;
-using System.Collections;
-using ExitGames;
-using UnityEngine.Networking;
-using Photon;
-using Photon.Realtime;
-*/
 
 
 namespace creativeCommonsMusicProject
@@ -30,7 +21,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
-        const string VERSION = "1.0";
+        const string VERSION = "0.9";
 
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
@@ -69,7 +60,9 @@ namespace creativeCommonsMusicProject
             internal static Dictionary<string, int> trackLengthFromString = new Dictionary<string, int>();
         }
 
-
+        /// <summary>
+        /// An abstraction for storing information about the individual tracks a player has loaded
+        /// </summary>
         internal class CCM_track
         {
             internal string Filename { get; }
@@ -100,6 +93,9 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             String Constants
         ------------------------------------------------------------------------ */
+        /// <summary>
+        /// Keeps track of the many constant directory paths CCM can use
+        /// </summary>
         internal static class CCM_Paths
         {
             internal static readonly string mainFolderPath = Path.GetFullPath(@"Mods\CCM Project");
@@ -127,9 +123,25 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             Misc
         ------------------------------------------------------------------------ */
-        // self explanitory
-        //internal static Scene CCM_currentScene;
+        /// <summary>
+        /// The current scene name occupied by the player
+        /// </summary>
         internal static string CCM_currentSceneName;
+
+        /// <summary>
+        /// The current scenes track type (e.g. is combat music playing or night town music or day town music, etc.)
+        /// </summary>
+        internal static CCM_trackTypes_enum CCM_currentTrackType = CCM_trackTypes_enum.EMPTY;
+
+        /// <summary>
+        /// Keeps track of the currently running music routine loop
+        /// </summary>
+        internal static Coroutine CCM_currentRoutine;
+
+        /// <summary>
+        /// Keeps track of what CCM_track is currently playing
+        /// </summary>
+        internal static CCM_track CCM_currentTrack;
 
         internal enum CCM_trackTypes_enum
         {
@@ -148,31 +160,22 @@ namespace creativeCommonsMusicProject
         };
 
 
-        // for keeping track of the CCM_trackTypes_enum
-        internal static CCM_trackTypes_enum CCM_currentTrackType = CCM_trackTypes_enum.EMPTY;
-
         internal static System.Random CCM_getRandom = new System.Random();
 
-        internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
-
         internal static bool CCM_syncOnline;
-
-        internal static CCM_trackTypes_enum CCM_directRequestType = CCM_trackTypes_enum.EMPTY;
 
         internal static float CCM_musicVolume;
 
         internal static bool CCM_loadingAudio = false;
-
-
-        internal static Coroutine CCM_currentRoutine;
-
-        internal static CCM_track CCM_currentTrack;
 
         internal static bool CCM_choosingTrackForScene;
 
         /* ------------------------------------------------------------------------
             Music Handlers
         ------------------------------------------------------------------------ */
+        /// <summary>
+        /// Used for keeping track of the various states and properties for the two music GameObjects used by CCM
+        /// </summary>
         internal static class CCM_MusicHandlers
         {
             // music game objects we will use to actually play music
@@ -187,7 +190,9 @@ namespace creativeCommonsMusicProject
             internal static bool musicAudioSource_1_stopFading = false;
             internal static bool musicAudioSource_2_stopFading = false;
 
-            //
+            /// <summary>
+            /// Checks if the two music handlers are fully Instantiated and ready to play music
+            /// </summary>
             internal static bool handlersInstantiated = false;
 
             // this keeps track of which music handler is actually currently intended to be played on
@@ -217,9 +222,14 @@ namespace creativeCommonsMusicProject
         }
 
 
+        internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
         /* ------------------------------------------------------------------------
             CCM_fnc_logWithTime
         ------------------------------------------------------------------------ */
+        /// <summary>
+        /// Creates a BepinEx log message but with a UTC date/time stamp
+        /// </summary>
+        /// <param name="myMessage"></param>
         internal static void CCM_fnc_logWithTime(object myMessage)
         {
             CCM_core.CCM_logSource.Log(LogLevel.Message, System.DateTime.UtcNow + "--: " + myMessage);
@@ -229,32 +239,16 @@ namespace creativeCommonsMusicProject
         /* ------------------------------------------------------------------------
             CCM_fnc_instantiateHarmony
         ------------------------------------------------------------------------ */
+        /// <summary>
+        /// Adds in the patch to the vanilla function that allows CCM_event_onVanillaMusicPlayed to execute
+        /// </summary>
         private static void CCM_fnc_instantiateHarmony()
         {
             var harmony = new Harmony("com.Ansible2.CCM");
             harmony.PatchAll();
         }
 
-
-
-
-
-        // You don't need to hook into any stop music function (atleast for combat tracks) as it appears there will be another playmusic called to restart the ambient one
-        // THIS NEEDS TO BE CONFIRMED IN THE GAMES CODE HOWEVER
-        // You have to make sure that you don't need to hook into the QueueMusic function instead to detect this for instance as it might just unmute the other game object instead of calling the playMusic function again
-
-
-
-
-
-
-
-
-
-
     }
-
-
 }
 
 
@@ -317,28 +311,4 @@ BGM_EventMystery,
 BGM_RegionAntiquePlateau,
 BGM_RegionAntiquePlateauNIGHT,
 BGM_TownHarmattan
-
-//// music types:
-
-// region
-// region night
-// town 
-// town night
-// combat
-// dungeon
-// Cierzo
-// Cierzo night
-// Chersonese
-// Chersonese night
-*/
-
-
-/*
-Logger.Log(LogLevel.Message, "Waiting for sync");
-AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene.name);
-while (!asyncLoad.isDone)
-{
-    yield return null;
-}
-Logger.Log(LogLevel.Message, "Sync done");
 */

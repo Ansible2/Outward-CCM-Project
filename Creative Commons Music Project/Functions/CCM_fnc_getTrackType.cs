@@ -25,6 +25,11 @@ namespace creativeCommonsMusicProject
 {
     partial class CCM_core
     {
+        /// <summary>
+        /// Takes a string (of a GameObject) and decideds on what the type of music that game object plays.
+        /// </summary>
+        /// <param name="_objectName"></param>
+        /// <returns>CCM_trackTypes_enum</returns>
         internal static CCM_trackTypes_enum CCM_fnc_getTrackType(string _objectName = "")
         {
             // .Contains() is case sensetive

@@ -38,6 +38,14 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_spawn_fadeAudioSource
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Creates a coroutine for fading an audiosource to a given volume
+        /// </summary>
+        /// <param name="_audioSoucre"></param>
+        /// <param name="_duration"></param>
+        /// <param name="_targetVolume"></param>
+        /// <param name="_stopAfter"></param>
+        /// <param name="_stopNowPlaying"></param>
         internal static void CCM_spawn_fadeAudioSource(AudioSource _audioSoucre, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
             CCM_Instance.StartCoroutine(CCM_fnc_fadeAudioSource(_audioSoucre, _duration, _targetVolume, _stopAfter, _stopNowPlaying));
@@ -47,6 +55,15 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_fadeAudioSource
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Fades a given audioSource to a given volume
+        /// </summary>
+        /// <param name="_audioSource"></param>
+        /// <param name="_duration"></param>
+        /// <param name="_targetVolume"></param>
+        /// <param name="_stopAfter"></param>
+        /// <param name="_stopNowPlaying"></param>
+        /// <returns>IEnumerator</returns>
         internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
             CCM_fnc_logWithTime("CCM_fnc_fadeAudioSource: Was called to fade " + _audioSource + " to " + _targetVolume);
@@ -117,6 +134,11 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_shouldFadeStop
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Used for determining if a given AudioSource should stop its current fade
+        /// </summary>
+        /// <param name="_audioSource"></param>
+        /// <returns>bool</returns>
         private static bool _fn_shouldFadeStop(AudioSource _audioSource)
         {
             if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
@@ -133,6 +155,11 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_setFadeStop
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Sets a corresponding bool for an AudioSource to stop fading
+        /// </summary>
+        /// <param name="_audioSource"></param>
+        /// <param name="_value"></param>
         private static void CCM_fnc_setFadeStop(AudioSource _audioSource, bool _value)
         {
             if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
@@ -149,6 +176,11 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             _fn_isAudioSourceFading
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Checks a corresponding AudioSource's bool to see if it is currently fading
+        /// </summary>
+        /// <param name="_audioSource"></param>
+        /// <returns>bool</returns>
         private static bool _fn_isAudioSourceFading(AudioSource _audioSource)
         {
             if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)
@@ -165,6 +197,11 @@ namespace creativeCommonsMusicProject
         /* ----------------------------------------------------------------------------
             CCM_fnc_setFadeIsFading
         ---------------------------------------------------------------------------- */
+        /// <summary>
+        /// Sets the corresponding bool of whether an AudioSource is fading
+        /// </summary>
+        /// <param name="_audioSource"></param>
+        /// <param name="_value"></param>
         private static void CCM_fnc_setFadeIsFading(AudioSource _audioSource, bool _value)
         {
             if (_audioSource == CCM_MusicHandlers.musicAudioSource_1)

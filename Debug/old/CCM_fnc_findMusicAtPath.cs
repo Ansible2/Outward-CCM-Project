@@ -34,23 +34,23 @@ namespace creativeCommonsMusicProject
 
             if (!Directory.Exists(_folderPathToSearch))
             {
-                CCM_fnc_logWithTime("Folder path " + _folderPathToSearch + " does not exist!");
+                CCM_logSource.LogMessage("CCM_fnc_findMusicAtPath: Folder path " + _folderPathToSearch + " does not exist...");
             }
             else
             {
-                // this will get all files of .ogg, however, this includes their paths
+                // this will get all files of .ogg. However, this includes their FULL paths
                 string[] _files = Directory.GetFiles(_folderPathToSearch, "*.ogg");
-                List<string> _tempList = _files.ToList();
+                List<string> _filesList = _files.ToList();
 
-                if (_tempList.Count() < 1)
+                if (_filesList.Count() < 1)
                 {
-                    CCM_fnc_logWithTime("File path " + _folderPathToSearch + " returned no files!");
+                    CCM_fnc_logWithTime("CCM_fnc_findMusicAtPath: File path " + _folderPathToSearch + " returned no files...");
                 }
                 else
                 {
                     // get only the file names for returns
                     string _tempFileName;
-                    foreach (string _filePath in _tempList)
+                    foreach (string _filePath in _filesList)
                     {
                         _tempFileName = Path.GetFileName(_filePath);
                         _returnList.Add(_tempFileName);
