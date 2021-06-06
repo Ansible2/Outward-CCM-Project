@@ -32,11 +32,11 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
-            CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: called for Scene - " + _goingToScene.name);
+            CCM_fnc_log.withTime.debug("CCM_event_onSceneChangeStarted: Called for Scene - " + _goingToScene.name);
            
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
-                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is real");
+                CCM_fnc_log.debug("CCM_event_onSceneChangeStarted: Scene is real");
                 CCM_currentSceneName = _goingToScene.name.ToLower();
 
                 bool _isMasterClient = PhotonNetwork.isMasterClient;
@@ -44,15 +44,15 @@ namespace creativeCommonsMusicProject
                 
                 if (!_isMasterClient)
                 {
-                    CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Player is NOT Master Client");
+                    CCM_fnc_log.info("CCM_event_onSceneChangeStarted: Player is NOT Master Client");
                     
                     if (CCM_syncOnline)
                     {
-                        CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: CCM_syncOnline is ON");
+                        CCM_fnc_log.info("CCM_event_onSceneChangeStarted: CCM_syncOnline is ON");
 
                         if (_routineIsRunning)
                         {
-                            CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Client has a routine running. Stopping routine and requesting track directly from Master Client...");
+                            CCM_fnc_log.withTime.warning("CCM_event_onSceneChangeStarted: Client has a routine running. Stopping routine and requesting track directly from Master Client...");
                             CCM_fnc_stopMusicRoutine();
                             CCM_rpc.CCM_rpcComponent.CCM_fnc_requestTrackToPlay(PhotonNetwork.player.ID);
                         }
@@ -63,12 +63,12 @@ namespace creativeCommonsMusicProject
             }
             else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
             {
-                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
+                CCM_fnc_log.withTime.debug("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
                 CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
             }
             else
             {
-                CCM_fnc_logWithTime("CCM_event_onSceneChangeStarted: Scene is NOT real.");
+                CCM_fnc_log.debug("CCM_event_onSceneChangeStarted: Scene is NOT real.");
             }
         }
     }

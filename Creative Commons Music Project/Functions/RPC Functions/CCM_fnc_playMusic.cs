@@ -37,7 +37,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: was called for file " + _filename);
+            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: was called for file " + _filename);
             if (CCM_core.CCM_Dictionaries.trackLengthFromString.ContainsKey(_filename))
             {
                 bool _musicIsPlaying = false;
@@ -49,7 +49,7 @@ namespace creativeCommonsMusicProject
 
                 if (_musicIsPlaying)
                 {
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
+                    CCM_core.CCM_fnc_log.debug("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
                     CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);              
                 }
 
@@ -57,7 +57,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: ERROR Could not find an entry in CCM_Dictionaries.trackLengthFromString for file: " + _filename);
+                CCM_core.CCM_fnc_log.error("CCM_fnc_playMusic: ERROR Could not find an entry in CCM_Dictionaries.trackLengthFromString for file: " + _filename);
             }
 
         }
@@ -72,18 +72,18 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: was called...");
+            CCM_core.CCM_fnc_log.withTime.debug("CCM_event_playMusic_RPC: was called...");
 
             if (CCM_core.CCM_syncOnline)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
+                CCM_core.CCM_fnc_log.withTime.info("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
 
                 CCM_fnc_playMusic(_filename, _folderType);
 
             } 
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
+                CCM_core.CCM_fnc_log.withTime.debug("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
             }
         }
 
@@ -97,8 +97,8 @@ namespace creativeCommonsMusicProject
         private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
         {
             CCM_core.CCM_loadingAudio = true;
-            
-            CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
+
+            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
 
 
             var _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_folderType);
@@ -116,11 +116,11 @@ namespace creativeCommonsMusicProject
                 }
 
 
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
+                CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
 
                 if (_request.error != null)
                 {
-                    CCM_core.CCM_fnc_logWithTime("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
+                    CCM_core.CCM_fnc_log.withTime.error("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
 
@@ -128,16 +128,16 @@ namespace creativeCommonsMusicProject
                 AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
 
                 GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
-                CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
+                CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
                 AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
-                CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
+                CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
 
 
                 _handlerAudioSource.clip = _clip;
                 _handlerAudioSource.clip.name = _filename;
 
                 _handlerAudioSource.Play();
-                CCM_core.CCM_logSource.LogMessage("CCM_fnc_playMusic: _fn_createAndPlayClip: Handler told to play: " + _filename);
+                CCM_core.CCM_fnc_log.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Handler told to play: " + _filename);
                 CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
                 CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
                 CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;

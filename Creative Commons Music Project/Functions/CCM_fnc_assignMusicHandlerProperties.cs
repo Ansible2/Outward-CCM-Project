@@ -37,7 +37,7 @@ namespace creativeCommonsMusicProject
                 // if main music object is not found select an object
                 if (_objectToCopy == null)
                 {
-                    CCM_fnc_logWithTime("CCM_fnc_assignMusicHandlerProperties: _objectToCopy is null");
+                    CCM_fnc_log.error("CCM_fnc_assignMusicHandlerProperties: _objectToCopy is null");
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace creativeCommonsMusicProject
 
                     CCM_MusicHandlers.handlersInstantiated = true;
 
-                    CCM_logSource.Log(LogLevel.Message, "CCM_fnc_assignMusicHandlerProperties: Assigned CCM music handler objects the properties of " + _objectToCopy);
+                    CCM_fnc_log.info("CCM_fnc_assignMusicHandlerProperties: Assigned CCM music handler objects the properties of " + _objectToCopy);
                 }
             }
         }

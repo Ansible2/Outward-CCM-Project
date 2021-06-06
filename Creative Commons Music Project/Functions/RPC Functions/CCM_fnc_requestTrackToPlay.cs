@@ -33,11 +33,11 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _playerId)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: Was called...");
+            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_requestTrackToPlay_RPC: Was called...");
 
             if (CCM_core.CCM_syncOnline)
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is ON. RPCing CCM_fnc_requestTrackToPlay to Master Client");
+                CCM_core.CCM_fnc_log.info("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is ON. RPCing CCM_fnc_requestTrackToPlay to Master Client");
 
                 CCM_photonView.RPC(
                     "CCM_fnc_requestTrackToPlay",
@@ -47,7 +47,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is OFF. Directly execing CCM_fnc_requestTrackToPlay.");
+                CCM_core.CCM_fnc_log.info("CCM_fnc_requestTrackToPlay_RPC: CCM_syncOnline is OFF. Directly execing CCM_fnc_requestTrackToPlay.");
                 CCM_rpcComponent.CCM_fnc_requestTrackToPlay(_playerId);
             }  
         }
@@ -62,7 +62,7 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_requestTrackToPlay(int _playerId)
         {
-            CCM_core.CCM_fnc_logWithTime("CCM_fnc_requestTrackToPlay: Was called...");
+            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_requestTrackToPlay: Was called...");
 
             CCM_photonView.RPC(
                 "CCM_event_playMusic_RPC",

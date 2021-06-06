@@ -102,7 +102,7 @@ namespace creativeCommonsMusicProject
             CCM_track _track = new CCM_track();
             if (_listOfUnusedTracks.Count() < 1)
             {
-                CCM_logSource.LogError("CCM_fnc_grabRandomTrack: _listOfUnusedTracks is empty!");
+                CCM_fnc_log.error("CCM_fnc_grabRandomTrack: _listOfUnusedTracks is empty!");
             }
             else
             {
@@ -112,7 +112,7 @@ namespace creativeCommonsMusicProject
                 _listOfUsedTracks.Add(_track);
             }
 
-            CCM_fnc_logWithTime("CCM_fnc_grabRandomTrack: Selected track file: " + _track.Filename);
+            CCM_fnc_log.info("CCM_fnc_grabRandomTrack: Selected track file: " + _track.Filename);
 
             return _track;
         }

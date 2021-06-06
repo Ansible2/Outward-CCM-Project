@@ -77,7 +77,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for int " + _trackType);
+                        CCM_fnc_log.error("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for int " + _trackType);
                         return "";
                     }
             }
@@ -138,7 +138,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for Enum " + _trackType);
+                        CCM_fnc_log.error("CCM_fnc_getTrackTypeFolderPath: Returned empty string for folder path for Enum " + _trackType);
                         return "";
                     }
             }

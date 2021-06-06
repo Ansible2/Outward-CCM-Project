@@ -64,7 +64,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_logSource.Log(LogLevel.Fatal, "Config file could not be found at: " + _pathToConfig);
+                CCM_fnc_log.fatal("CCM_fnc_parseConfig: Config file could not be found at: " + _pathToConfig);
             }
         }
 
@@ -77,7 +77,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         private static IEnumerator _fn_getAllFileTrackLengths()
         {
-            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Started audio load");
+            CCM_fnc_log.withTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Started audio load...");
             
             foreach (var _track in _filesToLoad)
             {
@@ -86,7 +86,7 @@ namespace creativeCommonsMusicProject
                     yield return new WaitForSecondsRealtime(0.1f);
                 }
 
-                CCM_fnc_logWithTime("Starting a new load...");
+                CCM_fnc_log.info("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Starting a new load...");
 
                 CCM_loadingAudio = true;
 
@@ -96,7 +96,7 @@ namespace creativeCommonsMusicProject
             _filesToLoad = null;
             _checkedFiles = null;
 
-            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
+            CCM_fnc_log.withTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
         }
 
 
@@ -113,7 +113,7 @@ namespace creativeCommonsMusicProject
 
             if (_list.Count() == 0)
             {
-                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getFilesFromConfig: No tracks were located in config file: " + CCM_configFileName);
+                CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getFilesFromConfig: No tracks were located in config file: " + CCM_configFileName);
             }
         
             foreach (var _x in _list)
@@ -126,7 +126,7 @@ namespace creativeCommonsMusicProject
                     // check for duplicates
                     if (_checkedFiles.Contains(_filename))
                     {
-                        CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
+                        CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Configed track: " + _filename + " within " + CCM_configFileName + " is a duplicate!");
                     }
                     else
                     {
@@ -149,13 +149,13 @@ namespace creativeCommonsMusicProject
                         }
                         else
                         {
-                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
+                            CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find any track types for file: " + _filename + " within " + CCM_configFileName);
                         }
                     }
                 }
                 else
                 {
-                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find track file: " + _filename + " within tracks folder!");
+                    CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getFilesFromConfig: Did not find track file: " + _filename + " within tracks folder!");
                 }
             }
 
@@ -184,7 +184,7 @@ namespace creativeCommonsMusicProject
 
                     if (_fileNames.Count() == 0)
                     {
-                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPath + " returned no files!");
+                        CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPath + " returned no files!");
                     }
                     else
                     {
@@ -202,7 +202,7 @@ namespace creativeCommonsMusicProject
                             }
                             else
                             {
-                                CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
+                                CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
                             }
                         }
                     }
@@ -218,7 +218,7 @@ namespace creativeCommonsMusicProject
             
             if (_fileNames.Count() == 0)
             {
-                CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPathToSearch + " returned no files!");
+                CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Folder path " + _folderPathToSearch + " returned no files!");
             }
             else
             {
@@ -235,7 +235,7 @@ namespace creativeCommonsMusicProject
                     }
                     else
                     {
-                        CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
+                        CCM_fnc_log.warning("CCM_fnc_parseConfig: _fn_getAudioClipsFromFolders: Found that track: " + _filename + " was already loaded in another location, throwing away duplicate...");
                     }
                 }
             }
@@ -251,7 +251,7 @@ namespace creativeCommonsMusicProject
         {
             var _trackSpacings = _xmlConfigFile.Root.Descendants("track_spacing").Elements();
 
-            CCM_fnc_logWithTime(_trackSpacings);
+            CCM_fnc_log.info(_trackSpacings);
 
             foreach (var _x in _trackSpacings)
             {
@@ -300,14 +300,14 @@ namespace creativeCommonsMusicProject
                     default:
                         {
                             _doAdd = false;
-                            CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Encountered unkown config for track spacing: " + _name);
+                            CCM_fnc_log.error("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Encountered unkown config for track spacing: " + _name);
                             break;
                         }
                 }
 
                 if (_doAdd)
                 {
-                    CCM_logSource.LogMessage("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Added min " + _min + " and max " + _max + " to " + _name);
+                    CCM_fnc_log.info("CCM_fnc_parseConfig: _fn_grabTrackSpacingSettings: Added min " + _min + " and max " + _max + " to " + _name);
                     List<int> _list = new List<int>() { _min, _max };
                     CCM_Dictionaries.trackSpacingFromType.Add(_trackType, _list);
                 }
@@ -341,11 +341,11 @@ namespace creativeCommonsMusicProject
                     yield return new WaitForSecondsRealtime(0.01f);
                 }
 
-                CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request is done for " + _filename);
+                CCM_fnc_log.info("CCM_fnc_parseConfig: _fn_getTrackLength: Web request is done for " + _filename);
 
                 if (_request.error != null)
                 {
-                    CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_getTrackLength: Web request encountered the following error: " + _request.error);
+                    CCM_fnc_log.error("CCM_fnc_parseConfig: _fn_getTrackLength: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
 
@@ -379,7 +379,7 @@ namespace creativeCommonsMusicProject
                 _doesFileExist = true;
             }
 
-            CCM_fnc_logWithTime("CCM_fnc_parseConfig: _fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
+            CCM_fnc_log.debug("CCM_fnc_parseConfig: _fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
 
             return _doesFileExist;
         }
@@ -440,7 +440,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("_fn_pushBackToList: Encountered unknown track type: " + _trackType);
+                        CCM_fnc_log.error("_fn_pushBackToList: Encountered unknown track type: " + _trackType);
                         break;
                     }
             }
@@ -510,7 +510,7 @@ namespace creativeCommonsMusicProject
                     }
                 default:
                     {
-                        CCM_fnc_logWithTime("_fn_pushBackToList: Encountered unknown track type enum: " + _trackType);
+                        CCM_fnc_log.error("_fn_pushBackToList: Encountered unknown track type enum: " + _trackType);
                         break;
                     }
             }
@@ -550,7 +550,7 @@ namespace creativeCommonsMusicProject
 
             if (!Directory.Exists(_folderPathToSearch))
             {
-                CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: Folder path " + _folderPathToSearch + " does not exist.");
+                CCM_fnc_log.error("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: Folder path " + _folderPathToSearch + " does not exist.");
             }
             else
             {
@@ -560,7 +560,7 @@ namespace creativeCommonsMusicProject
 
                 if (_filesList.Count() < 1)
                 {
-                    CCM_logSource.LogError("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: File path " + _folderPathToSearch + " returned no files.");
+                    CCM_fnc_log.error("CCM_fnc_parseConfig: _fn_getFileNamesAtPath: File path " + _folderPathToSearch + " returned no files.");
                 }
                 else
                 {

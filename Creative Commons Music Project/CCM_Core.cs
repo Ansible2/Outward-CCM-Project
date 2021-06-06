@@ -21,7 +21,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
-        const string VERSION = "0.9";
+        const string VERSION = "0.9.1";
 
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
@@ -219,20 +219,6 @@ namespace creativeCommonsMusicProject
             CCM_fnc_parseConfig();
 
             SceneManager.sceneLoaded += CCM_event_onSceneChangeStarted;
-        }
-
-
-        internal static ManualLogSource CCM_logSource = BepInEx.Logging.Logger.CreateLogSource("CCM_project");
-        /* ------------------------------------------------------------------------
-            CCM_fnc_logWithTime
-        ------------------------------------------------------------------------ */
-        /// <summary>
-        /// Creates a BepinEx log message but with a UTC date/time stamp
-        /// </summary>
-        /// <param name="myMessage"></param>
-        internal static void CCM_fnc_logWithTime(object myMessage)
-        {
-            CCM_core.CCM_logSource.Log(LogLevel.Message, System.DateTime.UtcNow + "--: " + myMessage);
         }
 
 

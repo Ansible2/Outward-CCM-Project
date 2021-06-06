@@ -39,12 +39,12 @@ namespace creativeCommonsMusicProject
 
             if (_objectName.Contains("dungeon"))
             {
-                CCM_fnc_logWithTime(_logString + "dungeons");
+                CCM_fnc_log.info(_logString + "dungeons");
                 _type = CCM_trackTypes_enum.dungeon;
             }
             else if (_objectName.Contains("combat"))
             {
-                CCM_fnc_logWithTime(_logString + "combat");
+                CCM_fnc_log.info(_logString + "combat");
                 _type = CCM_trackTypes_enum.combat;
             }
             else if (_objectName.Contains("region") || _objectName.Contains("chersonese"))
@@ -52,12 +52,12 @@ namespace creativeCommonsMusicProject
 
                 if (_objectName.Contains("night"))
                 {
-                    CCM_fnc_logWithTime(_logString + "ambient night");
+                    CCM_fnc_log.info(_logString + "ambient night");
                     _type = CCM_trackTypes_enum.ambientNight;
                 }
                 else
                 {
-                    CCM_fnc_logWithTime(_logString + "ambient day");
+                    CCM_fnc_log.info(_logString + "ambient day");
                     _type = CCM_trackTypes_enum.ambientDay;
                 }
 
@@ -66,18 +66,18 @@ namespace creativeCommonsMusicProject
             {
                 if (_objectName.Contains("night"))
                 {
-                    CCM_fnc_logWithTime(_logString + "Towns night");
+                    CCM_fnc_log.info(_logString + "Towns night");
                     _type = CCM_trackTypes_enum.townNight;
                 }
                 else
                 {
-                    CCM_fnc_logWithTime(_logString + "Towns day");
+                    CCM_fnc_log.info(_logString + "Towns day");
                     _type = CCM_trackTypes_enum.townDay;
                 }
             }
             else
             {
-                CCM_fnc_logWithTime("CCM_fnc_getTrackType: Did not find any track type to match " + _objectName);
+                CCM_fnc_log.error("CCM_fnc_getTrackType: Did not find any track type to match " + _objectName);
             }
 
             return _type;
