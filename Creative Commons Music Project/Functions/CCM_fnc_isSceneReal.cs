@@ -34,10 +34,10 @@ namespace creativeCommonsMusicProject
         internal static bool CCM_fnc_isSceneReal(Scene _scene)
         {
             var _name = _scene.name.ToLower();
-            CCM_fnc_log.debug("CCM_fnc_isSceneReal: Checking scene: " + _name);
+            CCM_fnc_log.message("CCM_fnc_isSceneReal: Checking scene: " + _name);
 
             bool _isSceneReal = (!_name.Contains("lowmemory") && !_name.Contains("mainmenu"));
-            CCM_fnc_log.debug("CCM_fnc_isSceneReal: Scene real? " + _isSceneReal);
+            CCM_fnc_log.message("CCM_fnc_isSceneReal: Scene real? " + _isSceneReal);
 
             return _isSceneReal;
         }

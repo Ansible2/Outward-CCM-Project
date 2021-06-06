@@ -32,11 +32,11 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
-            CCM_fnc_log.withTime.debug("CCM_event_onSceneChangeStarted: Called for Scene - " + _goingToScene.name);
+            CCM_fnc_log.withTime.message("CCM_event_onSceneChangeStarted: Called for Scene - " + _goingToScene.name);
            
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
-                CCM_fnc_log.debug("CCM_event_onSceneChangeStarted: Scene is real");
+                CCM_fnc_log.message("CCM_event_onSceneChangeStarted: Scene is real");
                 CCM_currentSceneName = _goingToScene.name.ToLower();
 
                 bool _isMasterClient = PhotonNetwork.isMasterClient;
@@ -63,12 +63,12 @@ namespace creativeCommonsMusicProject
             }
             else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
             {
-                CCM_fnc_log.withTime.debug("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
+                CCM_fnc_log.withTime.message("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
                 CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
             }
             else
             {
-                CCM_fnc_log.debug("CCM_event_onSceneChangeStarted: Scene is NOT real.");
+                CCM_fnc_log.message("CCM_event_onSceneChangeStarted: Scene is NOT real.");
             }
         }
     }

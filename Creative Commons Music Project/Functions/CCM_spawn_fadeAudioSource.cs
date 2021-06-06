@@ -66,7 +66,7 @@ namespace creativeCommonsMusicProject
         /// <returns>IEnumerator</returns>
         internal static IEnumerator CCM_fnc_fadeAudioSource(AudioSource _audioSource, float _duration = 3, float _targetVolume = 0.5f, bool _stopAfter = false, bool _stopNowPlaying = false)
         {
-            CCM_fnc_log.withTime.debug("CCM_fnc_fadeAudioSource: Was called to fade " + _audioSource + " to " + _targetVolume);
+            CCM_fnc_log.withTime.message("CCM_fnc_fadeAudioSource: Was called to fade " + _audioSource + " to " + _targetVolume);
             
             
             float currentTime = 0;
@@ -83,7 +83,7 @@ namespace creativeCommonsMusicProject
                     _waitCycle = _waitCycle + 1;
                     if (_waitCycle % 100 == 0)
                     {
-                        CCM_fnc_log.debug("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
+                        CCM_fnc_log.message("CCM_fnc_fadeAudioSource: Waiting for audioSource: " + _audioSource + " to stop fading...");
                     }
                     yield return new WaitForSecondsRealtime(0.01f);
                 }
@@ -96,7 +96,7 @@ namespace creativeCommonsMusicProject
             CCM_fnc_setFadeStop(_audioSource, false);
 
 
-            CCM_fnc_log.withTime.debug("CCM_fnc_fadeAudioSource: Now fading audioSource: " + _audioSource);         
+            CCM_fnc_log.withTime.message("CCM_fnc_fadeAudioSource: Now fading audioSource: " + _audioSource);         
 
 
             while (currentTime < _duration && (_audioSource.volume != _targetVolume) && (!_fn_shouldFadeStop(_audioSource)))
@@ -112,7 +112,7 @@ namespace creativeCommonsMusicProject
                 _audioSource.Stop();
                 _audioSource.clip.UnloadAudioData();
                 Destroy(_audioSource.clip);
-                CCM_fnc_log.withTime.debug("CCM_fnc_fadeAudioSource: Stopped audioSource: " + _audioSource);
+                CCM_fnc_log.withTime.message("CCM_fnc_fadeAudioSource: Stopped audioSource: " + _audioSource);
             }
           
 
@@ -120,14 +120,14 @@ namespace creativeCommonsMusicProject
             {
                 CCM_MusicHandlers.nowPlayingAudioSource = null; // could get removed from memory?
                 CCM_MusicHandlers.nowPlayingMusicHandler = null;
-                CCM_fnc_log.debug("CCM_fnc_fadeAudioSource: Set now playing vars to null");
+                CCM_fnc_log.message("CCM_fnc_fadeAudioSource: Set now playing vars to null");
             }
 
 
             CCM_fnc_setFadeIsFading(_audioSource, false);
             //CCM_fnc_setFadeStop(_audioSource, false);
 
-            CCM_fnc_log.debug("CCM_fnc_fadeAudioSource: AudioSource: " + _audioSource.name + " has finished its fade to " + _targetVolume);
+            CCM_fnc_log.message("CCM_fnc_fadeAudioSource: AudioSource: " + _audioSource.name + " has finished its fade to " + _targetVolume);
 
             yield break;
         }

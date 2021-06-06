@@ -96,6 +96,7 @@ namespace creativeCommonsMusicProject
             _filesToLoad = null;
             _checkedFiles = null;
 
+            CCM_core.CCM_trackLengthLoadComplete = true;
             CCM_fnc_log.withTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
         }
 
@@ -379,7 +380,7 @@ namespace creativeCommonsMusicProject
                 _doesFileExist = true;
             }
 
-            CCM_fnc_log.debug("CCM_fnc_parseConfig: _fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
+            CCM_fnc_log.message("CCM_fnc_parseConfig: _fn_doesFileExist: Checked file path " + _pathToFile + " : Does exist? -> " + _doesFileExist);
 
             return _doesFileExist;
         }

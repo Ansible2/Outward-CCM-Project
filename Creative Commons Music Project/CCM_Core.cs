@@ -170,6 +170,8 @@ namespace creativeCommonsMusicProject
 
         internal static bool CCM_choosingTrackForScene;
 
+        internal static bool CCM_trackLengthLoadComplete = false;
+
         /* ------------------------------------------------------------------------
             Music Handlers
         ------------------------------------------------------------------------ */

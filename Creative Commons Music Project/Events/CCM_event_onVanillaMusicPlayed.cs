@@ -36,12 +36,12 @@ namespace creativeCommonsMusicProject
             static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
             {
                 var _clipName = __result.clip.name.ToLower();
-                CCM_fnc_log.withTime.debug("CCM_event_onVanillaMusicPlayed: was called for vanilla clip: " + _clipName);
+                CCM_fnc_log.withTime.message("CCM_event_onVanillaMusicPlayed: was called for vanilla clip: " + _clipName);
                 
                 // Events are unqiue  not categorized and therefore should be ignored
                 if (!_clipName.Contains("event"))
                 {
-                    CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " is not event music. Proceeding normally...");
+                    CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " is not event music. Proceeding normally...");
 
                     CCM_trackTypes_enum _trackType = CCM_fnc_getTrackType(_clipName);
 
@@ -67,31 +67,31 @@ namespace creativeCommonsMusicProject
                 }
                 else
                 {
-                    CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " IS event music. Handling...");
+                    CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " IS event music. Handling...");
 
                     __result.mute = true;
 
                     if (_clipName.Contains("danger"))
                     {
-                        CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Playing combat music in place of event music...");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Playing combat music in place of event music...");
                         CCM_currentTrackType = CCM_trackTypes_enum.combat;
                         _fn_requestTrack(CCM_currentTrackType);
                     }
                     else if (_clipName.Contains("dramatic"))
                     {
-                        CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Event music is dramatic. Music will remain unchanged...");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is dramatic. Music will remain unchanged...");
                     }
                     else if (_clipName.Contains("friendly"))
                     {
-                        CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Event music is friendly. Music will remain unchanged...");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is friendly. Music will remain unchanged...");
                     }
                     else if (_clipName.Contains("quest"))
                     {
-                        CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Event music is quest. Music will remain unchanged...");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is quest. Music will remain unchanged...");
                     }
                     else if (_clipName.Contains("mystery"))
                     {
-                        CCM_fnc_log.debug("CCM_event_onVanillaMusicPlayed: Event music is mystery. Playing dungeon music instead...");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is mystery. Playing dungeon music instead...");
                         CCM_currentTrackType = CCM_trackTypes_enum.dungeon;
                         _fn_requestTrack(CCM_currentTrackType);
                     }
@@ -110,7 +110,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         private static void _fn_requestTrack(CCM_trackTypes_enum _trackType)
         {
-            CCM_fnc_log.withTime.debug("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");
+            CCM_fnc_log.withTime.message("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");
 
             if (CCM_syncOnline)
             {

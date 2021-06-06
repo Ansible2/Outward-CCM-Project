@@ -33,7 +33,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal static void CCM_fnc_requestTrackToPlay_RPC(int _playerId)
         {
-            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_requestTrackToPlay_RPC: Was called...");
+            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_requestTrackToPlay_RPC: Was called...");
 
             if (CCM_core.CCM_syncOnline)
             {
@@ -62,7 +62,7 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_fnc_requestTrackToPlay(int _playerId)
         {
-            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_requestTrackToPlay: Was called...");
+            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_requestTrackToPlay: Was called...");
 
             CCM_photonView.RPC(
                 "CCM_event_playMusic_RPC",

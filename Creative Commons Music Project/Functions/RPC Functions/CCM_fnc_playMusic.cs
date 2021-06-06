@@ -35,25 +35,29 @@ namespace creativeCommonsMusicProject
         ///<summary>
         /// Plays a given track file
         ///</summary>
-        internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
+        internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
             CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: was called for file " + _filename);
+            
             if (CCM_core.CCM_Dictionaries.trackLengthFromString.ContainsKey(_filename))
             {
-                bool _musicIsPlaying = false;
+                
                 if (CCM_core.CCM_MusicHandlers.nowPlayingAudioSource != null)
                 {
-                    _musicIsPlaying = CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying;
-                } 
+                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_MusicHandlers.nowPlayingAudioSource is NOT null. Referencing its isPlaying status...");
 
-
-                if (_musicIsPlaying)
+                    if (CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying)
+                    {
+                        CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
+                        CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);
+                    }
+                }
+                else
                 {
-                    CCM_core.CCM_fnc_log.debug("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
-                    CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);              
+                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_MusicHandlers.nowPlayingAudioSource IS null. Not referencing its isPlaying status...");
                 }
 
-                CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType));
+                CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType, _trackType));
             }
             else
             {
@@ -70,20 +74,20 @@ namespace creativeCommonsMusicProject
         /// The remote version of CCM_fnc_playMusic
         ///</summary>
         [PunRPC]
-        internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
+        internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
-            CCM_core.CCM_fnc_log.withTime.debug("CCM_event_playMusic_RPC: was called...");
+            CCM_core.CCM_fnc_log.withTime.message("CCM_event_playMusic_RPC: was called...");
 
             if (CCM_core.CCM_syncOnline)
             {
                 CCM_core.CCM_fnc_log.withTime.info("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
 
-                CCM_fnc_playMusic(_filename, _folderType);
+                CCM_fnc_playMusic(_filename, _folderType, _trackType);
 
             } 
             else
             {
-                CCM_core.CCM_fnc_log.withTime.debug("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
+                CCM_core.CCM_fnc_log.withTime.message("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
             }
         }
 
@@ -94,12 +98,9 @@ namespace creativeCommonsMusicProject
         ///<summary>
         /// Creates an audioclip and plays it for a given filename and CCM_trackTypes_enum
         ///</summary>
-        private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType)
+        private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
-            CCM_core.CCM_loadingAudio = true;
-
-            CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
-
+            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
 
             var _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_folderType);
             var _pathToFile = Path.Combine(CCM_core.CCM_Paths.FILE_PREFIX, _folderPath, _filename);
@@ -116,7 +117,7 @@ namespace creativeCommonsMusicProject
                 }
 
 
-                CCM_core.CCM_fnc_log.withTime.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
+                CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
 
                 if (_request.error != null)
                 {
@@ -125,25 +126,32 @@ namespace creativeCommonsMusicProject
                 }
 
 
-                AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
+                // make sure music has not been superceeded by an new track type before playing
+                if (_trackType == CCM_core.CCM_currentTrackType)
+                {
+                    CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType track type is still equal to called track type for: " + _filename + ". Will continue with playing...");
 
-                GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
-                CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
-                AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
-                CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
+                    AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
 
-
-                _handlerAudioSource.clip = _clip;
-                _handlerAudioSource.clip.name = _filename;
-
-                _handlerAudioSource.Play();
-                CCM_core.CCM_fnc_log.debug("CCM_fnc_playMusic: _fn_createAndPlayClip: Handler told to play: " + _filename);
-                CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
-                CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
-                CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;
+                    GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
+                    CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
+                    AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
+                    CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
 
 
-                CCM_core.CCM_loadingAudio = false;
+                    _handlerAudioSource.clip = _clip;
+                    _handlerAudioSource.clip.name = _filename;
+
+                    _handlerAudioSource.Play();
+                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Handler told to play: " + _filename);
+                    CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
+                    CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
+                    CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;
+                }
+                else
+                {
+                    CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType " + CCM_core.CCM_currentTrackType.ToString() + " is NOT equal to called track type for: " + _filename + " which is: " + _trackType.ToString() + ". Will throw out playing of this track...");
+                }
             }
 
             yield break;
