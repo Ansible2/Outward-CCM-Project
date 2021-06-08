@@ -127,7 +127,9 @@ namespace creativeCommonsMusicProject
 
 
                 // make sure music has not been superceeded by an new track type before playing
-                if (_trackType == CCM_core.CCM_currentTrackType)
+                // however, clients can't reject current track type when synced
+                bool trackTypeDifferent = _trackType == CCM_core.CCM_currentTrackType;
+                if (trackTypeDifferent || (!trackTypeDifferent && (!PhotonNetwork.isMasterClient && CCM_core.CCM_syncOnline)))
                 {
                     CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType track type is still equal to called track type for: " + _filename + ". Will continue with playing...");
 
