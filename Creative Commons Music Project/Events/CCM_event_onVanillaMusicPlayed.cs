@@ -124,7 +124,7 @@ namespace creativeCommonsMusicProject
                 }
                 else
                 {
-                    CCM_fnc_log.info("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine is NOT Master Client. Will nothing will be done...");
+                    CCM_fnc_log.info("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: Local Machine is NOT Master Client. Nothing will be done...");
                 }
             }
             else
