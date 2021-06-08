@@ -95,24 +95,28 @@ namespace creativeCommonsMusicProject
             // reallocate used list if unused list is empty now
             if (_listOfUnusedTracks.Count() < 1)
             {
-                _listOfUnusedTracks = new List<CCM_track>(_listOfUsedTracks);
+                //_listOfUnusedTracks = new List<CCM_track>(_listOfUsedTracks);
+                _listOfUnusedTracks.AddRange(_listOfUsedTracks);
                 _listOfUsedTracks.Clear();
+                CCM_fnc_log.warning("CCM_fnc_grabRandomTrack: Lists reset for track type: " + _trackType.ToString());
             }
 
             CCM_track _track = new CCM_track();
+            int _randomIndex = -1;
             if (_listOfUnusedTracks.Count() < 1)
             {
                 CCM_fnc_log.error("CCM_fnc_grabRandomTrack: _listOfUnusedTracks is empty!");
             }
             else
             {
-                int _randomIndex = CCM_getRandom.Next(_listOfUnusedTracks.Count());
+                _randomIndex = CCM_getRandom.Next(_listOfUnusedTracks.Count());
                 _track = _listOfUnusedTracks.ElementAt(_randomIndex);
                 _listOfUnusedTracks.RemoveAt(_randomIndex);
                 _listOfUsedTracks.Add(_track);
             }
 
-            CCM_fnc_log.info("CCM_fnc_grabRandomTrack: Selected track file: " + _track.Filename);
+            CCM_fnc_log.info("CCM_fnc_grabRandomTrack: Count of used tracks for type " + _trackType.ToString() + " is " + _listOfUsedTracks.Count() + " and unused is " + _listOfUnusedTracks.Count());
+            CCM_fnc_log.info("CCM_fnc_grabRandomTrack: Selected track file: " + _track.Filename + " at index: " + _randomIndex);
 
             return _track;
         }
