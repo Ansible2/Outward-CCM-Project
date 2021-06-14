@@ -80,14 +80,21 @@ namespace creativeCommonsMusicProject
                     else if (_clipName.Contains("dramatic"))
                     {
                         CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is dramatic. Music will remain unchanged...");
+                        CCM_currentTrackType = CCM_trackTypes_enum.combat;
+                        _fn_requestTrack(CCM_currentTrackType);
                     }
                     else if (_clipName.Contains("friendly"))
                     {
                         CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is friendly. Music will remain unchanged...");
+                        CCM_currentTrackType = CCM_trackTypes_enum.ambientDay;
+                        _fn_requestTrack(CCM_currentTrackType);
+
                     }
                     else if (_clipName.Contains("quest"))
                     {
                         CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is quest. Music will remain unchanged...");
+                        CCM_currentTrackType = CCM_trackTypes_enum.ambientDay;
+                        _fn_requestTrack(CCM_currentTrackType);
                     }
                     else if (_clipName.Contains("mystery"))
                     {
