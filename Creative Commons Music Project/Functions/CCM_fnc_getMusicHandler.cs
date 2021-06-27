@@ -2,18 +2,18 @@
 Function: CCM_fnc_getMusicHandler
 
 Description:
-	Returns a one of the two CCM music handle GameObjects depending on if #1 is
-     playing or not.
+	Returns a one of the two CCM music handle GameObjects depending on which was
+     the last one wo be used.
 
 Parameters:
 	NONE 
 
 Returns:
-	<GameObject> - Either music handler 1 or 2
+	<CCM_MusicHandler> - Either music handler 1 or 2
 
 Examples:
     (begin example)
-		_aNotPlayingMusicHandler = CCM_fnc_getMusicHandler();
+		leastRecentHandler = CCM_fnc_getMusicHandler();
     (end)
 
 Author(s):
@@ -27,19 +27,21 @@ namespace creativeCommonsMusicProject
     partial class CCM_core
     {
         /// <summary>
-        /// Returns a one of the two CCM music handle GameObjects depending on if #1 is playing or not.
+        /// Returns a one of the two CCM music handle GameObjects depending on which was the last one wo be used.
         /// </summary>
-        /// <returns>GameObject</returns>
-        internal static GameObject CCM_fnc_getMusicHandler()
+        /// <returns>CCM_MusicHandler</returns>
+        internal static CCM_MusicHandler CCM_fnc_getMusicHandler()
         {
-            bool _isPlaying = CCM_MusicHandlers.musicAudioSource_1.isPlaying;
-            if (_isPlaying)
+            
+            if (CCM_lastUsedHandler == CCM_MusicHandler_1)
             {
-                return CCM_MusicHandlers.musicHandler_2;
+                CCM_lastUsedHandler = CCM_MusicHandler_2;
+                return CCM_MusicHandler_2;
             }
             else
             {
-                return CCM_MusicHandlers.musicHandler_1;
+                CCM_lastUsedHandler = CCM_MusicHandler_1;
+                return CCM_MusicHandler_1;
             }
         }
     }

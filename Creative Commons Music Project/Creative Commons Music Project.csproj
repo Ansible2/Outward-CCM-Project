@@ -46,7 +46,7 @@
     <Compile Include="Functions\CCM_fnc_assignMusicHandlerProperties.cs" />
     <Compile Include="Functions\CCM_fnc_getTrackType.cs" />
     <Compile Include="Functions\CCM_fnc_grabRandomTrack.cs" />
-    <Compile Include="Functions\CCM_spawn_fadeAudioSource.cs" />
+    <Compile Include="Functions\CCM_spawn_fadeMusichandler.cs" />
     <Compile Include="CCM_Core.cs" />
     <Compile Include="CCM_Rpc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -32,7 +32,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal static void CCM_fnc_assignMusicHandlerProperties(GameObject _objectToCopy)
         {
-            if (!CCM_MusicHandlers.handlersInstantiated)
+            if (!CCM_createdMusicHandlers)
             {
                 // if main music object is not found select an object
                 if (_objectToCopy == null)
@@ -42,28 +42,10 @@ namespace creativeCommonsMusicProject
                 else
                 {
                     CCM_musicVolume = _objectToCopy.GetComponent<AudioSource>().volume;
+                    CCM_MusicHandler_1 = new CCM_MusicHandler("CCM_musicHandler_1", _objectToCopy);
+                    CCM_MusicHandler_2 = new CCM_MusicHandler("CCM_musicHandler_2", _objectToCopy);
 
-                    // copy settings to our objects for playing music
-                    CCM_MusicHandlers.musicHandler_1 = Instantiate(_objectToCopy);
-                    CCM_MusicHandlers.musicHandler_1.name = "CCM_musicHandler_1";
-                    DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_1);
-                    CCM_MusicHandlers.musicAudioSource_1 = CCM_MusicHandlers.musicHandler_1.GetComponent<AudioSource>();
-                    CCM_MusicHandlers.musicAudioSource_1.volume = 0;
-                    CCM_MusicHandlers.musicAudioSource_1.loop = false;
-                    //CCM_MusicHandlers.musicAudioSource_1.name = "CCM_musicHandler_1_audioSource";
-
-
-                    CCM_MusicHandlers.musicHandler_2 = Instantiate(_objectToCopy);
-                    CCM_MusicHandlers.musicHandler_2.name = "CCM_musicHandler_2";
-                    DontDestroyOnLoad(CCM_MusicHandlers.musicHandler_2);
-                    CCM_MusicHandlers.musicAudioSource_2 = CCM_MusicHandlers.musicHandler_2.GetComponent<AudioSource>();
-                    CCM_MusicHandlers.musicAudioSource_2.volume = 0;
-                    CCM_MusicHandlers.musicAudioSource_2.loop = false;
-                    //CCM_MusicHandlers.musicAudioSource_2.name = "CCM_musicHandler_2_audioSource";
-
-
-                    CCM_MusicHandlers.handlersInstantiated = true;
-
+                    CCM_createdMusicHandlers = true;
                     CCM_fnc_log.info("CCM_fnc_assignMusicHandlerProperties: Assigned CCM music handler objects the properties of " + _objectToCopy);
                 }
             }

@@ -61,10 +61,10 @@ namespace creativeCommonsMusicProject
                 }
 
             }
-            else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_MusicHandlers.nowPlayingAudioSource != null) // stop if going back to main menu
+            else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_nowPlayingMusicHandler != null) // stop if going back to main menu
             {
                 CCM_fnc_log.withTime.message("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
-                CCM_spawn_fadeAudioSource(CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true, true);
+                CCM_spawn_fadeMusichandler(CCM_nowPlayingMusicHandler, 3, 0, false);
             }
             else
             {

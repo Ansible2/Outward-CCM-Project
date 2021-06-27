@@ -21,7 +21,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
-        const string VERSION = "0.9.1";
+        const string VERSION = "0.9.2.1";
 
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
@@ -159,7 +159,7 @@ namespace creativeCommonsMusicProject
             EMPTY
         };
 
-
+        
         internal static System.Random CCM_getRandom = new System.Random();
 
         internal static bool CCM_syncOnline;
@@ -172,12 +172,15 @@ namespace creativeCommonsMusicProject
 
         internal static bool CCM_trackLengthLoadComplete = false;
 
+        internal static bool CCM_createdMusicHandlers = false;
+
         /* ------------------------------------------------------------------------
             Music Handlers
         ------------------------------------------------------------------------ */
         /// <summary>
         /// Used for keeping track of the various states and properties for the two music GameObjects used by CCM
         /// </summary>
+/*  
         internal static class CCM_MusicHandlers
         {
             // music game objects we will use to actually play music
@@ -185,6 +188,9 @@ namespace creativeCommonsMusicProject
             internal static GameObject musicHandler_2;
             internal static AudioSource musicAudioSource_1;
             internal static AudioSource musicAudioSource_2;
+
+            internal static uint CCM_fadeId_1 = 0;
+            internal static uint CCM_fadeId_2 = 0;
 
             internal static bool musicAudioSource_1_isFading = false;
             internal static bool musicAudioSource_2_isFading = false;
@@ -202,8 +208,41 @@ namespace creativeCommonsMusicProject
             internal static GameObject nowPlayingMusicHandler;
             internal static AudioSource nowPlayingAudioSource;
         }
-        
-        
+*/
+        internal class CCM_MusicHandler
+        {
+            internal GameObject musicHandler;
+            internal AudioSource audioSource;
+            internal string name;
+            internal uint fadeCount;
+            internal bool isFading { get; set; }
+            internal bool stopFading { get; set; }
+            //internal bool nowPlaying { get; set; }
+
+            internal CCM_MusicHandler(string nameOf, GameObject objectToCopy)
+            {
+                musicHandler = Instantiate(objectToCopy);
+                DontDestroyOnLoad(musicHandler);
+                musicHandler.name = nameOf + "_GameObject";
+
+                audioSource = musicHandler.GetComponent<AudioSource>();
+                audioSource.loop = false;
+                audioSource.volume = 0;
+
+                name = nameOf;
+
+                isFading = false;
+                stopFading = false;
+                //nowPlaying = false;
+                fadeCount = 0;
+            }
+        }
+
+        internal static CCM_MusicHandler CCM_MusicHandler_1;
+        internal static CCM_MusicHandler CCM_MusicHandler_2;
+        internal static CCM_MusicHandler CCM_nowPlayingMusicHandler;
+        internal static CCM_MusicHandler CCM_lastUsedHandler;
+
         /* ------------------------------------------------------------------------
         
             awake function

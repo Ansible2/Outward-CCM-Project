@@ -41,21 +41,17 @@ namespace creativeCommonsMusicProject
             
             if (CCM_core.CCM_Dictionaries.trackLengthFromString.ContainsKey(_filename))
             {
-                
-                if (CCM_core.CCM_MusicHandlers.nowPlayingAudioSource != null)
+                if (CCM_core.CCM_nowPlayingMusicHandler != null && (CCM_core.CCM_nowPlayingMusicHandler.audioSource.isPlaying))
                 {
-                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_MusicHandlers.nowPlayingAudioSource is NOT null. Referencing its isPlaying status...");
+                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_nowPlayingMusicHandler: " + CCM_core.CCM_nowPlayingMusicHandler.name + " is NOT null and is playing... Fading it out");
 
-                    if (CCM_core.CCM_MusicHandlers.nowPlayingAudioSource.isPlaying)
-                    {
-                        CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that music was already playing on " + CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler.name + " ... Now fading it out...");
-                        CCM_core.CCM_spawn_fadeAudioSource(CCM_core.CCM_MusicHandlers.nowPlayingAudioSource, 3, 0, true);
-                    }
+                    CCM_core.CCM_spawn_fadeMusichandler(CCM_core.CCM_nowPlayingMusicHandler, 3, 0, false);
                 }
                 else
                 {
-                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_MusicHandlers.nowPlayingAudioSource IS null. Not referencing its isPlaying status...");
+                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_nowPlayingMusicHandler is not playing, not fading it out...");
                 }
+
 
                 CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType, _trackType));
             }
@@ -135,20 +131,15 @@ namespace creativeCommonsMusicProject
 
                     AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
 
-                    GameObject _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
+                    CCM_core.CCM_MusicHandler _musicHandler = CCM_core.CCM_fnc_getMusicHandler();
+                    AudioSource _handlerAudioSource = _musicHandler.audioSource;
                     CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler for " + _filename + " is named: " + _musicHandler.name);
-                    AudioSource _handlerAudioSource = _musicHandler.GetComponent<AudioSource>();
-                    CCM_core.CCM_fnc_log.info("CCM_fnc_playMusic: _fn_createAndPlayClip: Music handler audiosource for " + _filename + " is named: " + _handlerAudioSource);
-
-
+                    
                     _handlerAudioSource.clip = _clip;
                     _handlerAudioSource.clip.name = _filename;
 
-                    _handlerAudioSource.Play();
-                    CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Handler told to play: " + _filename);
-                    CCM_core.CCM_spawn_fadeAudioSource(_handlerAudioSource, 3, 0.5f);
-                    CCM_core.CCM_MusicHandlers.nowPlayingMusicHandler = _musicHandler;
-                    CCM_core.CCM_MusicHandlers.nowPlayingAudioSource = _handlerAudioSource;
+                    // hit play and then you can be stopped after by an audio source that is fading out
+                    CCM_core.CCM_spawn_fadeMusichandler(_musicHandler, 3, 0.5f, true);
                 }
                 else
                 {

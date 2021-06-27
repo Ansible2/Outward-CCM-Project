@@ -59,7 +59,7 @@ namespace creativeCommonsMusicProject
                         CCM_fnc_log.withTime.error("CCM_event_onVanillaMusicPlayed: Unhandled piece of music has empty track type: " + _clipName);
                     }
 
-                    if (!CCM_MusicHandlers.handlersInstantiated)
+                    if (!CCM_createdMusicHandlers)
                     {
 
                         CCM_fnc_assignMusicHandlerProperties(__result.gameObject);
