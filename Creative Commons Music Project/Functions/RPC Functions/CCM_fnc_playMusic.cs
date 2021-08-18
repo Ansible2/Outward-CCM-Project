@@ -38,7 +38,6 @@ namespace creativeCommonsMusicProject
         internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
             CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: was called for file " + _filename);
-            
             if (CCM_core.CCM_Dictionaries.trackLengthFromString.ContainsKey(_filename))
             {
                 if (CCM_core.CCM_nowPlayingMusicHandler != null && (CCM_core.CCM_nowPlayingMusicHandler.audioSource.isPlaying))
@@ -52,7 +51,7 @@ namespace creativeCommonsMusicProject
                     CCM_core.CCM_fnc_log.message("CCM_fnc_playMusic: Found that CCM_nowPlayingMusicHandler is not playing, not fading it out...");
                 }
 
-
+                CCM_core.CCM_currentTrackFilename = _filename;
                 CCM_core.CCM_Instance.StartCoroutine(_fn_createAndPlayClip(_filename, _folderType, _trackType));
             }
             else
@@ -120,12 +119,19 @@ namespace creativeCommonsMusicProject
                     CCM_core.CCM_fnc_log.withTime.error("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
-
+                
 
                 // make sure music has not been superceeded by an new track type before playing
                 // however, clients can't reject current track type when synced
-                bool trackTypeDifferent = _trackType == CCM_core.CCM_currentTrackType;
-                if (trackTypeDifferent || (!trackTypeDifferent && (!PhotonNetwork.isMasterClient && CCM_core.CCM_syncOnline)))
+                bool trackTypeTheSame = _trackType == CCM_core.CCM_currentTrackType;
+                bool trackIsTheSame = CCM_core.CCM_currentTrackFilename == _filename;
+                if (
+                    (trackTypeTheSame && trackIsTheSame) || 
+                    (
+                        (!trackTypeTheSame || !trackIsTheSame) && 
+                        (!PhotonNetwork.isMasterClient && CCM_core.CCM_syncOnline)
+                    )
+                   )
                 {
                     CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType track type is still equal to called track type for: " + _filename + ". Will continue with playing...");
 
@@ -143,7 +149,16 @@ namespace creativeCommonsMusicProject
                 }
                 else
                 {
-                    CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType " + CCM_core.CCM_currentTrackType.ToString() + " is NOT equal to called track type for: " + _filename + " which is: " + _trackType.ToString() + ". Will throw out playing of this track...");
+                    if (!trackTypeTheSame)
+                    {
+                        CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType " + CCM_core.CCM_currentTrackType.ToString() + " is NOT equal to called track type for: " + _filename + " which is: " + _trackType.ToString() + ". Will throw out playing of this track...");
+
+                    }
+                    if (!trackIsTheSame)
+                    {
+                        CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackFilename is: " + CCM_core.CCM_currentTrackFilename + " which is not requested track file: " + _filename + "... Throwing out track.");
+
+                    }
                 }
             }
 

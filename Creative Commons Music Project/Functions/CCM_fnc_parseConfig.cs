@@ -352,6 +352,7 @@ namespace creativeCommonsMusicProject
 
                 var _clip = DownloadHandlerAudioClip.GetContent(_request);
                 _track.Length = (int)_clip.length;
+                CCM_fnc_log.info("CCM_fnc_parseConfig: " + _filename + " has a track length of " + _track.Length);
                 CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
 
                 _clip.UnloadAudioData();

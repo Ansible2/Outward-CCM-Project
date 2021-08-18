@@ -159,7 +159,8 @@ namespace creativeCommonsMusicProject
             EMPTY
         };
 
-        
+        internal static string CCM_currentTrackFilename = "";
+
         internal static System.Random CCM_getRandom = new System.Random();
 
         internal static bool CCM_syncOnline;
@@ -173,6 +174,8 @@ namespace creativeCommonsMusicProject
         internal static bool CCM_trackLengthLoadComplete = false;
 
         internal static bool CCM_createdMusicHandlers = false;
+
+
 
         /* ------------------------------------------------------------------------
             Music Handlers

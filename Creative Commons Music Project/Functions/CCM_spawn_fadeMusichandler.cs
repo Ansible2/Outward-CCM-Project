@@ -72,7 +72,7 @@ namespace creativeCommonsMusicProject
             // wait until audiosource is done with a previous fade
             if (_musicHandler.isFading)
             {
-                _musicHandler.stopFading = true;
+                //_musicHandler.stopFading = true;
 
                 int _waitCycle = 0;
                 while (_musicHandler.isFading)
@@ -110,14 +110,15 @@ namespace creativeCommonsMusicProject
 
                 float currentTime = 0;
                 float _startingVolume = _audioSource.volume;
-                while (currentTime < _duration && (_audioSource.volume != _targetVolume) && (!_musicHandler.stopFading))
+                float _finishTime = Time.unscaledDeltaTime + _duration;
+                while (currentTime < _finishTime && (_audioSource.volume != _targetVolume) && (!_musicHandler.stopFading))
                 {
                     currentTime += Time.unscaledDeltaTime;
                     _audioSource.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
                     yield return null;
                 }
 
-
+                
                 if (!_musicIsStarting)
                 {
                     _audioSource.Stop();
