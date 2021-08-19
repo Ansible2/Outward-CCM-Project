@@ -32,27 +32,30 @@ namespace creativeCommonsMusicProject
         [HarmonyPatch(typeof(GlobalAudioManager), "PlayMusic")]
         class CCM_playMusicPatch
         {
+            /* ----------------------------------------------------------------------------
+                CCM_event_onVanillaMusicPlayed
+            ---------------------------------------------------------------------------- */
             [HarmonyPostfix]
             static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
             {
                 var _clipName = __result.clip.name.ToLower();
                 CCM_fnc_log.withTime.message("CCM_event_onVanillaMusicPlayed: was called for vanilla clip: " + _clipName);
                 
-                // Events are unqiue  not categorized and therefore should be ignored
+                // Events are unqiue
                 if (!_clipName.Contains("event"))
                 {
-                    CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " is not event music. Proceeding normally...");
-
+                    CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Clip " + _clipName + " is not event music.");
                     CCM_trackTypes_enum _trackType = CCM_fnc_getTrackType(_clipName);
 
                     if (_trackType != CCM_trackTypes_enum.EMPTY)
                     {
                         __result.mute = true;
 
-                        CCM_currentTrackType = _trackType;
-                        CCM_fnc_log.info("CCM_event_onVanillaMusicPlayed: CCM_currentTrackType was set to " + _trackType);
-
-                        _fn_requestTrack(_trackType);
+                        if (_fn_changeCurrentTrackType(_trackType))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
+                        
                     }
                     else
                     {
@@ -73,34 +76,44 @@ namespace creativeCommonsMusicProject
 
                     if (_clipName.Contains("danger"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Playing combat music in place of event music...");
-                        CCM_currentTrackType = CCM_trackTypes_enum.combat;
-                        _fn_requestTrack(CCM_currentTrackType);
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Dangerramatic event music requested.");
+                        if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.combat))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
                     }
                     else if (_clipName.Contains("dramatic"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is dramatic. Music will remain unchanged...");
-                        CCM_currentTrackType = CCM_trackTypes_enum.combat;
-                        _fn_requestTrack(CCM_currentTrackType);
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Dramatic event music requested.");
+                        if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.combat))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
                     }
                     else if (_clipName.Contains("friendly"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is friendly. Music will remain unchanged...");
-                        CCM_currentTrackType = CCM_trackTypes_enum.ambientDay;
-                        _fn_requestTrack(CCM_currentTrackType);
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Friendly event music requested.");
+                        if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.ambientDay))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
 
                     }
                     else if (_clipName.Contains("quest"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is quest. Music will remain unchanged...");
-                        CCM_currentTrackType = CCM_trackTypes_enum.ambientDay;
-                        _fn_requestTrack(CCM_currentTrackType);
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Quest event music requested.");
+                        if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.ambientDay))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
                     }
                     else if (_clipName.Contains("mystery"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Event music is mystery. Playing dungeon music instead...");
-                        CCM_currentTrackType = CCM_trackTypes_enum.dungeon;
-                        _fn_requestTrack(CCM_currentTrackType);
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Mystery event music requested.");
+                        if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.dungeon))
+                        {
+                            _fn_requestTrack(CCM_currentTrackType);
+                        }
                     }
                     else
                     {
@@ -112,6 +125,32 @@ namespace creativeCommonsMusicProject
             }
         }
 
+
+        /* ----------------------------------------------------------------------------
+            _fn_changeCurrentTrackType
+        ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Adjusts CCM_currentTrackType and returns a bool depending on whether it was changed or not
+        ///</summary>
+        private static bool _fn_changeCurrentTrackType(CCM_trackTypes_enum _trackType)
+        {
+            if (_trackType != CCM_currentTrackType)
+            {
+                CCM_fnc_log.info("CCM_event_onVanillaMusicPlayed: _fn_changeCurrentTrackType: CCM_currentTrackType set to: " + _trackType);
+                CCM_currentTrackType = _trackType;
+                return true;
+            }
+            else
+            {
+                CCM_fnc_log.info("CCM_event_onVanillaMusicPlayed: _fn_changeCurrentTrackType: CCM_currentTrackType is already set to: " + _trackType);
+                return false;
+            }
+        }
+
+
+        /* ----------------------------------------------------------------------------
+            _fn_requestTrack
+        ---------------------------------------------------------------------------- */
         ///<summary>
         /// Requests a new music routine for a given CCM_trackTypes_enum (intiates a new music routine) 
         ///</summary>
