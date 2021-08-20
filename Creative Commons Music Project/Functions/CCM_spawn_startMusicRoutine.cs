@@ -37,11 +37,10 @@ namespace creativeCommonsMusicProject
         /// <param name="_trackType"></param>
         internal static void CCM_spawn_startMusicRoutine(CCM_trackTypes_enum _trackType)
         {
-            string _sceneName = CCM_currentSceneName;
-            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: was called for scene " + _sceneName + " with track type: " + _trackType);
+            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: was called for scene " + CCM_currentSceneName + " with track type: " + _trackType);
             
             CCM_fnc_stopMusicRoutine();
-            CCM_currentRoutine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_trackType, _sceneName));
+            CCM_currentRoutine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_trackType));
         }
 
 
@@ -77,9 +76,8 @@ namespace creativeCommonsMusicProject
         /// Runs the music routine loop for a given track type and scene that will continuously queue music for a certain track type
         /// </summary>
         /// <param name="_trackType"></param>
-        /// <param name="_sceneName"></param>
         /// <returns>IEnumerator</returns>
-        private static IEnumerator _fn_beginRoutine(CCM_trackTypes_enum _trackType, string _sceneName)
+        private static IEnumerator _fn_beginRoutine(CCM_trackTypes_enum _trackType)
         {
             while (!CCM_core.CCM_trackLengthLoadComplete)
             {
@@ -88,8 +86,7 @@ namespace creativeCommonsMusicProject
 
             CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: _fn_beginRoutine: was called for scene...");
 
-            bool _sceneActive = true;
-            while (_sceneActive)
+            while (true)
             {
                 var _track = _fn_decideNewTrackForScene(_trackType);
                 string _sceneTrackFilename = _track.Filename;
@@ -112,33 +109,12 @@ namespace creativeCommonsMusicProject
                     CCM_rpc.CCM_fnc_playMusic(_sceneTrackFilename, _track.FolderType, _trackType);
                 }
 
-
                 int _trackLength = _track.Length;
                 int _sleepTime = _fn_decideTimeBetweenTracks(_trackType) + _trackLength;
-                CCM_fnc_log.info("CCM_spawn_startMusicRoutine: _fn_beginRoutine: sleep time will be: " + _sleepTime);
-                CCM_fnc_log.info("_tracklength int: " + _trackLength);
+                CCM_fnc_log.info("CCM_spawn_startMusicRoutine: _fn_beginRoutine: sleep time will be: " + _sleepTime + " Track length is: " + _trackLength);
 
-
-                int _sleptTime = 0;
-
-                while (_sleptTime < _sleepTime)
-                {
-                    if (CCM_currentSceneName == _sceneName)
-                    {
-                        yield return new WaitForSecondsRealtime(1);
-                        _sleptTime = _sleptTime + 1;
-                    }
-                    else
-                    {
-                        CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Routine for scene: " + _sceneName + " is no longer the CCM_currentScene. Exiting loop...");
-                        _sleptTime = _sleepTime;
-                        _sceneActive = false;
-                        break;
-                    }
-                }
+                yield return new WaitForSecondsRealtime(_sleepTime);
             }
-
-            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: _fn_beginRoutine: Routine for scene: " + _sceneName + " has exited its while loop.");   
         }
 
 

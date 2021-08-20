@@ -21,7 +21,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
-        const string VERSION = "0.9.2.2";
+        const string VERSION = "0.9.2.3";
 
         // used for running static coroutines
         internal static CCM_core CCM_Instance;

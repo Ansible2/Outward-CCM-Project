@@ -76,7 +76,7 @@ namespace creativeCommonsMusicProject
 
                     if (_clipName.Contains("danger"))
                     {
-                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Dangerramatic event music requested.");
+                        CCM_fnc_log.message("CCM_event_onVanillaMusicPlayed: Danger event music requested.");
                         if (_fn_changeCurrentTrackType(CCM_trackTypes_enum.combat))
                         {
                             _fn_requestTrack(CCM_currentTrackType);
