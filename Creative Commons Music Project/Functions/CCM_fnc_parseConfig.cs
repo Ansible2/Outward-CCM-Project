@@ -352,8 +352,19 @@ namespace creativeCommonsMusicProject
 
                 var _clip = DownloadHandlerAudioClip.GetContent(_request);
                 _track.Length = (int)_clip.length;
-                CCM_fnc_log.info("CCM_fnc_parseConfig: " + _filename + " has a track length of " + _track.Length);
-                CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
+                if (_track.Length == 0)
+                {
+                    CCM_fnc_log.error("CCM_fnc_parseConfig: " + _filename + " has a track length of " + _track.Length + ". This track will not be added to the list rotation as a length of 0 causes issues.");
+                }
+                else
+                {
+                    CCM_fnc_log.info("CCM_fnc_parseConfig: " + _filename + " has a track length of " + _track.Length);
+                    CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
+                }
+                
+                
+
+                
 
                 _clip.UnloadAudioData();
                 Destroy(_clip);

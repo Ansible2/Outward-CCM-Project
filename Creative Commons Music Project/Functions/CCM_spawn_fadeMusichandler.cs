@@ -98,8 +98,6 @@ namespace creativeCommonsMusicProject
                 // reset
                 _musicHandler.stopFading = false;
 
-                CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Now fading audioSource: " + _audioSource + " to " + _targetVolume + " with a fade ID of " + _fadeId);
-
                 if (_musicIsStarting)
                 {
                     _audioSource.Play();
@@ -108,10 +106,15 @@ namespace creativeCommonsMusicProject
                 }
 
 
+
                 float currentTime = 0;
                 float _startingVolume = _audioSource.volume;
+
+                CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Now fading audioSource: " + _audioSource + " to volume " + _targetVolume + " from starting volume " + _startingVolume + " with a fade ID of " + _fadeId);
+
+
                 float _finishTime = Time.unscaledDeltaTime + _duration;
-                while (currentTime < _finishTime && (_audioSource.volume != _targetVolume) && (!_musicHandler.stopFading))
+                while (currentTime < _finishTime && (_audioSource.volume != _targetVolume) && (!_musicHandler.stopFading) && (_musicHandler.audioSource.isPlaying))
                 {
                     currentTime += Time.unscaledDeltaTime;
                     _audioSource.volume = Mathf.Lerp(_startingVolume, _targetVolume, currentTime / _duration);
