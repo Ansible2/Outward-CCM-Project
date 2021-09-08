@@ -21,7 +21,7 @@ namespace creativeCommonsMusicProject
         ------------------------------------------------------------------------ */
         const string ID = "com.Ansible2.CCMProject"; // use the reverse domain syntax for BepInEx. Change "author" and "project".
         const string NAME = "CCM Project";
-        const string VERSION = "0.9.2.5";
+        const string VERSION = "0.9.2.6";
 
         // used for running static coroutines
         internal static CCM_core CCM_Instance;
@@ -163,7 +163,7 @@ namespace creativeCommonsMusicProject
 
         internal static System.Random CCM_getRandom = new System.Random();
 
-        internal static bool CCM_syncOnline;
+        internal static bool CCM_syncOnline = false;
 
         internal static float CCM_musicVolume;
 
@@ -175,6 +175,8 @@ namespace creativeCommonsMusicProject
 
         internal static bool CCM_createdMusicHandlers = false;
 
+        internal static bool CCM_doLog = true;
+
 
 
         /* ------------------------------------------------------------------------
@@ -183,35 +185,6 @@ namespace creativeCommonsMusicProject
         /// <summary>
         /// Used for keeping track of the various states and properties for the two music GameObjects used by CCM
         /// </summary>
-/*  
-        internal static class CCM_MusicHandlers
-        {
-            // music game objects we will use to actually play music
-            internal static GameObject musicHandler_1;
-            internal static GameObject musicHandler_2;
-            internal static AudioSource musicAudioSource_1;
-            internal static AudioSource musicAudioSource_2;
-
-            internal static uint CCM_fadeId_1 = 0;
-            internal static uint CCM_fadeId_2 = 0;
-
-            internal static bool musicAudioSource_1_isFading = false;
-            internal static bool musicAudioSource_2_isFading = false;
-
-            internal static bool musicAudioSource_1_stopFading = false;
-            internal static bool musicAudioSource_2_stopFading = false;
-
-            /// <summary>
-            /// Checks if the two music handlers are fully Instantiated and ready to play music
-            /// </summary>
-            internal static bool handlersInstantiated = false;
-
-            // this keeps track of which music handler is actually currently intended to be played on
-            // for instance, when transitioning to a new track, this one
-            internal static GameObject nowPlayingMusicHandler;
-            internal static AudioSource nowPlayingAudioSource;
-        }
-*/
         internal class CCM_MusicHandler
         {
             internal GameObject musicHandler;

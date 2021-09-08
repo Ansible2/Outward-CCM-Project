@@ -19,8 +19,9 @@
 
 <SETTINGS_ROOT>
   <!--Sync To Online-->
-  <syncOnline>ON</syncOnline> 
-  
+  <syncOnline>ON</syncOnline>
+  <!--Log To BepInEx LogOutput File-->
+  <log>OFF</log>
   
   <!--Track list-->
 	<tracks>

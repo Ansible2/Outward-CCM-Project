@@ -39,7 +39,7 @@ namespace creativeCommonsMusicProject
             static void CCM_event_onVanillaMusicPlayed(ref AudioSource __result)
             {
                 var _clipName = __result.clip.name.ToLower();
-                CCM_fnc_log.withTime.message("CCM_event_onVanillaMusicPlayed: was called for vanilla clip: " + _clipName);
+                CCM_fnc_log.WithTime.message("CCM_event_onVanillaMusicPlayed: was called for vanilla clip: " + _clipName);
                 
                 // Events are unqiue
                 if (!_clipName.Contains("event"))
@@ -59,7 +59,7 @@ namespace creativeCommonsMusicProject
                     }
                     else
                     {
-                        CCM_fnc_log.withTime.error("CCM_event_onVanillaMusicPlayed: Unhandled piece of music has empty track type: " + _clipName);
+                        CCM_fnc_log.WithTime.error("CCM_event_onVanillaMusicPlayed: Unhandled piece of music has empty track type: " + _clipName);
                     }
 
                     if (!CCM_createdMusicHandlers)
@@ -156,7 +156,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         private static void _fn_requestTrack(CCM_trackTypes_enum _trackType)
         {
-            CCM_fnc_log.withTime.message("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");
+            CCM_fnc_log.WithTime.message("CCM_event_onVanillaMusicPlayed: _fn_requestTrack: was called...");
 
             if (CCM_syncOnline)
             {

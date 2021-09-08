@@ -53,6 +53,8 @@ namespace creativeCommonsMusicProject
             if (File.Exists(_pathToConfig))
             {
                 var _xmlConfigFile = XDocument.Load(_pathToConfig);
+                _fn_getLogMode(_xmlConfigFile, _pathToConfig);
+
                 _fn_getFilesFromConfig(_xmlConfigFile);
                 _fn_getFilesFromFolders();
 
@@ -60,7 +62,7 @@ namespace creativeCommonsMusicProject
 
 
                 _fn_grabTrackSpacingSettings(_xmlConfigFile);
-                _fn_getOnlineMode(_xmlConfigFile);
+                _fn_getOnlineMode(_xmlConfigFile, _pathToConfig);
             }
             else
             {
@@ -77,7 +79,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         private static IEnumerator _fn_getAllFileTrackLengths()
         {
-            CCM_fnc_log.withTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Started audio load...");
+            CCM_fnc_log.WithTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Started audio load...");
             
             foreach (var _track in _filesToLoad)
             {
@@ -97,7 +99,7 @@ namespace creativeCommonsMusicProject
             _checkedFiles = null;
 
             CCM_core.CCM_trackLengthLoadComplete = true;
-            CCM_fnc_log.withTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
+            CCM_fnc_log.WithTime.message("CCM_fnc_parseConfig: _fn_getAllFileTrackLengths: Completed audio load");
         }
 
 
@@ -318,7 +320,7 @@ namespace creativeCommonsMusicProject
 
         /* ----------------------------------------------------------------------------
            _fn_getTrackLength    (AudioClips are loaded at the start and stored due to a need to know their duration in order to queue songs for the future. 
-                                        I could've used another library for this, but it is the smoothest for development and playback though costly for memory)
+                                        I could've used another library for this, but it is the smoothest for development at the moment.
         ---------------------------------------------------------------------------- */
         ///<summary>
         /// Gets the length of a given CCM_track (which is basically just the track file's details)
@@ -361,10 +363,7 @@ namespace creativeCommonsMusicProject
                     CCM_fnc_log.info("CCM_fnc_parseConfig: " + _filename + " has a track length of " + _track.Length);
                     CCM_Dictionaries.trackLengthFromString.Add(_filename, _track.Length);
                 }
-                
-                
-
-                
+                              
 
                 _clip.UnloadAudioData();
                 Destroy(_clip);
@@ -536,18 +535,66 @@ namespace creativeCommonsMusicProject
         ///<summary>
         /// Parses the CCM_syncOnline config entry in CCM Config.xml
         ///</summary>
-        private static void _fn_getOnlineMode(XDocument _xmlConfigFile)
+        private static void _fn_getOnlineMode(XDocument _xmlConfigFile, string _pathToConfig)
         {
-            bool _isOnline = _xmlConfigFile.Root.Element("syncOnline").Value.ToUpper() == "ON";
+            CCM_syncOnline = _xmlConfigFile.Root.Element("syncOnline").Value.ToUpper() == "ON";
 
-            if (_isOnline)
+            XElement syncElement = _xmlConfigFile.Root.Element("syncOnline");
+            if (syncElement != null)
             {
-                CCM_syncOnline = true;
+                CCM_syncOnline = syncElement.Value.ToUpper() == "ON";
+                if (CCM_syncOnline)
+                {
+                    CCM_fnc_log.info("CCM online synchronization is set to ON");
+                }
+                else
+                {
+                    CCM_fnc_log.info("CCM online synchronization is set to OFF");
+                }
             }
             else
             {
-                CCM_syncOnline = false;
+                CCM_fnc_log.error("CCM syncOnline attribute in CCM Config.xml is undefined, defaulting to OFF");
+
+                _xmlConfigFile.Root.Add(new XElement("syncOnline","OFF"));
+                _xmlConfigFile.Save(_pathToConfig);
             }
+
+        }
+
+
+        /* ----------------------------------------------------------------------------
+           _fn_getLogMode
+        ---------------------------------------------------------------------------- */
+        ///<summary>
+        /// Parses the CCM_doLog config entry in CCM Config.xml
+        ///</summary>
+        private static void _fn_getLogMode(XDocument _xmlConfigFile, string _pathToConfig)
+        {
+            XElement logElement = _xmlConfigFile.Root.Element("log");
+            if (logElement != null)
+            {
+                bool _doLog = logElement.Value.ToUpper() == "ON";
+                if (_doLog)
+                {
+                    CCM_fnc_log.info("CCM IS set to log");
+                }
+                else
+                {
+                    CCM_fnc_log.info("CCM is set to NOT log");
+                }
+
+                // this is so the logging function can print the messages above before the logging variable is set to false
+                CCM_doLog = _doLog;
+            } 
+            else
+            {
+                CCM_fnc_log.error("CCM log attribute in CCM Config.xml is undefined, logging will default to ON and XML will be saved with setting");
+                
+                _xmlConfigFile.Root.Add(new XElement("log", "ON"));
+                _xmlConfigFile.Save(_pathToConfig);
+            }
+            
         }
 
 
@@ -592,91 +639,3 @@ namespace creativeCommonsMusicProject
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// random between two ints
-/*
-    Random r = new Random();
-	int rInt = r.Next(0, 100); //for ints
-	Console.WriteLine(rInt);
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-
-// Change this to match your program's normal namespace
-namespace MyProg
-{
-    class IniFile   // revision 11
-    {
-        string Path;
-        string EXE = Assembly.GetExecutingAssembly().GetName().Name;
-
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString(string Section, string Key, string Value, string FilePath);
-
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
-
-        public IniFile(string IniPath = null)
-        {
-            Path = new FileInfo(IniPath ?? EXE + ".ini").FullName;
-        }
-
-        public string Read(string Key, string Section = null)
-        {
-            var RetVal = new StringBuilder(255);
-            GetPrivateProfileString(Section ?? EXE, Key, "", RetVal, 255, Path);
-            return RetVal.ToString();
-        }
-
-        public void Write(string Key, string Value, string Section = null)
-        {
-            WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
-        }
-
-        public void DeleteKey(string Key, string Section = null)
-        {
-            Write(Key, null, Section ?? EXE);
-        }
-
-        public void DeleteSection(string Section = null)
-        {
-            Write(null, null, Section ?? EXE);
-        }
-
-        public bool KeyExists(string Key, string Section = null)
-        {
-            return Read(Key, Section).Length > 0;
-        }
-    }
-}
-*/

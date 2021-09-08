@@ -33,67 +33,88 @@ namespace creativeCommonsMusicProject
         /// <param name="myMessage"></param>
         internal static class CCM_fnc_log
         {
-            internal static class withTime
+            internal static class WithTime
             {
-                internal static void error(object myMessage)
-                {
-                    CCM_core.CCM_logSource.Log(LogLevel.Error, System.DateTime.UtcNow + "--: " + myMessage);
-                }
-                internal static void debug(object myMessage)
-                {
-                    CCM_core.CCM_logSource.Log(LogLevel.Debug, System.DateTime.UtcNow + "--: " + myMessage);
-                }
                 internal static void fatal(object myMessage)
                 {
-                    CCM_core.CCM_logSource.Log(LogLevel.Fatal, System.DateTime.UtcNow + "--: " + myMessage);
+                    printWithTime(LogLevel.Fatal, myMessage);
                 }
-                internal static void info(object myMessage)
+                internal static void error(object myMessage)
                 {
-                    CCM_core.CCM_logSource.Log(LogLevel.Info, System.DateTime.UtcNow + "--: " + myMessage);
-                }
-                internal static void message(object myMessage)
-                {
-                    CCM_core.CCM_logSource.Log(LogLevel.Message, System.DateTime.UtcNow + "--: " + myMessage);
+                    printWithTime(LogLevel.Error, myMessage);
                 }
                 internal static void warning(object myMessage)
                 {
-                    CCM_core.CCM_logSource.Log(LogLevel.Warning, System.DateTime.UtcNow + "--: " + myMessage);
+                    printWithTime(LogLevel.Warning, myMessage);
+                }
+                internal static void debug(object myMessage)
+                {
+                    printWithTime(LogLevel.Debug, myMessage);
+                }
+                internal static void info(object myMessage)
+                {
+                    printWithTime(LogLevel.Info, myMessage);
+                }
+                internal static void message(object myMessage)
+                {
+                    printWithTime(LogLevel.Message, myMessage);
                 }
                 internal static void none(object myMessage)
                 {
-                    CCM_core.CCM_logSource.Log(LogLevel.None, System.DateTime.UtcNow + "--: " + myMessage);
+                    printWithTime(LogLevel.None, myMessage);
                 }
+
+
+                private static void printWithTime(BepInEx.Logging.LogLevel logLevel, object message)
+                {
+                    printLog(logLevel, message, true);
+                }
+               
             }
 
 
 
             internal static void error(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Error, myMessage);
+                printLog(LogLevel.Error, myMessage);
             }
             internal static void debug(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Debug, myMessage);
+                printLog(LogLevel.Debug, myMessage);
             }
             internal static void fatal(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Fatal, myMessage);
+                printLog(LogLevel.Fatal, myMessage);
             }
             internal static void info(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Info, myMessage);
+                printLog(LogLevel.Info, myMessage);
             }
             internal static void message(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Message, myMessage);
+                printLog(LogLevel.Message, myMessage);
             }
             internal static void warning(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.Warning, myMessage);
+                printLog(LogLevel.Warning, myMessage);
             }
             internal static void none(object myMessage)
             {
-                CCM_core.CCM_logSource.Log(LogLevel.None, myMessage);
+                printLog(LogLevel.None, myMessage);
+            }
+
+            static void printLog(BepInEx.Logging.LogLevel logLevel, object message, bool withTime = false)
+            {
+                if (CCM_core.CCM_doLog)
+                {
+                    if (withTime)
+                    {
+                        message = System.DateTime.UtcNow + "--: " + message;
+                    }
+
+                    CCM_core.CCM_logSource.Log(logLevel, message);
+                }
+                
             }
         }
 

@@ -37,7 +37,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal static void CCM_fnc_playMusic(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
-            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: was called for file " + _filename);
+            CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: was called for file " + _filename);
             if (CCM_core.CCM_Dictionaries.trackLengthFromString.ContainsKey(_filename))
             {
                 if (CCM_core.CCM_nowPlayingMusicHandler != null && (CCM_core.CCM_nowPlayingMusicHandler.audioSource.isPlaying))
@@ -71,18 +71,18 @@ namespace creativeCommonsMusicProject
         [PunRPC]
         internal void CCM_event_playMusic_RPC(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
-            CCM_core.CCM_fnc_log.withTime.message("CCM_event_playMusic_RPC: was called...");
+            CCM_core.CCM_fnc_log.WithTime.message("CCM_event_playMusic_RPC: was called...");
 
             if (CCM_core.CCM_syncOnline)
             {
-                CCM_core.CCM_fnc_log.withTime.info("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
+                CCM_core.CCM_fnc_log.WithTime.info("CCM_event_playMusic_RPC: Sync Online is ON, continuing with remotely triggered event...");
 
                 CCM_fnc_playMusic(_filename, _folderType, _trackType);
 
             } 
             else
             {
-                CCM_core.CCM_fnc_log.withTime.message("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
+                CCM_core.CCM_fnc_log.WithTime.message("CCM_event_playMusic_RPC: Won't execute as Sync Online is off in config.");
             }
         }
 
@@ -95,7 +95,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         private static IEnumerator _fn_createAndPlayClip(string _filename, CCM_core.CCM_trackTypes_enum _folderType, CCM_core.CCM_trackTypes_enum _trackType)
         {
-            CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
+            CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Called for song: " + _filename);
 
             var _folderPath = CCM_core.CCM_fnc_getTrackTypeFolderPath(_folderType);
             var _pathToFile = Path.Combine(CCM_core.CCM_Paths.FILE_PREFIX, _folderPath, _filename);
@@ -112,11 +112,11 @@ namespace creativeCommonsMusicProject
                 }
 
 
-                CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
+                CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request is done for " + _filename);
 
                 if (_request.error != null)
                 {
-                    CCM_core.CCM_fnc_log.withTime.error("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
+                    CCM_core.CCM_fnc_log.WithTime.error("CCM_fnc_playMusic: _fn_createAndPlayClip: Web request encountered the following error: " + _request.error);
                     yield break;
                 }
                 
@@ -133,7 +133,7 @@ namespace creativeCommonsMusicProject
                     )
                    )
                 {
-                    CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType track type is still equal to called track type for: " + _filename + ". Will continue with playing...");
+                    CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: CCM_currentTrackType track type is still equal to called track type for: " + _filename + ". Will continue with playing...");
 
                     AudioClip _clip = DownloadHandlerAudioClip.GetContent(_request);
 
@@ -151,12 +151,12 @@ namespace creativeCommonsMusicProject
                 {
                     if (!trackTypeTheSame)
                     {
-                        CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackType " + CCM_core.CCM_currentTrackType.ToString() + " is NOT equal to called track type for: " + _filename + " which is: " + _trackType.ToString() + ". Will throw out playing of this track...");
+                        CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: CCM_currentTrackType " + CCM_core.CCM_currentTrackType.ToString() + " is NOT equal to called track type for: " + _filename + " which is: " + _trackType.ToString() + ". Will throw out playing of this track...");
 
                     }
                     if (!trackIsTheSame)
                     {
-                        CCM_core.CCM_fnc_log.withTime.message("CCM_fnc_playMusic: CCM_currentTrackFilename is: " + CCM_core.CCM_currentTrackFilename + " which is not requested track file: " + _filename + "... Throwing out track.");
+                        CCM_core.CCM_fnc_log.WithTime.message("CCM_fnc_playMusic: CCM_currentTrackFilename is: " + CCM_core.CCM_currentTrackFilename + " which is not requested track file: " + _filename + "... Throwing out track.");
 
                     }
                 }

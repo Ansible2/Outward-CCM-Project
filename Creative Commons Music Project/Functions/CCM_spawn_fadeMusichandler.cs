@@ -66,7 +66,7 @@ namespace creativeCommonsMusicProject
         {
             var _fadeId = _musicHandler.fadeCount += 1;
             AudioSource _audioSource = _musicHandler.audioSource;
-            CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Was called to fade " + _audioSource + " to " + _targetVolume + " with a fade ID of " + _fadeId);
+            CCM_fnc_log.WithTime.message("CCM_fnc_fadeMusichandler: Was called to fade " + _audioSource + " to " + _targetVolume + " with a fade ID of " + _fadeId);
 
             
             // wait until audiosource is done with a previous fade
@@ -102,7 +102,7 @@ namespace creativeCommonsMusicProject
                 {
                     _audioSource.Play();
                     CCM_nowPlayingMusicHandler = _musicHandler;
-                    CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Played audioSource: " + _audioSource + " for Fade ID: " + _fadeId);
+                    CCM_fnc_log.WithTime.message("CCM_fnc_fadeMusichandler: Played audioSource: " + _audioSource + " for Fade ID: " + _fadeId);
                 }
 
 
@@ -110,7 +110,7 @@ namespace creativeCommonsMusicProject
                 float currentTime = 0;
                 float _startingVolume = _audioSource.volume;
 
-                CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Now fading audioSource: " + _audioSource + " to volume " + _targetVolume + " from starting volume " + _startingVolume + " with a fade ID of " + _fadeId);
+                CCM_fnc_log.WithTime.message("CCM_fnc_fadeMusichandler: Now fading audioSource: " + _audioSource + " to volume " + _targetVolume + " from starting volume " + _startingVolume + " with a fade ID of " + _fadeId);
 
 
                 float _finishTime = Time.unscaledDeltaTime + _duration;
@@ -127,7 +127,7 @@ namespace creativeCommonsMusicProject
                     _audioSource.Stop();
                     _audioSource.clip.UnloadAudioData();
                     Destroy(_audioSource.clip);
-                    CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Stopped audioSource: " + _audioSource + " for Fade ID: " + _fadeId);
+                    CCM_fnc_log.WithTime.message("CCM_fnc_fadeMusichandler: Stopped audioSource: " + _audioSource + " for Fade ID: " + _fadeId);
                 }
 
 
@@ -138,7 +138,7 @@ namespace creativeCommonsMusicProject
             }
             else
             {
-                CCM_fnc_log.withTime.message("CCM_fnc_fadeMusichandler: Found fade ID: " + _fadeId + " has been overwritten...");
+                CCM_fnc_log.WithTime.message("CCM_fnc_fadeMusichandler: Found fade ID: " + _fadeId + " has been overwritten...");
             }
 
 

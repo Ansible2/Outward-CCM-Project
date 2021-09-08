@@ -37,7 +37,7 @@ namespace creativeCommonsMusicProject
         /// <param name="_trackType"></param>
         internal static void CCM_spawn_startMusicRoutine(CCM_trackTypes_enum _trackType)
         {
-            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: was called for scene " + CCM_currentSceneName + " with track type: " + _trackType);
+            CCM_fnc_log.WithTime.message("CCM_spawn_startMusicRoutine: was called for scene " + CCM_currentSceneName + " with track type: " + _trackType);
             
             CCM_fnc_stopMusicRoutine();
             CCM_currentRoutine = CCM_Instance.StartCoroutine(_fn_beginRoutine(_trackType));
@@ -52,7 +52,7 @@ namespace creativeCommonsMusicProject
         /// </summary>
         internal static void CCM_fnc_stopMusicRoutine()
         {
-            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: CCM_fnc_stopMusicRoutine: was called...");
+            CCM_fnc_log.WithTime.message("CCM_spawn_startMusicRoutine: CCM_fnc_stopMusicRoutine: was called...");
 
 
             if (CCM_currentRoutine != null)
@@ -84,7 +84,7 @@ namespace creativeCommonsMusicProject
                 yield return new WaitForEndOfFrame();
             }
 
-            CCM_fnc_log.withTime.message("CCM_spawn_startMusicRoutine: _fn_beginRoutine: was called for scene...");
+            CCM_fnc_log.WithTime.message("CCM_spawn_startMusicRoutine: _fn_beginRoutine: was called for scene...");
 
             while (true)
             {

@@ -32,7 +32,7 @@ namespace creativeCommonsMusicProject
         ///</summary>
         internal void CCM_event_onSceneChangeStarted(Scene _goingToScene, LoadSceneMode _mode)
         {
-            CCM_fnc_log.withTime.message("CCM_event_onSceneChangeStarted: Called for Scene - " + _goingToScene.name);
+            CCM_fnc_log.WithTime.message("CCM_event_onSceneChangeStarted: Called for Scene - " + _goingToScene.name);
            
             if (CCM_fnc_isSceneReal(_goingToScene))
             {
@@ -52,7 +52,7 @@ namespace creativeCommonsMusicProject
 
                         if (_routineIsRunning)
                         {
-                            CCM_fnc_log.withTime.warning("CCM_event_onSceneChangeStarted: Client has a routine running. Stopping routine and requesting track directly from Master Client...");
+                            CCM_fnc_log.WithTime.warning("CCM_event_onSceneChangeStarted: Client has a routine running. Stopping routine and requesting track directly from Master Client...");
                             CCM_fnc_stopMusicRoutine();
                             CCM_rpc.CCM_rpcComponent.CCM_fnc_requestTrackToPlay(PhotonNetwork.player.ID);
                         }
@@ -63,7 +63,7 @@ namespace creativeCommonsMusicProject
             }
             else if (_goingToScene.name.ToLower().Contains("mainmenu") && CCM_nowPlayingMusicHandler != null) // stop if going back to main menu
             {
-                CCM_fnc_log.withTime.message("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
+                CCM_fnc_log.WithTime.message("CCM_event_onSceneChangeStarted: Found that going to main menu scene and CCM music is playing. Will fade out...");
                 CCM_fnc_stopMusicRoutine();
                 CCM_currentTrackType = CCM_trackTypes_enum.EMPTY;
                 CCM_spawn_fadeMusichandler(CCM_nowPlayingMusicHandler, 3, 0, false);
