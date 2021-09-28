@@ -96,8 +96,5 @@
       <HintPath>B:\GOG Games\Outward\Outward_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="CCM Config.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
